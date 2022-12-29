@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken";
 export const getAllBooks = (req: Request, res: Response) => {
     const q = req.query.status
         ? "SELECT * FROM books WHERE status=?"
-        : "SELECT * FROM posts";
+        : "SELECT * FROM books";
     
     db.query(q, [req.query.status], (err, data) => {
         if (err) return res.status(500).json(err);

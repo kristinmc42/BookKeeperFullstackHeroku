@@ -1,21 +1,20 @@
-import React from 'react';
-import { NavLink, Outlet } from 'react-router-dom';
+import React from "react";
+import { Outlet } from "react-router-dom";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
-export default function RootLayout() {
+const RootLayout: React.FC = () => {
   return (
-      <div className='rootLayout'>
-          <header>
-              <h1>Book Keeper</h1>
-              {/* <NavLink to="/books">Home</NavLink> */}
-          </header>
+    <div className="rootLayout">
+      <Header />
 
-          <main>
-              <Outlet />
-          </main>
+      <main>
+        <Outlet />
+      </main>
 
-          <footer>
-              <p>Book Keeper</p>
-          </footer>
+      <Footer />
     </div>
-  )
-}
+  );
+};
+
+export default RootLayout;

@@ -3,7 +3,7 @@ import {
   createBrowserRouter,
   Route,
   createRoutesFromElements,
-  RouterProvider
+  RouterProvider,
 } from "react-router-dom";
 
 //pages
@@ -22,22 +22,21 @@ import "./App.css";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
+    <>
       <Route path="/" element={<RootLayout />}>
         <Route index element={<Home />} />
-        <Route path="login" element={<Login />} />
-        <Route path="register" element={<Register />} />
         <Route path="books" element={<Books />} />
         <Route path="add" element={<AddBook />} />
         <Route path="update/:id" element={<UpdateBook />} />
       </Route>
-
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+    </>
   )
-)
+);
 
 const App: React.FC = () => {
-  return (
-    <RouterProvider router={router}  />
-  );
-}
+  return <RouterProvider router={router} />;
+};
 
 export default App;

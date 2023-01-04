@@ -1,9 +1,12 @@
 import React from "react";
 
+
 const AddBook: React.FC = () => {
     return (
         <>
-            <h1>This is the Add Book Page</h1>
+            <div className="bookContainer">
+               <h2>Add book page</h2>
+            </div>
         </>
     )
 };

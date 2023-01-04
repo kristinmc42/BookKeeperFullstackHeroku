@@ -6,6 +6,8 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import { QueryClientProvider, QueryClient } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
+
 
 //pages
 import Books from "./pages/Books";
@@ -15,6 +17,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import SearchBooks from "./pages/SearchBooks";
+import SingleSearchBook from "./pages/SingleSearchBook";
 
 //layouts
 import RootLayout from "./layouts/RootLayout";
@@ -22,7 +25,13 @@ import RootLayout from "./layouts/RootLayout";
 // styles
 import "./App.css";
 
-const queryClient:QueryClient = new QueryClient();
+const queryClient: QueryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      cacheTime: 1000 * 60 * 60 * 24, // 24 hrs
+    }
+  }
+});
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -31,6 +40,7 @@ const router = createBrowserRouter(
         <Route index element={<Home />} />
         <Route path="books" element={<Books />} />
         <Route path="search" element={<SearchBooks />} />
+        <Route path="search/:bookId" element={<SingleSearchBook />} />
         <Route path="add" element={<AddBook />} />
         <Route path="update/:id" element={<UpdateBook />} />
       </Route>
@@ -43,6 +53,7 @@ const router = createBrowserRouter(
 const App: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
+      <ReactQueryDevtools initialIsOpen={false} />
       <RouterProvider router={router} />
     </QueryClientProvider>
   );

@@ -1,14 +1,30 @@
 import React, { useState } from "react";
 import { useQuery } from "react-query";
+import {  Link } from "react-router-dom";
 import axios from "axios";
 
 // components
 import SearchBar from "../components/SearchBar";
-import BookInfo from "../components/BookInfo";
+import DisplayBook from "../components/DisplayBook";
+
 
 const SearchBooks: React.FC = () => {
-  const [inputValue, setInputValue] = useState<string>();
+  const [ errorMessage, setErrorMessage ] = useState<string | null>(null)
+ 
+  const [inputValue, setInputValue] = useState(() => {
+    // get stored value from local storage if there is one
+    const saved: string | null = localStorage.getItem("searchValue");
+    if (saved) {
+      console.log(saved)
+      return JSON.parse(saved);
+    } else {
+      return null
+    }
+  });
 
+
+  // makes call to Google Books API based on input from user
+  // returns array of book objects
   const getBooks = async () => {
     return axios
       .get(
@@ -17,24 +33,40 @@ const SearchBooks: React.FC = () => {
       .then((res) => {
         if (res.data.items && res.data.items.length > 0) {
           return res.data.items;
+        } else {
+          throw Error("Sorry. No results were found. Please try again.");
         }
+      })
+      .catch((err:Error) => {
+        console.log(err.message);
+        const message = err.message;
+        setErrorMessage(message)
       });
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("Inside handleSubmit");
+ 
     const form = e.currentTarget;
     const formElements = form.elements as typeof form.elements & {
       searchBarContents: { value: "string" };
     };
-    setInputValue(formElements.searchBarContents.value);
+    const value = formElements.searchBarContents.value
+    setInputValue(value);
+    localStorage.setItem("searchValue",JSON.stringify(value))
   };
 
+  // useQuery called when there is an inputValue
   const { isLoading, isError, error, isFetching, data } = useQuery(
     ["googleBooks", inputValue],
     getBooks,
-    { enabled: !!inputValue }
+    { enabled: !!inputValue,
+      refetchOnWindowFocus: false,
+      staleTime: 1000 * 60,
+      cacheTime: 1000 * 60 * 60 * 24,
+      keepPreviousData: true,
+    }
   );
 
   if (isLoading || isFetching) {
@@ -42,23 +74,35 @@ const SearchBooks: React.FC = () => {
   }
 
   if (isError) {
-    console.log(error);
-    return <h2>Error!</h2>;
+    if (error instanceof Error) {
+      return <h2>Error: {error.message }</h2>
+    }
   }
 
   if (data) {
     console.log(data);
   }
   return (
+   
     <div className="searchContainer">
-      <SearchBar
+
+          <SearchBar
         onSubmit={handleSubmit}
         placeholderText={"Title, Author, Keyword..."}
       />
+      {errorMessage && <h3>{errorMessage}</h3>}
       <ul>
         {data &&
-            data.map((item: any, index: number) =>  <BookInfo item={item} key={index} />)}
-      </ul>
+          data.map((item: any, index: number) => {
+            return (
+              <li key={index}>
+                <Link to={`${item.id}`}>
+                  <DisplayBook item={item} format={"short"} />
+                </Link>
+              </li>
+            );
+          })}
+      </ul>       
     </div>
   );
 };

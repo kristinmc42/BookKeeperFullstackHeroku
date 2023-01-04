@@ -64,8 +64,9 @@ const SingleSearchBook: React.FC = () => {
 
   return (
       <div className='pageContainer'>
-      <button type="button" onClick={() => navigate(-1)}>Back</button>
+      <button className="back" type="button" onClick={() => navigate(-1)}>Back</button>
       <DisplayBook item={data} format={"full"} />
+      <button type="button" onClick={() => navigate("/update", {state: { bookInfo: data}})}>Add to my books</button>
     </div>
   )
 }

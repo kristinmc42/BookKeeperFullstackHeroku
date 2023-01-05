@@ -24,13 +24,14 @@ const SearchBooks: React.FC = () => {
   });
 
   // makes call to Google Books API based on input from user
-  // returns array of book objects
+  // returns array of book objects (max that can be returned is 40 items)
   const getBooks = async () => {
     return axios
       .get(
-        `https://www.googleapis.com/books/v1/volumes?q=${inputValue}&key=${process.env.REACT_APP_GOOGLE_API_KEY}`
+        `https://www.googleapis.com/books/v1/volumes?q=${inputValue}&maxResults=40&startIndex=0&key=${process.env.REACT_APP_GOOGLE_API_KEY}`
       )
       .then((res) => {
+        console.log(res.data)
         if (res.data.items && res.data.items.length > 0) {
           setErrorMessage(null);
           return res.data.items;

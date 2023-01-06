@@ -3,7 +3,10 @@
 //types
 import { BookInfo } from '../types';
 
-const DisplayBook: ({ item, format }: { item: BookInfo; format: string }) => JSX.Element = ({ item, format }: { item: BookInfo; format: string }) => {
+// MAKE FUNCTION TO DISPLAY BOOKS IN DB FORMAT
+
+export const DisplayGoogleBook: ({ item, format }: { item: BookInfo; format: string }) => JSX.Element = ({ item, format }: { item: BookInfo; format: string }) => {
+  // displays book of Google Books format
 
     return (
         <div className='bookInfo' key={item.id}>
@@ -44,4 +47,3 @@ const DisplayBook: ({ item, format }: { item: BookInfo; format: string }) => JSX
     );
 };
 
-export default DisplayBook;

@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 // components
-import DisplayBook from "../components/DisplayBook";
+import { DisplayGoogleBook } from "../components/DisplayBook";
 
 // hooks
 import useBook from "../hooks/useBook"
@@ -36,7 +36,7 @@ const SingleSearchBook: React.FC = () => {
   return (
       <div className='pageContainer'>
       <button className="back" type="button" onClick={() => navigate(-1)}>Back</button>
-      <DisplayBook item={data} format={"full"} />
+      <DisplayGoogleBook item={data} format={"full"} />
       <button type="button" onClick={() => navigate("/update", {state: { bookInfo: data}})}>Add to my books</button>
     </div>
   )

@@ -31,3 +31,21 @@ export interface BookInfo{
     publishedDate?: string;
   }
 }
+
+export interface DbBookInfo{
+  id: number; 
+  title: string;
+  subtitle?: string;
+  author?: string;// need to serialize/unserialize string of authors
+  genre?: string;// need to serialize/unserialize string of genres
+  img?: string;//save smallThumbnail url here
+  desc?: string;
+  pageCount?: number;
+  previewLink?: string;
+  language?: string;
+  publishedDate?: Date;
+  bookid: string;
+  dateRead?: Date;
+  status: string;
+  userid: number;
+}

@@ -5,7 +5,7 @@ import axios from "axios";
 
 // components
 import SearchBar from "../components/SearchBar";
-import DisplayBook from "../components/DisplayBook";
+import {DisplayGoogleBook} from "../components/DisplayBook";
 
 const SearchBooks: React.FC = () => {
   // const queryClient = useQueryClient(); // get queryClient from the context
@@ -91,6 +91,7 @@ const SearchBooks: React.FC = () => {
         onSubmit={handleSubmit}
         placeholderText={"Title, Author, Keyword..."}
       />
+      {/* FIND A WAY TO CLEAR LOCAL STORAGE CACHE IF USER WANTS TO CLEAR THE RESULTS */}
       {/* <button
         type="button"
         className="clearSearch"
@@ -110,7 +111,7 @@ const SearchBooks: React.FC = () => {
             return (
               <li key={index}>
                 <Link to={`${item.id}`}>
-                  <DisplayBook item={item} format={"short"} />
+                  <DisplayGoogleBook item={item} format={"short"} />
                 </Link>
               </li>
             );

@@ -9,6 +9,9 @@ export const register = (req: Request, res: Response) => {
 
   db.query(q, [req.body.email, req.body.username], (err, data) => {
     console.log(err);
+    
+    // 🚨 IF MAKE USERNAME AND EMAIL UNIQUE IN DB WHAT WILL BE ERROR MESSAGES TO HANDLE
+
     // handle error or exisiting user
     if (err) return res.status(500).json(err);
     if (data.length) return res.status(409).json("User already exists!");

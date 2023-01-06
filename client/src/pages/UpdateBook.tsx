@@ -8,25 +8,36 @@ import { format } from "date-fns";
 // components
 import DisplayBook from "../components/DisplayBook";
 
-// types
-// import { BookInfo } from "../types";
-// interface LocationState {
-//   bookInfo: BookInfo;
-//   dateRead?: Date;
-// }
+//hooks
+import useUserId from "../hooks/useUserId";
+import useBooks from "../hooks/useBooks";
 
-const AddBook: React.FC = () => {
-  const { state } = useLocation(); // bookInfo and (possibly) dateRead passed in state
+// types
+import { BookInfo } from "../types";
+
+
+const UpdateBook: React.FC = () => {
   const navigate = useNavigate();
 
+  // get book info from location and extract and save bookInfo object and bookId string in variables
+  const { state } = useLocation(); // bookInfo
+  const bookInfo: BookInfo = state.bookInfo;
+  const bookId = bookInfo.id;
+
+  // get userid of current user
+  const { data: user } = useUserId();
+  const userId = user?.id;
+
+  // get all books from the db for current user
+  const  bookData = useBooks(userId);
+  const allUsersBooks = bookData.data;
+  console.log(allUsersBooks)
+  
+  // for the bookshelf category selected by the user
   const [bookshelf, setBookshelf] = useState<string | undefined>();
 
-  // for day selected by user in DayPicker
+  // for the day selected by user in DayPicker
   const [dateRead, setDateRead] = useState<Date>();
-  let footer = <p>Date you finished reading.</p>;
-  if (dateRead) {
-    footer = <p>You picked {format(dateRead, "PP")}.</p>;
-  }
 
   // when radio button selection changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,9 +57,12 @@ const AddBook: React.FC = () => {
 
     console.log(status); // status of bookshelf (read;currentlyReading;toRead)
 
-    console.log(dateRead); // dateRead
-
-    // update bookInfo in db or add book to db
+    // check if this book (bookId) is in the allUsersBooks 
+    // if no, add the book to the db
+    // if yes, update the status of the book info in the db
+    
+ 
+      
   };
   return (
     <>
@@ -56,7 +70,7 @@ const AddBook: React.FC = () => {
         <button className="back" type="button" onClick={() => navigate(-1)}>
           Back
         </button>
-        <DisplayBook item={state.bookInfo} format={"short"} />
+        <DisplayBook item={bookInfo} format={"short"} />
       </div>
       <form className="optionsForm" onSubmit={handleSubmit}>
         <fieldset>
@@ -77,7 +91,7 @@ const AddBook: React.FC = () => {
                 mode="single"
                 selected={dateRead}
                 onSelect={setDateRead}
-                footer={footer}
+                footer={dateRead ?<p>You picked {format(dateRead, "PP")}.</p> :<p>Select the date you finished reading.</p>}
               />
             )}
           </div>
@@ -102,10 +116,11 @@ const AddBook: React.FC = () => {
             To Read
           </label>
         </fieldset>
+        {/* {isError && <h2>Error: {errorMessage}</h2> } */}
         <button type="submit">Save</button>
       </form>
     </>
   );
 };
 
-export default AddBook;
+export default UpdateBook;

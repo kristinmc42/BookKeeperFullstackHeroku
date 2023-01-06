@@ -8,10 +8,9 @@ import { ContextState } from "../types";
 const Nav: React.FC = () => {
   const navigate: NavigateFunction = useNavigate();
 
-  const userContext: ContextState | null = useContext(AuthContext);
-
-  if (!userContext) return null;
   // deconstructs the currentUser and logout function from the AuthContext
+  const userContext: ContextState | null = useContext(AuthContext);
+  if (!userContext) return null
   const { currentUser, logout } = userContext;
 
   const handleLogout = () => {
@@ -27,7 +26,7 @@ const Nav: React.FC = () => {
       </div>
       <ul className="links">
         <Link to="books">My Books</Link>
-        <Link to="add">Add Book</Link>
+        <Link to="search">Find New Book</Link>
         <span>{currentUser?.username}</span>
         {currentUser ? (
           <button onClick={handleLogout}>Logout</button>

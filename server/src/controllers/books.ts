@@ -1,25 +1,38 @@
-import express, { Application, Request, Response, NextFunction } from "express";
+import express, { Request, Response } from "express";
 import { userInfo } from "os";
 import { db } from "../db";
 import jwt from "jsonwebtoken";
 
 export const getAllBooks = (req: Request, res: Response) => {
-    const q = req.query.status
-        ? "SELECT * FROM books WHERE status=?"
-        : "SELECT * FROM books";
-    
-    db.query(q, [req.query.status], (err, data) => {
-        if (err) return res.status(500).json(err);
+    //  get all books for the user
+    // user must be signed in to access books
+    // const token:string | null = req.cookies.access_token;
 
-        return res.status(200).json(data);
-    });
+    // if (!token) return res.status(401).json("Not authenticated!");
+
+    // jwt.verify(token, process.env.JWT_KEY as string, (err: any, userInfo: any) => {
+    //     if (err) return res.status(403).json("Token is not valid!");
+        // [req.params.userId]
+        // const q = req.query.status
+        //     ? "SELECT * FROM books WHERE status=?"
+        //     : "SELECT * FROM books";
+   
+        const q = "SELECT * FROM books WHERE userid = ?"
+        
+        db.query(q, [Number(req.params.userid)], (err, data) => {
+            if (err) return res.status(500).json(err);
+            
+            return res.status(200).json(data);
+        });
+    // });
 };
 
 export const getBook = (req: Request, res: Response) => {
-    const q = "SELECT b.id, `username`, `title`, `author`, `desc`, b.img, u.img AS userImg, `genre`, `status`, `dateread` FROM users u JOIN books p ON u.id = b.userid WHERE b.id = ?";
+    // 🚨 NEED TO CHANGE THIS SO USERID AND ID MATCH AND BOOKID MATCHES AND USER SHOULD BE SIGNED IN
+    const q = "SELECT b.id, `username`, `title`, `author`, `desc`, b.img, u.img AS userImg, `genre`, `status`, `dateread` FROM users u JOIN books b ON u.id = b.userid WHERE b.id = ?";
 
     db.query(q, [req.params.id], (err, data) => {
-        if (err) return res.status(500).json(err);
+        if (err) return res.status(500).json("Book not in database");
 
         return res.status(200).json(data[0]);
     });
@@ -30,10 +43,10 @@ export const addBook = (req: Request, res: Response) => {
 
     if (!token) return res.status(401).json("Not authenticated!");
 
-    jwt.verify(token, "jwtkey", (err:any, userInfo:any) => {
+    jwt.verify(token, process.env.JWT_KEY as string, (err:any, userInfo:any) => {
         if (err) return res.status(403).json("Token is not valid!");
 
-        const q = "INSERT INTO books(`title`, `author`, `desc`, `img`, `genre`, `status`, `dateread`, `userid`) VALUES (?)";
+        const q = "INSERT INTO books(`title`, `author`, `desc`, `img`, `genre`, `status`, `dateread`, `bookid`, `userid`) VALUES (?)";
     
         const values = [
             req.body.title,
@@ -43,6 +56,7 @@ export const addBook = (req: Request, res: Response) => {
             req.body.genre,
             req.body.status,
             req.body.dateread,
+            req.body.bookid,
             userInfo.id
         ];
 
@@ -54,11 +68,13 @@ export const addBook = (req: Request, res: Response) => {
 };
 
 export const deleteBook = (req: Request, res: Response) => {
+    // 🚨 NEED TO CHANGE THIS FUNCTION SO THAT IT RETRIEVES BOOK THAT MATCHES BOOKID AND THAT THE USERID AND ID MATCH
+    // delete book where id from users matches userid from books and bookid matches
     const token = req.cookies.access_token;
 
     if (!token) return res.status(401).json("Not authenticated!");
 
-    jwt.verify(token, "jwtkey", (err: any, userInfo: any) => {
+    jwt.verify(token, process.env.JWT_KEY as string, (err: any, userInfo: any) => {
         if (err) return res.status(403).json("Token is not valid!");
 
         const bookId = req.params.id;
@@ -73,11 +89,12 @@ export const deleteBook = (req: Request, res: Response) => {
 };
 
 export const updateBook = (req: Request, res: Response) => {
+    // 🚨 NEED TO CHANGE THIS FUNCTION SO THAT IT RETRIEVES BOOK THAT MATCHES BOOKID AND THAT THE USERID AND ID MATCH
     const token = req.cookies.access_token;
 
     if (!token) return res.status(401).json("Not authenticated!");
 
-    jwt.verify(token, "jwtkey", (err: any, userInfo: any) => {
+    jwt.verify(token, process.env.JWT_KEY as string, (err: any, userInfo: any) => {
         if (err) return res.status(403).json("Token is not valid!");
 
         const bookId = req.params.id;

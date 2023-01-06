@@ -58,6 +58,7 @@ const UpdateBook: React.FC = () => {
 
     console.log(status); // status of bookshelf (read;currentlyReading;toRead)
 
+    console.log(typeof dateRead)// Date object
     // check if this book (bookId) is in the allUsersBooks 
 
     // if no, add the book to the db
@@ -67,7 +68,7 @@ const UpdateBook: React.FC = () => {
       
   };
   //   🚨   NEED TO RENDER DISPLAY OF BOOK INFO BASED ON IF IT IS GOOGLE BOOKS INFO OR DB INFO & NEED TO CONVERT GOOGLE BOOKS INFO INTO FORMAT FOR DB  
-  
+
   return (
     <>
       <div className="bookContainer">

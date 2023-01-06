@@ -36,16 +36,16 @@ export interface DbBookInfo{
   id: number; 
   title: string;
   subtitle?: string;
-  author?: string;// need to serialize/unserialize string of authors
-  genre?: string;// need to serialize/unserialize string of genres
+  author?: string;// need to toString/Split string of authors
+  genre?: string;// need to toString/Split string of genres
   img?: string;//save smallThumbnail url here
   desc?: string;
   pageCount?: number;
   previewLink?: string;
   language?: string;
-  publishedDate?: Date;
+  publishedDate?: string;
   bookid: string;
   dateRead?: Date;
-  status: string;
+  status: string; // read/toRead/currentlyReading
   userid: number;
 }

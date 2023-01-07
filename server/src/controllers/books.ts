@@ -29,42 +29,52 @@ export const getAllBooks = (req: Request, res: Response) => {
 
 export const getBook = (req: Request, res: Response) => {
     // 🚨 NEED TO CHANGE THIS SO USERID AND ID MATCH AND BOOKID MATCHES AND USER SHOULD BE SIGNED IN
-    const q = "SELECT b.id, `username`, `title`, `author`, `desc`, b.img, u.img AS userImg, `genre`, `status`, `dateread` FROM users u JOIN books b ON u.id = b.userid WHERE b.id = ?";
+    // const q = "SELECT b.id, `username`, `title`, `author`, `desc`, b.img, u.img AS userImg, `genre`, `status`, `dateread` FROM users u JOIN books b ON u.id = b.userid WHERE b.id = ?";
 
-    db.query(q, [req.params.id], (err, data) => {
+    // const q = "SELECT * FROM users u JOIN books b ON u.id = b.userid WHERE b.bookId = ?"
+
+    const q = "SELECT `title`, `subtitle`, `author`, `genre`,  `img`, `desc`,`pageCount`, `previewLink`, `language`, `publishedDate`, `bookid`, `dateread`,`status`, `userid` FROM books WHERE bookId = ?"
+
+    db.query(q, [req.params.bookId], (err, data) => {
         if (err) return res.status(500).json("Book not in database");
 
-        return res.status(200).json(data[0]);
+        return res.status(200).json(data);
     });
 };
 
 export const addBook = (req: Request, res: Response) => {
-    const token = req.cookies.access_token;
+    // 🚨 NEED TO FIX AUTHENTICATION 
+    // const token = req.cookies.access_token;
 
-    if (!token) return res.status(401).json("Not authenticated!");
+    // if (!token) return res.status(401).json("Not authenticated!");
 
-    jwt.verify(token, process.env.JWT_KEY as string, (err:any, userInfo:any) => {
-        if (err) return res.status(403).json("Token is not valid!");
+    // jwt.verify(token, process.env.JWT_KEY as string, (err:any, userInfo:any) => {
+    //     if (err) return res.status(403).json("Token is not valid!");
 
-        const q = "INSERT INTO books(`title`, `author`, `desc`, `img`, `genre`, `status`, `dateread`, `bookid`, `userid`) VALUES (?)";
+        const q = "INSERT INTO books(`title`, `subtitle`, `author`, `genre`,  `img`, `desc`,`pageCount`, `previewLink`, `language`, `publishedDate`, `bookid`, `dateread`,`status`, `userid`) VALUES (?)";
     
         const values = [
             req.body.title,
+            req.body.subtitle,
             req.body.author,
-            req.body.desc,
-            req.body.img,
             req.body.genre,
-            req.body.status,
-            req.body.dateread,
+            req.body.img,
+            req.body.desc,
+            req.body.pageCount,
+            req.body.previewLink,
+            req.body.language,
+            req.body.publishedDate,
             req.body.bookid,
-            userInfo.id
+            req.body.dateread,
+            req.body.status,
+            req.body.userid
         ];
 
         db.query(q, [values], (err, data) => {
             if (err) return res.status(500).json(err);
             return res.json("Book has been added.");
         });
-    });
+    // });
 };
 
 export const deleteBook = (req: Request, res: Response) => {

@@ -33,7 +33,7 @@ export interface BookInfo{
 }
 
 export interface DbBookInfo{
-  id: number; 
+  id?: number; 
   title: string;
   subtitle?: string;
   author?: string;// need to toString/Split string of authors
@@ -46,6 +46,6 @@ export interface DbBookInfo{
   publishedDate?: string;
   bookid: string;
   dateRead?: Date;
-  status: string; // read/toRead/currentlyReading
+  status?: string; // read/toRead/currentlyReading
   userid: number;
 }

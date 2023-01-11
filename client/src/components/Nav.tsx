@@ -14,8 +14,9 @@ const Nav: React.FC = () => {
   const { currentUser, logout } = userContext;
 
   const handleLogout = () => {
-    // logs out user(clears cookie) and navigates back to home page
+    // logs out user(clears cookie), search info (local storage) and navigates back to home page
     logout();
+    localStorage.clear();
     navigate("/");
   };
 

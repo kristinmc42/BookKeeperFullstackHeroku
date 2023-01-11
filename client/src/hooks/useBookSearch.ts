@@ -5,23 +5,14 @@ import axios from 'axios';
 // types
 import { BookInfo } from '../types';
 
-export default function useBook(bookId:string | undefined, api:string): UseQueryResult<any, unknown> {
+// hook uses React query to retrieve book info from Google Books API by a specific bookId
+
+export default function useBookSearch(bookId:string | undefined): UseQueryResult<any, unknown> {
   const queryClient = useQueryClient();
-
-  let url: string;
-  let queryKey: string;
-
-  if (api === "googleBooks") {
-    url = `https://www.googleapis.com/books/v1/volumes/${bookId}`;
-    queryKey = "googleBooks";
-  } else if (api = "api") {
-    url = `http://localhost:5000/api/books/${bookId}`;
-    queryKey = "api";
-  }
 
   const getBookById =  async () => {
       return  axios
-        .get(url)
+        .get(`https://www.googleapis.com/books/v1/volumes/${bookId}`)
         .then((res) => {
           console.log(res.data)
           return res.data
@@ -35,7 +26,7 @@ export default function useBook(bookId:string | undefined, api:string): UseQuery
     {
       enabled: !!bookId,
       initialData: () => {
-        const bookCache = queryClient.getQueryData(queryKey) as BookInfo[] | undefined;
+        const bookCache = queryClient.getQueryData("googleBooks") as BookInfo[] | undefined;
         
         if (bookCache) {
           const book = bookCache.find((book: BookInfo) => book.id === bookId)

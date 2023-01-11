@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { DisplayGoogleBook } from "../components/DisplayBook";
 
 // hooks
-import useBook from "../hooks/useBook"
+import useBook from "../hooks/useBookSearch"
 
 // types
 type BookParams = {

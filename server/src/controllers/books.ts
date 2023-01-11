@@ -28,14 +28,18 @@ export const getAllBooks = (req: Request, res: Response) => {
 };
 
 export const getBook = (req: Request, res: Response) => {
-    // 🚨 NEED TO CHANGE THIS SO USERID AND ID MATCH AND BOOKID MATCHES AND USER SHOULD BE SIGNED IN
+  
     // const q = "SELECT b.id, `username`, `title`, `author`, `desc`, b.img, u.img AS userImg, `genre`, `status`, `dateread` FROM users u JOIN books b ON u.id = b.userid WHERE b.id = ?";
 
     // const q = "SELECT * FROM users u JOIN books b ON u.id = b.userid WHERE b.bookId = ?"
 
-    const q = "SELECT `title`, `subtitle`, `author`, `genre`,  `img`, `desc`,`pageCount`, `previewLink`, `language`, `publishedDate`, `bookid`, `dateread`,`status`, `userid` FROM books WHERE bookId = ?"
+    // const q = "SELECT `title`, `subtitle`, `author`, `genre`,  `img`, `desc`,`pageCount`, `previewLink`, `language`, `publishedDate`, `bookid`, `dateread`,`status`, `userid` FROM books WHERE bookId = ? AND userid = ?"
 
-    db.query(q, [req.params.bookId], (err, data) => {
+    const bookId = req.params.bookid;
+    const userId = Number(req.params.userid);
+    const q = "SELECT `title`, `subtitle`, `author`, `genre`,  `img`, `desc`,`pageCount`, `previewLink`, `language`, `publishedDate`, `bookid`, `dateread`,`status`, `userid` FROM books WHERE bookId = ? AND userid = ?"
+
+    db.query(q, [bookId, userId], (err, data) => {
         if (err) return res.status(500).json("Book not in database");
 
         return res.status(200).json(data);
@@ -80,50 +84,47 @@ export const addBook = (req: Request, res: Response) => {
 export const deleteBook = (req: Request, res: Response) => {
     // 🚨 NEED TO CHANGE THIS FUNCTION SO THAT IT RETRIEVES BOOK THAT MATCHES BOOKID AND THAT THE USERID AND ID MATCH
     // delete book where id from users matches userid from books and bookid matches
-    const token = req.cookies.access_token;
+    // const token = req.cookies.access_token;
 
-    if (!token) return res.status(401).json("Not authenticated!");
+    // if (!token) return res.status(401).json("Not authenticated!");
 
-    jwt.verify(token, process.env.JWT_KEY as string, (err: any, userInfo: any) => {
-        if (err) return res.status(403).json("Token is not valid!");
+    // jwt.verify(token, process.env.JWT_KEY as string, (err: any, userInfo: any) => {
+    //     if (err) return res.status(403).json("Token is not valid!");
 
-        const bookId = req.params.id;
-        const q = "DELETE FROM books WHERE `id` = ? AND `userid` = ?";
+        const bookId = req.params.bookid;
+    const userId = Number(req.params.userid);
+        const q = "DELETE FROM books WHERE `bookid` = ? AND `userid` = ?";
 
-        db.query(q, [bookId, userInfo.id], (err: any, data: any) => {
+        db.query(q, [bookId, userId], (err: any, data: any) => {
             if (err) return res.status(403).json("You can only delete one of your books.");
 
             return res.json("The book has been deleted!");
         });
-    });
+    // });
 };
 
 export const updateBook = (req: Request, res: Response) => {
-    // 🚨 NEED TO CHANGE THIS FUNCTION SO THAT IT RETRIEVES BOOK THAT MATCHES BOOKID AND THAT THE USERID AND ID MATCH
-    const token = req.cookies.access_token;
+    // 🚨 FIX AUTHENTICATION
+    // const token = req.cookies.access_token;
 
-    if (!token) return res.status(401).json("Not authenticated!");
+    // if (!token) return res.status(401).json("Not authenticated!");
 
-    jwt.verify(token, process.env.JWT_KEY as string, (err: any, userInfo: any) => {
-        if (err) return res.status(403).json("Token is not valid!");
+    // jwt.verify(token, process.env.JWT_KEY as string, (err: any, userInfo: any) => {
+    //     if (err) return res.status(403).json("Token is not valid!");
 
-        const bookId = req.params.id;
-        const q = "UPDATE books SET `title`=?, `author`=?, `desc`=?, `img`=?, `genre`=?, `status`=?, `dateread`=?, WHERE `id`=? AND `userid`=?";
+    const bookId = req.params.bookid;
+    const userId = Number(req.params.userid);
+        const q = "UPDATE books SET `status`=?, `dateread`=? WHERE `bookid`=? AND `userid`=?";
 
         const values = [
-            req.body.title,
-            req.body.author,
-            req.body.desc,
-            req.body.img,
-            req.body.genre,
             req.body.status,
             req.body.dateread,
         ];
 
-        db.query(q, [...values,bookId, userInfo.id], (err: any, data: any) => {
+        db.query(q, [...values, bookId, userId], (err: any, data: any) => {
             if (err) return res.status(500).json(err);
 
             return res.json("The book has been updated!");
         });
-    })
+    // })
 }

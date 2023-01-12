@@ -6,15 +6,13 @@ import { format } from "date-fns";
 // style sheet for react-day-picker imported in App.tsx
 
 // components
-import { DisplayDbBook, DisplayGoogleBook } from "../components/DisplayBook";
+import { DisplayDbBook } from "../components/DisplayBook";
 
 //hooks
 import useUserId from "../hooks/useUserId";
-import useBook from "../hooks/useBookSearch";
 
 // types
-import { BookInfo, DbBookInfo } from "../types";
-import useConvertBookInfo from "../hooks/useConvertBookInfo";
+import { DbBookInfo } from "../types";
 import axios from "axios";
 import { useMutation } from "react-query";
 import useBookInDb from "../hooks/useBookInDb";
@@ -32,7 +30,7 @@ const UpdateBook: React.FC = () => {
   const bookId: string = bookInfo.id;
   const selectedStatus = state.selectedStatus; // bookshelf status to change to
 
-  const [convertedBook, setConvertedBook] = useState<DbBookInfo | undefined>();
+  // const [convertedBook, setConvertedBook] = useState<DbBookInfo | undefined>();
 
   // const [updatedBook, setUpdatedBook] = useState<DbBookInfo | undefined>();
 

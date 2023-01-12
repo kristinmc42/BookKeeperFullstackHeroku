@@ -8,10 +8,12 @@ import {
 import { QueryClientProvider, QueryClient } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 
+// styles
+import "react-day-picker/dist/style.css"; 
+
 
 //pages
 import Books from "./pages/Books";
-import AddBook from "./pages/AddBook";
 import UpdateBook from "./pages/UpdateBook";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -24,6 +26,7 @@ import RootLayout from "./layouts/RootLayout";
 
 // styles
 import "./App.css";
+import AddBook from "./pages/AddBook";
 
 const queryClient: QueryClient = new QueryClient({
   defaultOptions: {
@@ -42,7 +45,7 @@ const router = createBrowserRouter(
         <Route path="search" element={<SearchBooks />} />
         <Route path="search/:bookId" element={<SingleSearchBook />} />
         <Route path="add" element={<AddBook />} />
-        <Route path="update/:id" element={<UpdateBook />} />
+        <Route path="update" element={<UpdateBook />} />
       </Route>
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />

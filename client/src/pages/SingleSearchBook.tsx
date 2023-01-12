@@ -1,52 +1,26 @@
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useQuery, useQueryClient } from "react-query";
-import axios from 'axios';
 
 // components
-import DisplayBook from "../components/DisplayBook";
+import { DisplayGoogleBook } from "../components/DisplayBook";
+
+// hooks
+import useBookSearch from '../hooks/useBookSearch';
 
 // types
-import { BookInfo } from '../types';
 type BookParams = {
   bookId: string
 }
+
+// Displays more information on the book from Google books API that was selected by the user
+// gets current info on book with useQuery through the custim useBook hook
+// if user clicks button to add to their bookshelf, they are navigated to the update page and the book info is passed in state
 const SingleSearchBook: React.FC = () => {
   const navigate = useNavigate();
   const { bookId } = useParams<BookParams>();
   
-  const queryClient = useQueryClient();
-
-  const getBookById =  async (id: string | undefined) => {
-    return  axios
-      .get(
-        `https://www.googleapis.com/books/v1/volumes/${id}`
-      )
-      .then((res) => {
-        console.log(res.data)
-        return res.data
-      });
-  };
-
-      
-  const { data, error, isError, isLoading, isFetching } = useQuery(
-    ["book", bookId],
-    () => getBookById(bookId),
-    {
-      enabled: !!bookId,
-      initialData: () => {
-        const bookCache = queryClient.getQueryData("googleBooks") as BookInfo[] | undefined;
-        
-        if (bookCache) {
-          const book = bookCache.find((book: BookInfo) => book.id === bookId)
-
-          if (book) {
-            return { data: book }
-          } else { return undefined }
-        }
-      }
-    }
-  );
+  // use custom hook to retrieve book info from Google books API
+  const { data, error, isError, isLoading, isFetching } = useBookSearch(bookId);
 
   if (isLoading || isFetching) {
     return <h2>Loading...</h2>
@@ -59,13 +33,12 @@ const SingleSearchBook: React.FC = () => {
   }
 
   data && console.log(data)
-  // data.id; data.volumeInfo.title; data.volumeInfo.subtitle; data.volumeInfo.authors; data.volumeInfo.categories; data.volumeInfo.imageLinks.smallThumbnail; data.volumeInfo.description; data.volumeInfo.pageCount; data.volumeInfo.previewLink;data.volumeInfo.language;data.volumeInfo.publishedDate;
-
 
   return (
       <div className='pageContainer'>
-      <button type="button" onClick={() => navigate(-1)}>Back</button>
-      <DisplayBook item={data} format={"full"} />
+      <button className="back" type="button" onClick={() => navigate(-1)}>Back</button>
+      <DisplayGoogleBook item={data} format={"full"} />
+      <button type="button" onClick={() => navigate("/add", {state: { bookInfo: data }})}>Add to my books</button>
     </div>
   )
 }

@@ -20,13 +20,14 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import SearchBooks from "./pages/SearchBooks";
 import SingleSearchBook from "./pages/SingleSearchBook";
+import SingleDbBook from "./pages/SingleDbBook";
+import AddBook from "./pages/AddBook";
 
 //layouts
 import RootLayout from "./layouts/RootLayout";
 
 // styles
 import "./App.css";
-import AddBook from "./pages/AddBook";
 
 const queryClient: QueryClient = new QueryClient({
   defaultOptions: {
@@ -42,6 +43,7 @@ const router = createBrowserRouter(
       <Route path="/" element={<RootLayout />}>
         <Route index element={<Home />} />
         <Route path="books" element={<Books />} />
+        <Route path="books/:bookId" element={<SingleDbBook />} />
         <Route path="search" element={<SearchBooks />} />
         <Route path="search/:bookId" element={<SingleSearchBook />} />
         <Route path="add" element={<AddBook />} />

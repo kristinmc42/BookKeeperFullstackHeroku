@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 //components
 import { DisplayDbBook } from "../components/DisplayBook";
@@ -13,6 +14,7 @@ import { DbBookInfo } from "../types";
 // gets all users book from db and displays them
 // user can filter books displayed by bookshelf(status)
 const Books: React.FC = () => {
+
   // get userid of current user
   const { data: user } = useUserId();
   const userId: number = user?.id;
@@ -91,7 +93,9 @@ const Books: React.FC = () => {
                   {allBooks.data.map((book: DbBookInfo, index: number) => {
                     return (
                       <li key={`${book.bookid}${index}`}>
-                        <DisplayDbBook item={book} format={"short"} />
+                        <Link to={`${book.bookid}`} state={{ book: book }}>
+                          <DisplayDbBook item={book} format={"short"} />
+                        </Link>
                       </li>
                     );
                   })}
@@ -102,7 +106,9 @@ const Books: React.FC = () => {
                     if (book.status === "read") {
                       return (
                         <li key={`${book.bookid}${index}`}>
-                          <DisplayDbBook item={book} format={"short"} />
+                          <Link to={`${book.bookid}`} state={{ book: book }}>
+                            <DisplayDbBook item={book} format={"short"} />
+                          </Link>
                         </li>
                       );
                     } else {
@@ -116,7 +122,9 @@ const Books: React.FC = () => {
                     if (book.status === "currentlyReading") {
                       return (
                         <li key={`${book.bookid}${index}`}>
-                          <DisplayDbBook item={book} format={"short"} />
+                          <Link to={`${book.bookid}`} state={{ book: book }}>
+                            <DisplayDbBook item={book} format={"short"} />
+                          </Link>
                         </li>
                       );
                     } else {
@@ -130,7 +138,9 @@ const Books: React.FC = () => {
                     if (book.status === "toRead") {
                       return (
                         <li key={`${book.bookid}${index}`}>
-                          <DisplayDbBook item={book} format={"short"} />
+                          <Link to={`${book.bookid}`} state={{ book: book }}>
+                            <DisplayDbBook item={book} format={"short"} />
+                          </Link>
                         </li>
                       );
                     } else {

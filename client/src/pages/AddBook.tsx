@@ -109,7 +109,7 @@ const AddBook: React.FC = () => {
     const bookToAdd = convertedBook;
     if (bookToAdd) {
       bookToAdd.status = bookshelf;
-      bookToAdd.dateRead = dateRead;
+      bookToAdd.dateRead = dateRead; // 🚨 DATE IS NOT BEING STORED PROPERLY IN DB
       bookToAdd.userid = userId;
     }
 
@@ -121,12 +121,6 @@ const AddBook: React.FC = () => {
     setConvertedBook(undefined);
   };
 
-  // if (mutation.isSuccess) {
-  //   setTimeout(() => {
-  //     navigate("/books")
-
-  //   },10000)
-  // }
 
   return (
     <>

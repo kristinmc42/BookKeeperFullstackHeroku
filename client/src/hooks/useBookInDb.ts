@@ -18,7 +18,7 @@ export default function useBookInDb(
       });
   };
 
-  return useQuery(["books", userId], getBookByUserId, {
+  return useQuery(["book", userId], getBookByUserId, {
     enabled: !!userId,
   });
 }

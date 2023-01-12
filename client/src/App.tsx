@@ -26,6 +26,7 @@ import RootLayout from "./layouts/RootLayout";
 
 // styles
 import "./App.css";
+import AddBook from "./pages/AddBook";
 
 const queryClient: QueryClient = new QueryClient({
   defaultOptions: {
@@ -43,6 +44,7 @@ const router = createBrowserRouter(
         <Route path="books" element={<Books />} />
         <Route path="search" element={<SearchBooks />} />
         <Route path="search/:bookId" element={<SingleSearchBook />} />
+        <Route path="add" element={<AddBook />} />
         <Route path="update" element={<UpdateBook />} />
       </Route>
       <Route path="/login" element={<Login />} />

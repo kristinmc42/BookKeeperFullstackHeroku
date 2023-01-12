@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { DisplayGoogleBook } from "../components/DisplayBook";
 
 // hooks
-import useBook from "../hooks/useBookSearch"
+import useBookSearch from '../hooks/useBookSearch';
 
 // types
 type BookParams = {
@@ -20,7 +20,7 @@ const SingleSearchBook: React.FC = () => {
   const { bookId } = useParams<BookParams>();
   
   // use custom hook to retrieve book info from Google books API
-  const { data, error, isError, isLoading, isFetching } = useBook(bookId, "googleBooks");
+  const { data, error, isError, isLoading, isFetching } = useBookSearch(bookId);
 
   if (isLoading || isFetching) {
     return <h2>Loading...</h2>
@@ -38,7 +38,7 @@ const SingleSearchBook: React.FC = () => {
       <div className='pageContainer'>
       <button className="back" type="button" onClick={() => navigate(-1)}>Back</button>
       <DisplayGoogleBook item={data} format={"full"} />
-      <button type="button" onClick={() => navigate("/update", {state: { bookInfo: data, source:"googleBooks"}})}>Add to my books</button>
+      <button type="button" onClick={() => navigate("/add", {state: { bookInfo: data }})}>Add to my books</button>
     </div>
   )
 }

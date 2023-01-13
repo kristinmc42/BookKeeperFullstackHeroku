@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { DayPicker } from "react-day-picker";
 import { format } from "date-fns";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useMutation } from "react-query";
 
 // style sheet for react-day-picker imported in App.tsx
@@ -163,7 +163,9 @@ const AddBook: React.FC = () => {
                 </label>
               </fieldset>
 
-              <button disabled={!bookshelf}>Add Book </button>
+              {mutation.isError ? null : (
+                <button disabled={!bookshelf}>Add Book </button>
+              )}
             </form>
           )}
         </>
@@ -180,7 +182,15 @@ const AddBook: React.FC = () => {
         <span className="message">"Adding book to bookshelf..."</span>
       ) : (
         <>
-          {mutation.isError ? (
+          {mutation.isError &&
+          (mutation.error as AxiosError).response?.status === 500 ? (
+            <span className="message">
+              Please login to add the book to your bookshelf.
+            </span>
+          ) : null}
+
+          {mutation.isError &&
+          (mutation.error as AxiosError).response?.status !== 500 ? (
             <span className="message">
               An error occurred: {(mutation.error as Error).message}
             </span>

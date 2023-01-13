@@ -10,6 +10,10 @@ import { useMutation } from "react-query";
 // components
 import { DisplayGoogleBook } from "../components/DisplayBook";
 
+//functions
+import { convertBookToDbFormat } from "../functions/convertBookToDbFormat";
+import { convertDateToString } from "../functions/convertDateToString";
+
 //hooks
 import useUserId from "../hooks/useUserId";
 import useBookInDb from "../hooks/useBookInDb";
@@ -23,7 +27,7 @@ const AddBook: React.FC = () => {
 
   // get book info from location and save bookId string in variables
   const { state } = useLocation();
-  const bookInfo = state.bookInfo; // bookInfo Object
+  const bookInfo: BookInfo = state.bookInfo; // bookInfo Object
   const bookId: string = bookInfo.id;
 
   // get userid of current user
@@ -31,65 +35,28 @@ const AddBook: React.FC = () => {
   const userId: number = user?.id;
 
   //  check if book is in db
-  const bookData = useBookInDb(bookId, userId);
+  const bookData = useBookInDb(bookId, userId, undefined);
 
   // for the bookshelf category selected by the user
   const [bookshelf, setBookshelf] = useState<string | undefined>();
 
   // for the day selected by user in DayPicker
-  const [dateRead, setDateRead] = useState<Date>();
+  const [dateRead, setDateRead] = useState<Date | undefined>();
 
-  // function to convert GoogleBook info to DB format
-  const convertBookToDbFormat = (
-    bookInfo: BookInfo,
-    dateRead: Date | undefined,
-    bookshelf: string | undefined,
-    userId: number
-  ) => {
-    const bookToStore: DbBookInfo = {
-      title: bookInfo.volumeInfo.title,
-      subtitle: bookInfo.volumeInfo.subtitle
-        ? bookInfo.volumeInfo.subtitle
-        : undefined,
-      author: bookInfo.volumeInfo.authors
-        ? bookInfo.volumeInfo.authors.join(",")
-        : undefined,
-      genre: bookInfo.volumeInfo.categories
-        ? bookInfo.volumeInfo.categories.join(",")
-        : undefined,
-      img: bookInfo.volumeInfo.imageLinks?.smallThumbnail
-        ? bookInfo.volumeInfo.imageLinks.smallThumbnail
-        : undefined,
-      desc: bookInfo.volumeInfo.description
-        ? bookInfo.volumeInfo.description
-        : undefined,
-      pageCount: bookInfo.volumeInfo.pageCount
-        ? bookInfo.volumeInfo.pageCount
-        : undefined,
-      previewLink: bookInfo.volumeInfo.previewLink
-        ? bookInfo.volumeInfo.previewLink
-        : undefined,
-      language: bookInfo.volumeInfo.language
-        ? bookInfo.volumeInfo.language
-        : undefined,
-      publishedDate: bookInfo.volumeInfo.publishedDate
-        ? bookInfo.volumeInfo.publishedDate
-        : undefined,
-      bookid: bookInfo.id,
-      dateRead: dateRead ? dateRead : undefined,
-      status: bookshelf ? bookshelf : undefined, // read/toRead/currentlyReading
-      userid: userId,
-    };
+  // date as a string
+  let dateReadString: string | undefined;
 
-    return bookToStore;
-  };
-
-  const [convertedBook, setConvertedBook] = useState<DbBookInfo | undefined>(
-    convertBookToDbFormat(bookInfo, dateRead, bookshelf, userId)
+  // convert bookInfo from book passed to DB format
+  const convertedBook: DbBookInfo | undefined = convertBookToDbFormat(
+    bookInfo,
+    bookshelf,
+    dateReadString,
+    userId
   );
 
   // to ADD the book to the db
   const addBook = (book: DbBookInfo | undefined) => {
+    console.log(book);
     return axios.post(`http://localhost:5000/api/books/`, book);
   };
   const mutation = useMutation(addBook);
@@ -108,25 +75,18 @@ const AddBook: React.FC = () => {
 
     const bookToAdd = convertedBook;
     if (bookToAdd) {
-      bookToAdd.status = bookshelf;
-      bookToAdd.dateRead = dateRead;
       bookToAdd.userid = userId;
+      bookToAdd.status = bookshelf;
+      if (dateRead) {
+        dateReadString = convertDateToString(dateRead);
+        bookToAdd.dateRead = dateReadString;
+      }
     }
 
     console.log(bookToAdd);
     // add book to db
     mutation.mutate(bookToAdd);
-
-    // clean up state
-    setConvertedBook(undefined);
   };
-
-  // if (mutation.isSuccess) {
-  //   setTimeout(() => {
-  //     navigate("/books")
-
-  //   },10000)
-  // }
 
   return (
     <>
@@ -135,7 +95,6 @@ const AddBook: React.FC = () => {
           className="back"
           type="button"
           onClick={() => {
-            setConvertedBook(undefined);
             navigate(-1);
           }}
         >
@@ -226,13 +185,6 @@ const AddBook: React.FC = () => {
               An error occurred: {(mutation.error as Error).message}
             </span>
           ) : null}
-
-          {/* {mutation.isSuccess ? (
-              <>
-                <span className="message">Book added!</span>
-               
-              </>
-          ) : null} */}
         </>
       )}
     </>

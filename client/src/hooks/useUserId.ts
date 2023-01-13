@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useContext, useState } from "react";
+import { useContext } from "react";
 import { useQuery } from "react-query";
 import { AuthContext } from "../context/AuthContext";
 import { ContextState } from "../types";

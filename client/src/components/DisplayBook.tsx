@@ -36,8 +36,8 @@ export const DisplayDbBook: ({ item, format }: { item: DbBookInfo; format: strin
         {genres
           ? genres.map((genre: string, index:number) => (
               <h4 key={index+item.id!}>
-                <span>Genre: </span>
-                {genre}
+                {index === 0 ?<span>Genre: </span> : <span>/ </span>}
+                  {genre}
               </h4>
             ))
           : null}

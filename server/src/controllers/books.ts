@@ -37,7 +37,7 @@ export const getBook = (req: Request, res: Response) => {
 
     const bookId = req.params.bookid;
     const userId = Number(req.params.userid);
-    const q = "SELECT `title`, `subtitle`, `author`, `genre`,  `img`, `desc`,`pageCount`, `previewLink`, `language`, `publishedDate`, `bookid`, `dateRead`,`status`, `userid` FROM books WHERE bookId = ? AND userid = ?"
+    const q = "SELECT `title`, `subtitle`, `author`, `genre`,  `img`, `desc`,`pageCount`, `previewLink`, `language`, `publishedDate`, `bookid`, `dateRead`,`status`, `userid` FROM books WHERE bookid = ? AND userid = ?"
 
     db.query(q, [bookId, userId], (err, data) => {
         if (err) return res.status(500).json("Book not in database");

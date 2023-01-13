@@ -35,7 +35,7 @@ const AddBook: React.FC = () => {
   const userId: number = user?.id;
 
   //  check if book is in db
-  const bookData = useBookInDb(bookId, userId);
+  const bookData = useBookInDb(bookId, userId, undefined);
 
   // for the bookshelf category selected by the user
   const [bookshelf, setBookshelf] = useState<string | undefined>();

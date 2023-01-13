@@ -14,7 +14,6 @@ import { DbBookInfo } from "../types";
 // gets all users book from db and displays them
 // user can filter books displayed by bookshelf(status)
 const Books: React.FC = () => {
-
   // get userid of current user
   const { data: user } = useUserId();
   const userId: number = user?.id;

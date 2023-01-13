@@ -1,25 +1,31 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+
+//components
+import BackButton from "../components/BackButton";
 import { DisplayDbBook } from "../components/DisplayBook";
+
+//types
+import { DbBookInfo } from "../types";
 
 export default function SingleDbBook() {
   const navigate = useNavigate();
 
   const { state } = useLocation();
-  const bookInfo = state.book; // bookInfo
+  const bookInfo: DbBookInfo = state.book;
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     // when user selects a different option, launch UpdateBook component, passing target option and item in state
     navigate("/update", {
       state: {
         bookInfo: bookInfo,
-        source: "db",
         selectedStatus: (e.target as HTMLSelectElement).value,
       },
     });
   };
   return (
-    <>
+    <div className="pageContainer">
+      <BackButton />
       <DisplayDbBook item={bookInfo} format={"full"} />
       <div className="selectContainer">
         <label htmlFor="bookshelfSelect"></label>
@@ -35,6 +41,6 @@ export default function SingleDbBook() {
         </select>
         {bookInfo.dateRead ? <h4>Date read: {bookInfo.dateRead}</h4> : null}
       </div>
-    </>
+    </div>
   );
 }

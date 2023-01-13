@@ -45,7 +45,7 @@ export interface DbBookInfo{
   language?: string;
   publishedDate?: string;
   bookid: string;
-  dateRead?: Date;
+  dateRead?: string;
   status?: string; // read/toRead/currentlyReading
   userid: number;
 }

@@ -1,4 +1,3 @@
-// import React from "react";
 import { useQuery, UseQueryResult } from "react-query";
 import axios from "axios";
 
@@ -7,9 +6,8 @@ import axios from "axios";
 
 export default function useBookInDb(
   bookId: string | undefined,
-  userId: number | undefined,
+  userId: number | undefined
 ): UseQueryResult<any, unknown> {
-
   const getBookByUserId = async () => {
     return axios
       .get(`http://localhost:5000/api/books/${bookId}/users/${userId}`)

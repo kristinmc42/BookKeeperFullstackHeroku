@@ -8,7 +8,6 @@ export default function SingleDbBook() {
   const { state } = useLocation();
   const bookInfo = state.book; // bookInfo
 
-
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     // when user selects a different option, launch UpdateBook component, passing target option and item in state
     navigate("/update", {
@@ -34,9 +33,7 @@ export default function SingleDbBook() {
           <option value="toRead">Want to Read</option>
           <option value="currentlyReading">Currently Reading</option>
         </select>
-        {bookInfo.dateRead ? (
-          <h3>Date read: {bookInfo.dateRead?.toLocaleDateString("en-US")}</h3>
-        ) : null}
+        {bookInfo.dateRead ? <h4>Date read: {bookInfo.dateRead}</h4> : null}
       </div>
     </>
   );

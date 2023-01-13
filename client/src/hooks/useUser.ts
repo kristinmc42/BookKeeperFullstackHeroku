@@ -1,19 +1,14 @@
-import React, { useContext } from 'react';
+import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
-
 
 // types
 import { ContextState } from "../types";
 
 export default function useUser(): ContextState | null {
-    // get username and logout function from AuthContext
-    const userContext: ContextState | null = useContext(AuthContext);
+  // get username and logout function from AuthContext
+  const userContext: ContextState | null = useContext(AuthContext);
 
-    if (!userContext) return null;
+  if (!userContext) return null;
 
-    return userContext;
-
-    // const { currentUser, logout } = userContext;
-
-    // return { currentUser, logout };
+  return userContext;
 }

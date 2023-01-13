@@ -37,7 +37,7 @@ export const getBook = (req: Request, res: Response) => {
 
     const bookId = req.params.bookid;
     const userId = Number(req.params.userid);
-    const q = "SELECT `title`, `subtitle`, `author`, `genre`,  `img`, `desc`,`pageCount`, `previewLink`, `language`, `publishedDate`, `bookid`, `dateread`,`status`, `userid` FROM books WHERE bookId = ? AND userid = ?"
+    const q = "SELECT `title`, `subtitle`, `author`, `genre`,  `img`, `desc`,`pageCount`, `previewLink`, `language`, `publishedDate`, `bookid`, `dateRead`,`status`, `userid` FROM books WHERE bookId = ? AND userid = ?"
 
     db.query(q, [bookId, userId], (err, data) => {
         if (err) return res.status(500).json("Book not in database");
@@ -55,7 +55,7 @@ export const addBook = (req: Request, res: Response) => {
     // jwt.verify(token, process.env.JWT_KEY as string, (err:any, userInfo:any) => {
     //     if (err) return res.status(403).json("Token is not valid!");
 
-        const q = "INSERT INTO books(`title`, `subtitle`, `author`, `genre`,  `img`, `desc`,`pageCount`, `previewLink`, `language`, `publishedDate`, `bookid`, `dateread`,`status`, `userid`) VALUES (?)";
+        const q = "INSERT INTO books(`title`, `subtitle`, `author`, `genre`,  `img`, `desc`,`pageCount`, `previewLink`, `language`, `publishedDate`, `bookid`, `dateRead`,`status`, `userid`) VALUES (?)";
     
         const values = [
             req.body.title,
@@ -69,7 +69,7 @@ export const addBook = (req: Request, res: Response) => {
             req.body.language,
             req.body.publishedDate,
             req.body.bookid,
-            req.body.dateread,
+            req.body.dateRead,
             req.body.status,
             req.body.userid
         ];
@@ -114,11 +114,11 @@ export const updateBook = (req: Request, res: Response) => {
 
     const bookId = req.params.bookid;
     const userId = Number(req.params.userid);
-        const q = "UPDATE books SET `status`=?, `dateread`=? WHERE `bookid`=? AND `userid`=?";
+        const q = "UPDATE books SET `status`=?, `dateRead`=? WHERE `bookid`=? AND `userid`=?";
 
         const values = [
             req.body.status,
-            req.body.dateread,
+            req.body.dateRead,
         ];
 
         db.query(q, [...values, bookId, userId], (err: any, data: any) => {

@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 // components
 import { DisplayGoogleBook } from "../components/DisplayBook";
+import BackButton from '../components/BackButton';
 
 // hooks
 import useBookSearch from '../hooks/useBookSearch';
@@ -36,7 +37,7 @@ const SingleSearchBook: React.FC = () => {
 
   return (
       <div className='pageContainer'>
-      <button className="back" type="button" onClick={() => navigate(-1)}>Back</button>
+      <BackButton />
       <DisplayGoogleBook item={data} format={"full"} />
       <button type="button" onClick={() => navigate("/add", {state: { bookInfo: data }})}>Add to my books</button>
     </div>

@@ -1,4 +1,6 @@
-import React from "react";
+import axios from "axios";
+import React, { useState } from "react";
+import { useMutation } from "react-query";
 import { useNavigate, useLocation } from "react-router-dom";
 
 //components
@@ -11,11 +13,35 @@ import { DbBookInfo } from "../types";
 export default function SingleDbBook() {
   const navigate = useNavigate();
 
+  // get bookInfo passed in state
   const { state } = useLocation();
   const bookInfo: DbBookInfo = state.book;
 
+  // get bookId and userId from bookInfo
+  const bookId: string = bookInfo.bookid;
+  const userId: number = bookInfo.userid;
+
+  // for when user clicks on Delete button
+  const [confirmDelete, setConfirmDelete] = useState<boolean>(false);
+
+  // handles the mutation to delete the book from the db
+  const deleteBook = (bookId: string, userId: number) => {
+    return axios.delete(
+      `http://localhost:5000/api/books/${bookId}/users/${userId}`
+    );
+  };
+
+  const mutation = useMutation({
+    mutationFn: ({ bookId, userId }: { bookId: string; userId: number }) =>
+      deleteBook(bookId, userId),
+  });
+
+  const handleDelete = () => {
+    mutation.mutate({ bookId, userId });
+  };
+
+  // when user selects a different option, launch UpdateBook component, passing target option and item in state
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    // when user selects a different option, launch UpdateBook component, passing target option and item in state
     navigate("/update", {
       state: {
         bookInfo: bookInfo,
@@ -23,24 +49,54 @@ export default function SingleDbBook() {
       },
     });
   };
+
   return (
     <div className="pageContainer">
-      <BackButton />
-      <DisplayDbBook item={bookInfo} format={"full"} />
-      <div className="selectContainer">
-        <label htmlFor="bookshelfSelect"></label>
-        <select
-          name="bookshelfSelect"
-          id="bookshelfSelect"
-          onChange={handleChange}
-          value={bookInfo.status}
-        >
-          <option value="read">Read</option>
-          <option value="toRead">Want to Read</option>
-          <option value="currentlyReading">Currently Reading</option>
-        </select>
-        {bookInfo.dateRead ? <h4>Date read: {bookInfo.dateRead}</h4> : null}
-      </div>
+      {mutation.isSuccess ? (
+        <h2>Your book has been deleted</h2>
+      ) : (
+        <>
+          <BackButton />
+          <DisplayDbBook item={bookInfo} format={"full"} />
+          <div className="selectContainer">
+            <label htmlFor="bookshelfSelect"></label>
+            <select
+              name="bookshelfSelect"
+              id="bookshelfSelect"
+              onChange={handleChange}
+              value={bookInfo.status}
+            >
+              <option value="read">Read</option>
+              <option value="toRead">Want to Read</option>
+              <option value="currentlyReading">Currently Reading</option>
+            </select>
+            {bookInfo.dateRead ? <h4>Date read: {bookInfo.dateRead}</h4> : null}
+            <button onClick={() => setConfirmDelete(true)}>Delete Book</button>
+
+            {mutation.isLoading ? (
+              "Deleting book from bookshelf..."
+            ) : (
+              <>
+                {mutation.isError ? (
+                  <div>
+                    An error occurred: {(mutation.error as Error).message}
+                  </div>
+                ) : null}
+              </>
+            )}
+            {confirmDelete ? (
+              <div className="deleteModal">
+                <h2>
+                  Are you sure you want to permanently delete this book from
+                  your bookshelf?
+                </h2>
+                <button onClick={() => setConfirmDelete(false)}>Cancel</button>
+                <button onClick={handleDelete}>Delete Book</button>
+              </div>
+            ) : null}
+          </div>
+        </>
+      )}
     </div>
   );
 }

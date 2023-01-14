@@ -39,7 +39,12 @@ const Books: React.FC = () => {
   };
 
   return (
-    <>
+    <div className="pageContainer">
+      {userId ? null : (
+        <>
+          <h2>Login to see your bookshelves</h2>
+        </>
+      )}
       {allBooks && allBooks.data ? (
         <>
           <fieldset>
@@ -152,7 +157,7 @@ const Books: React.FC = () => {
           </ul>
         </>
       ) : null}
-    </>
+    </div>
   );
 };
 

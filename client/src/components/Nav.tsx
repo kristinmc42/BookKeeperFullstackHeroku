@@ -1,16 +1,44 @@
 import React, { useContext } from "react";
-import { Link, NavigateFunction, useNavigate } from "react-router-dom";
+import { NavLink, NavigateFunction, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import styled from "styled-components";
 
 //interfaces
 import { ContextState } from "../types";
+
+// styled components
+const StyledNav = styled.nav`
+  display: flex;
+  justify-content: space-between;
+
+  ul {
+    display: flex;
+    padding-right: 30px;
+  }
+  p {
+    color: ${(props) => props.theme.colors.secondary};
+    padding: 10px 30px;
+  }
+`;
+const StyledNavLink = styled(NavLink)`
+  color: ${(props) => props.theme.colors.whiteText};
+  padding: 10px 30px;
+  &.active {
+    border-bottom: 2px solid ${(props) => props.theme.colors.secondary};
+  }
+`;
+const StyledLogoLink = styled(StyledNavLink)`
+  font-family: ${(props) => props.theme.fonts.header};
+`;
+
+const StyledButton = styled.button``;
 
 const Nav: React.FC = () => {
   const navigate: NavigateFunction = useNavigate();
 
   // deconstructs the currentUser and logout function from the AuthContext
   const userContext: ContextState | null = useContext(AuthContext);
-  if (!userContext) return null
+  if (!userContext) return null;
   const { currentUser, logout } = userContext;
 
   const handleLogout = () => {
@@ -21,23 +49,22 @@ const Nav: React.FC = () => {
   };
 
   return (
-    <nav>
-      <div className="logo">
-        <Link to="/">Book Keeper</Link>
-      </div>
-      <ul className="links">
-        <Link to="books">My Books</Link>
-        <Link to="search">Find New Book</Link>
-        <span>{currentUser?.username}</span>
+    <StyledNav>
+      <StyledLogoLink to="/">Book Keeper</StyledLogoLink>
+
+      <ul>
+        <StyledNavLink to="books">My Books</StyledNavLink>
+        <StyledNavLink to="search">Find New Book</StyledNavLink>
         {currentUser ? (
-          <button onClick={handleLogout}>Logout</button>
+          <>
+            <p>{currentUser?.username}</p>
+            <button onClick={handleLogout}>Logout</button>
+          </>
         ) : (
-          <Link className="link" to="/login">
-            Login
-          </Link>
+          <StyledNavLink to="/login">Login</StyledNavLink>
         )}
       </ul>
-    </nav>
+    </StyledNav>
   );
 };
 

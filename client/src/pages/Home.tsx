@@ -1,14 +1,28 @@
 import React from "react";
+import styled from "styled-components";
 
 const Home: React.FC = () => {
+  const Wrapper = styled.div`
+    max-width: 1600px;
+    width: 90%;
+    margin: 0 auto;
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+
+    h1, p{
+      color:${props => props.theme.colors.whiteText};
+    }
+  `
   return (
-    <>
-      <p>Book Keeper is a virtual library.</p>
+    <Wrapper>
+      <h1>Book Keeper is a virtual library.</h1>
       <p>
         It helps keep track of the books you have read, are currently reading,
         or want to read.
       </p>
-    </>
+    </Wrapper>
   );
 };
 

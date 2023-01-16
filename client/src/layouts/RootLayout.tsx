@@ -5,7 +5,7 @@ import Footer from "../components/Footer";
 
 const RootLayout: React.FC = () => {
   return (
-    <div className="rootLayout">
+    <>
       <Header />
 
       <main>
@@ -13,7 +13,7 @@ const RootLayout: React.FC = () => {
       </main>
 
       <Footer />
-    </div>
+    </>
   );
 };
 

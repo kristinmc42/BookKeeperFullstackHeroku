@@ -6,6 +6,7 @@ import axios from "axios";
 // components
 import SearchBar from "../components/SearchBar";
 import { DisplayGoogleBook } from "../components/DisplayBook";
+import Button from "../components/Button";
 
 // searches Google Books API based on input from user and displays results
 const SearchBooks: React.FC = () => {
@@ -90,9 +91,9 @@ const SearchBooks: React.FC = () => {
         placeholderText={"Title, Author, Keyword..."}
       />
 
-      <button type="button" className="clearSearch" onClick={handleClear}>
+      <Button type="button" onClick={handleClear}>
         Clear Search
-      </button>
+      </Button>
 
       <ul>
         {isSuccess && data && data.length > 0 ? (

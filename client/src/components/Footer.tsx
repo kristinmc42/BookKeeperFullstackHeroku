@@ -16,11 +16,13 @@ const StyledFooter = styled.footer`
   }
 `;
 
-export default function Footer() {
+ const Footer:React.FC = () => {
   return (
     <StyledFooter>
       <p>Book Keeper</p>
       <p>Designed by Kristin McCollum</p>
     </StyledFooter>
   );
-}
+ }
+
+ export default Footer

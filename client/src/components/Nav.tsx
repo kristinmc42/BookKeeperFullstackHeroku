@@ -8,6 +8,9 @@ import {
   faBookOpen,
 } from "@fortawesome/free-solid-svg-icons";
 
+// components
+import Button from "./Button";
+
 //interfaces
 import { ContextState } from "../types";
 
@@ -57,7 +60,6 @@ const StyledMobileLink = styled(StyledLogoLink)`
   }
 `;
 
-const StyledButton = styled.button``;
 
 
 const Nav: React.FC = () => {
@@ -91,11 +93,11 @@ const Nav: React.FC = () => {
         {currentUser ? (
           <>
             <p>{currentUser?.username}</p>
-            <button onClick={handleLogout}>Logout</button>
+            <Button onClick={handleLogout}>Logout</Button>
           </>
         ) : (
           <>
-            <button onClick={() => navigate("/login")}>Login</button>
+            <Button onClick={() => navigate("/login")}>Login</Button>
           </>
         )}
       </ul>

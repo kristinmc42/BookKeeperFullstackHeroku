@@ -4,7 +4,7 @@ import { useMutation } from "react-query";
 import { useNavigate, useLocation } from "react-router-dom";
 
 //components
-import BackButton from "../components/BackButton";
+import Button from "../components/Button";
 import { DisplayDbBook } from "../components/DisplayBook";
 
 //types
@@ -56,7 +56,7 @@ export default function SingleDbBook() {
         <h2>Your book has been deleted</h2>
       ) : (
         <>
-          <BackButton />
+          <Button onClick={() => navigate(-1)}>Back</Button>
           <DisplayDbBook item={bookInfo} format={"full"} />
           <div className="selectContainer">
             <label htmlFor="bookshelfSelect"></label>
@@ -71,7 +71,7 @@ export default function SingleDbBook() {
               <option value="currentlyReading">Currently Reading</option>
             </select>
             {bookInfo.dateRead ? <h4>Date read: {bookInfo.dateRead}</h4> : null}
-            <button onClick={() => setConfirmDelete(true)}>Delete Book</button>
+            <Button onClick={() => setConfirmDelete(true)}>Delete Book</Button>
 
             {mutation.isLoading ? (
               "Deleting book from bookshelf..."
@@ -90,8 +90,8 @@ export default function SingleDbBook() {
                   Are you sure you want to permanently delete this book from
                   your bookshelf?
                 </h2>
-                <button onClick={() => setConfirmDelete(false)}>Cancel</button>
-                <button onClick={handleDelete}>Delete Book</button>
+                <Button onClick={() => setConfirmDelete(false)}>Cancel</Button>
+                <Button onClick={handleDelete}>Delete Book</Button>
               </div>
             ) : null}
           </div>

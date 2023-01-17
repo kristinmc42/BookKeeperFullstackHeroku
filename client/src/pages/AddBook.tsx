@@ -9,6 +9,7 @@ import { useMutation } from "react-query";
 
 // components
 import { DisplayGoogleBook } from "../components/DisplayBook";
+import Button from "../components/Button";
 
 //functions
 import { convertBookToDbFormat } from "../functions/convertBookToDbFormat";
@@ -91,15 +92,9 @@ const AddBook: React.FC = () => {
   return (
     <>
       <div className="bookContainer">
-        <button
-          className="back"
-          type="button"
-          onClick={() => {
-            navigate(-1);
-          }}
-        >
-          Back
-        </button>
+        <Button onClick={() => navigate(-1) } >Back</Button>
+  
+      
 
         <DisplayGoogleBook item={bookInfo} format={"short"} />
       </div>
@@ -164,7 +159,7 @@ const AddBook: React.FC = () => {
               </fieldset>
 
               {mutation.isError ? null : (
-                <button disabled={!bookshelf}>Add Book </button>
+                <Button disabled={!bookshelf}>Add Book </Button>
               )}
             </form>
           )}

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useMutation } from "react-query";
 import { DayPicker } from "react-day-picker";
 import { format } from "date-fns";
@@ -9,7 +9,7 @@ import { format } from "date-fns";
 
 // components
 import { DisplayDbBook } from "../components/DisplayBook";
-import BackButton from "../components/BackButton";
+import Button from "../components/Button";
 
 //functions
 import { convertDateToString } from "../functions/convertDateToString";
@@ -23,6 +23,8 @@ import { DbBookInfo } from "../types";
 
 // displays select info on the book and allows the user to modify the status of the book in the db
 const UpdateBook: React.FC = () => {
+  const navigate = useNavigate();
+
   // get book info from location and extract and save bookInfo object, selectedStatus, and bookId string in variables
   const { state } = useLocation();
   const bookInfo: DbBookInfo = state.bookInfo; // bookInfo Object
@@ -90,7 +92,7 @@ const UpdateBook: React.FC = () => {
   return (
     <>
       <div className="bookContainer">
-        {mutation.isSuccess ? null : <BackButton />}
+        {mutation.isSuccess ? null : <Button onClick={() => navigate(-1)}>Back</Button>}
         <DisplayDbBook item={bookInfo} format={"short"} />
       </div>
       {mutation.isSuccess ? (
@@ -153,7 +155,7 @@ const UpdateBook: React.FC = () => {
             <h2>Error: {(bookData.error as Error).message}</h2>
           )}
 
-          <button type="submit">Update</button>
+          <Button type="submit">Update</Button>
         </form>
       )}
 

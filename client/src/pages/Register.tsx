@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
+// components
+import Button from "../components/Button";
+
 // interfaces
 import { UserObj } from "../types";
 
@@ -26,7 +29,7 @@ const Register: React.FC = () => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleSubmit = async (e: React.SyntheticEvent) => {
     // makes axios post call when user clicks register button
     e.preventDefault();
     try {
@@ -42,7 +45,7 @@ const Register: React.FC = () => {
   return (
     <div className="auth">
       <h1>Register</h1>
-      <form>
+      <form onSubmit={handleSubmit}>
         <label htmlFor="usernameRegister">Username:</label>
         <input
           required
@@ -75,7 +78,7 @@ const Register: React.FC = () => {
           checked={isShown}
           onChange={() => setIsShown((isShown) => !isShown)}
         />
-        <button onClick={handleSubmit}>Register</button>
+        <Button type="submit">Register</Button>
         {error ? <p className="error">{error}</p> : null}
         <span>
           Already have an account? <Link to="/login">Login</Link>

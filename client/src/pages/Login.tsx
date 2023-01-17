@@ -2,6 +2,9 @@ import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
+//components
+import Button from "../components/Button";
+
 // interfaces
 import { UserObj } from "../types";
 
@@ -28,7 +31,7 @@ const Login: React.FC = () => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleSubmit = async (e: React.SyntheticEvent) => {
     // makes axios post call when user clicks login button
     e.preventDefault();
     try {
@@ -43,7 +46,7 @@ const Login: React.FC = () => {
   return (
     <div className="auth">
       <h1>Login</h1>
-      <form action="">
+      <form action="" onSubmit={handleSubmit}>
         <label htmlFor="usernameLogin">Username:</label>
         <input
           required
@@ -60,7 +63,7 @@ const Login: React.FC = () => {
           name="password"
           onChange={handleChange}
         />
-        <button onClick={handleSubmit}>Login</button>
+        <Button type="submit">Login</Button>
         {error && <p className="error">{error}</p>}
         <span>
           Don't have an account? <Link to="/register">Register</Link>

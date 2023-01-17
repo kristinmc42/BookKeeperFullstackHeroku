@@ -39,6 +39,9 @@ const StyledNav = styled.nav`
       @media (max-width: 902px) {
         padding: 10px 15px;
       }
+      @media (max-width: 630px) {
+        padding: 10px;
+      }
       @media (max-width: 380px) {
         padding: 8px;
       }
@@ -89,12 +92,20 @@ const StyledNavLink = styled(NavLink)`
 `;
 const StyledLogoLink = styled(StyledNavLink)`
   font-family: ${(props) => props.theme.fonts.header};
+  font-size: 1.6rem;
   text-align: left;
   padding: 10px 30px;
   min-width: 75px;
 
-  @media (max-width: 902px) {
+  @media (max-width: 962px) {
+    font-size: 1.4rem;
     padding: 10px;
+  }
+  @media (max-width: 768px) {
+    font-size: 1.11rem;
+  }
+  @media (max-width: 436px) {
+    font-size: 1rem;
   }
 `;
 

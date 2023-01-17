@@ -6,7 +6,7 @@ const Wrapper = styled.div`
   max-width: 1600px;
   width: 90%;
   margin: 0 auto;
-  height: 90vh;
+  height: 88vh;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;

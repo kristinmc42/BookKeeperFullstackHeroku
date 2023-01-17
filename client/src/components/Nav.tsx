@@ -55,13 +55,21 @@ const StyledNav = styled.nav`
       }
     }
     li:nth-child(5) {
-      @media (max-width: 496px) {
-        display: none;
+      display:flex;
+      
+      p {
+        color: ${(props) => props.theme.colors.secondary};
+        padding-right: 30px;
+
+        @media (max-width: 496px) {
+          display: none;
+        }
       }
+      button{
+        margin-top:-6px;
+      }
+
     }
-  }
-  p {
-    color: ${(props) => props.theme.colors.secondary};
   }
 `;
 
@@ -134,13 +142,11 @@ const Nav: React.FC = () => {
           <>
             <li key={5}>
               <p>{currentUser?.username}</p>
-            </li>
-            <li key={6}>
               <Button onClick={handleLogout}>Logout</Button>
             </li>
           </>
         ) : (
-          <li>
+          <li key={6}>
             <Button onClick={() => navigate("/login")}>Login</Button>
           </li>
         )}

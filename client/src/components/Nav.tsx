@@ -2,6 +2,11 @@ import React, { useContext } from "react";
 import { NavLink, NavigateFunction, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import styled from "styled-components";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faMagnifyingGlassPlus,
+  faBookOpen,
+} from "@fortawesome/free-solid-svg-icons";
 
 //interfaces
 import { ContextState } from "../types";
@@ -14,24 +19,46 @@ const StyledNav = styled.nav`
   ul {
     display: flex;
     padding-right: 30px;
+
+    @media (max-width: 445px) {
+      padding-right: 10px;
+    }
   }
   p {
     color: ${(props) => props.theme.colors.secondary};
     padding: 10px 30px;
   }
 `;
-const StyledNavLink = styled(NavLink)`
+
+const StyledLogoLink = styled(NavLink)`
+  font-family: ${(props) => props.theme.fonts.header};
   color: ${(props) => props.theme.colors.whiteText};
   padding: 10px 30px;
   &.active {
     border-bottom: 2px solid ${(props) => props.theme.colors.secondary};
   }
+
+  @media (max-width: 445px) {
+    padding: 10px;
+  }
 `;
-const StyledLogoLink = styled(StyledNavLink)`
-  font-family: ${(props) => props.theme.fonts.header};
+
+const StyledNavLink = styled(StyledLogoLink)`
+  font-family: ${(props) => props.theme.fonts.main};
+
+  @media (max-width: 703px) {
+    display: none;
+  }
+`;
+
+const StyledMobileLink = styled(StyledLogoLink)`
+  @media (min-width: 703px) {
+    display: none;
+  }
 `;
 
 const StyledButton = styled.button``;
+
 
 const Nav: React.FC = () => {
   const navigate: NavigateFunction = useNavigate();
@@ -53,6 +80,12 @@ const Nav: React.FC = () => {
       <StyledLogoLink to="/">Book Keeper</StyledLogoLink>
 
       <ul>
+        <StyledMobileLink to="books">
+          {<FontAwesomeIcon icon={faBookOpen} />}
+        </StyledMobileLink>
+        <StyledMobileLink to="search">
+          {<FontAwesomeIcon icon={faMagnifyingGlassPlus} />}
+        </StyledMobileLink>
         <StyledNavLink to="books">My Books</StyledNavLink>
         <StyledNavLink to="search">Find New Book</StyledNavLink>
         {currentUser ? (
@@ -61,7 +94,9 @@ const Nav: React.FC = () => {
             <button onClick={handleLogout}>Logout</button>
           </>
         ) : (
-          <StyledNavLink to="/login">Login</StyledNavLink>
+          <>
+            <button onClick={() => navigate("/login")}>Login</button>
+          </>
         )}
       </ul>
     </StyledNav>

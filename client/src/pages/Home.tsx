@@ -6,7 +6,7 @@ const Home: React.FC = () => {
     max-width: 1600px;
     width: 90%;
     margin: 0 auto;
-    height: 80vh;
+    height: 90vh;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
@@ -14,10 +14,13 @@ const Home: React.FC = () => {
     h1, p{
       color:${props => props.theme.colors.whiteText};
     }
+    h1 > span {
+      font-family: ${props => props.theme.fonts.header}
+    }
   `
   return (
     <Wrapper>
-      <h1>Book Keeper is a virtual library.</h1>
+      <h1><span>Book Keeper</span> is a virtual library.</h1>
       <p>
         It helps keep track of the books you have read, are currently reading,
         or want to read.

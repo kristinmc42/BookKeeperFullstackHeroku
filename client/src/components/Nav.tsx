@@ -11,56 +11,86 @@ import {
 // components
 import Button from "./Button";
 
-//interfaces
+//types
 import { ContextState } from "../types";
 
 // styled components
 const StyledNav = styled.nav`
   display: flex;
   justify-content: space-between;
+  padding: 10px 0 10px 30px;
+
+  @media (max-width: 902px) {
+    padding-left: 15px;
+  }
+  @media (max-width: 380px) {
+    padding-left: 8px;
+  }
 
   ul {
     display: flex;
-    padding-right: 30px;
 
-    @media (max-width: 445px) {
+    @media (max-width: 586px) {
       padding-right: 10px;
+    }
+    li {
+      padding: 10px 30px;
+
+      @media (max-width: 902px) {
+        padding: 10px 15px;
+      }
+      @media (max-width: 380px) {
+        padding: 8px;
+      }
+    }
+    li:nth-child(-n + 2) {
+      @media (min-width: 617px) {
+        display: none;
+      }
+    }
+    li:nth-child(3),
+    li:nth-child(4) {
+      @media (max-width: 616px) {
+        display: none;
+      }
+    }
+    li:nth-child(5) {
+      @media (max-width: 496px) {
+        display: none;
+      }
     }
   }
   p {
     color: ${(props) => props.theme.colors.secondary};
-    padding: 10px 30px;
   }
 `;
 
-const StyledLogoLink = styled(NavLink)`
-  font-family: ${(props) => props.theme.fonts.header};
+const StyledNavLink = styled(NavLink)`
   color: ${(props) => props.theme.colors.whiteText};
-  padding: 10px 30px;
+  font-family: ${(props) => props.theme.fonts.main};
+  text-align: center;
+  min-width: 149px;
+
   &.active {
     border-bottom: 2px solid ${(props) => props.theme.colors.secondary};
   }
 
-  @media (max-width: 445px) {
+  @media (max-width: 702px) {
+    min-width: 0;
+  }
+`;
+const StyledLogoLink = styled(StyledNavLink)`
+  font-family: ${(props) => props.theme.fonts.header};
+  text-align: left;
+  padding: 10px 30px;
+  min-width: 75px;
+
+  @media (max-width: 902px) {
     padding: 10px;
   }
 `;
 
-const StyledNavLink = styled(StyledLogoLink)`
-  font-family: ${(props) => props.theme.fonts.main};
-
-  @media (max-width: 703px) {
-    display: none;
-  }
-`;
-
-const StyledMobileLink = styled(StyledLogoLink)`
-  @media (min-width: 703px) {
-    display: none;
-  }
-`;
-
-
+const StyledMobileLink = styled(StyledNavLink)``;
 
 const Nav: React.FC = () => {
   const navigate: NavigateFunction = useNavigate();
@@ -79,26 +109,40 @@ const Nav: React.FC = () => {
 
   return (
     <StyledNav>
-      <StyledLogoLink to="/">Book Keeper</StyledLogoLink>
+      <StyledLogoLink to="/" title="home page">
+        Book Keeper
+      </StyledLogoLink>
 
       <ul>
-        <StyledMobileLink to="books">
-          {<FontAwesomeIcon icon={faBookOpen} />}
-        </StyledMobileLink>
-        <StyledMobileLink to="search">
-          {<FontAwesomeIcon icon={faMagnifyingGlassPlus} />}
-        </StyledMobileLink>
-        <StyledNavLink to="books">My Books</StyledNavLink>
-        <StyledNavLink to="search">Find New Book</StyledNavLink>
+        <li key={1}>
+          <StyledMobileLink to="books" title="my books">
+            {<FontAwesomeIcon icon={faBookOpen} />}
+          </StyledMobileLink>
+        </li>
+        <li key={2}>
+          <StyledMobileLink to="search" title="find new book">
+            {<FontAwesomeIcon icon={faMagnifyingGlassPlus} />}
+          </StyledMobileLink>
+        </li>
+        <li key={3}>
+          <StyledNavLink to="books">My Books</StyledNavLink>
+        </li>
+        <li key={4}>
+          <StyledNavLink to="search">Find New Book</StyledNavLink>
+        </li>
         {currentUser ? (
           <>
-            <p>{currentUser?.username}</p>
-            <Button onClick={handleLogout}>Logout</Button>
+            <li key={5}>
+              <p>{currentUser?.username}</p>
+            </li>
+            <li key={6}>
+              <Button onClick={handleLogout}>Logout</Button>
+            </li>
           </>
         ) : (
-          <>
+          <li>
             <Button onClick={() => navigate("/login")}>Login</Button>
-          </>
+          </li>
         )}
       </ul>
     </StyledNav>

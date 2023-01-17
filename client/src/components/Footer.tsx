@@ -4,7 +4,6 @@ import styled from "styled-components";
 const StyledFooter = styled.footer`
   display: flex;
   justify-content: space-between;
-  max-width: 1600px;
   color: ${(props) => props.theme.colors.whiteText};
 
   p {
@@ -16,13 +15,13 @@ const StyledFooter = styled.footer`
   }
 `;
 
- const Footer:React.FC = () => {
+const Footer: React.FC = () => {
   return (
     <StyledFooter>
       <p>Book Keeper</p>
       <p>Designed by Kristin McCollum</p>
     </StyledFooter>
   );
- }
+};
 
- export default Footer
+export default Footer;

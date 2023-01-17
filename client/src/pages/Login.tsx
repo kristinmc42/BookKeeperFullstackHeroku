@@ -10,6 +10,8 @@ import Button from "../components/Button";
 import { UserObj } from "../types";
 
 // styles
+import { device } from "../styles/Breakpoints";
+
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -18,52 +20,65 @@ const Wrapper = styled.div`
   margin: 0 auto;
   height: 100vh;
 
+  header {
+    a {
+      color: ${(props) => props.theme.colors.whiteText};
+      font-family: ${(props) => props.theme.fonts.header};
+      font-size: 1.8rem;
+
+      @media ${device.mobileS} {
+        font-size: 2rem;
+      }
+    }
+  }
+
   main {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 75%;
+    width: 100%;
     height: 100%;
     max-width: 876px;
-    margin: -100px auto;
+    margin: 0px auto;
 
-    @media (max-width: 542px) {
-      width: 100%;
-    }
-
-    h2 {
+    h1 {
       margin-bottom: 75px;
     }
 
     form {
       display: flex;
       flex-wrap: wrap;
-      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+      max-width: 366px;
       gap: 3em;
 
-      @media (max-width: 1161px) {
-        flex-direction: column;
-        align-items: center;
-        max-width: 366px;
+      @media ${device.laptop} {
+        flex-direction: row;
+        justify-content: center;
+        max-width: none;
       }
 
       input {
-        margin-left: 10px;
+        display: block;
+        margin-left: 0;
+        margin-top: 8px;
         color: ${(props) => props.theme.colors.blackText};
         background-color: ${(props) => props.theme.colors.secondary};
         border: 3px solid ${(props) => props.theme.colors.secondary};
 
-        @media (max-width: 405px) {
-          display: block;
-          margin-left: 0;
-          margin-top: 8px;
+        @media ${device.mobileL} {
+          margin-left: 10px;
+          display: inline;
         }
       }
 
       p {
-        @media (max-width: 328px) {
-          text-align: center;
+        text-align: center;
+
+        a {
+          color: ${(props) => props.theme.colors.secondary};
         }
       }
 
@@ -74,19 +89,9 @@ const Wrapper = styled.div`
   }
 
   h1,
-  h2,
   p,
   label {
     color: ${(props) => props.theme.colors.whiteText};
-  }
-  a {
-    color: ${(props) => props.theme.colors.secondary};
-  }
-  h1 {
-    font-family: ${(props) => props.theme.fonts.header};
-    @media (max-width: 330px) {
-      font-size: 1.8em;
-    }
   }
 `;
 
@@ -128,11 +133,12 @@ const Login: React.FC = () => {
   return (
     <Wrapper>
       <header>
-        <Link to="/" title="home"> <h1>Book Keeper</h1></Link>
-       
+        <Link to="/" title="home">
+          Book Keeper
+        </Link>
       </header>
       <main>
-        <h2>Login</h2>
+        <h1>Login</h1>
         <form onSubmit={handleSubmit}>
           <label htmlFor="usernameLogin">
             Username:

@@ -15,63 +15,69 @@ import Button from "./Button";
 import { ContextState } from "../types";
 
 // styled components
+import { device } from "../styles/Breakpoints";
+
 const StyledNav = styled.nav`
   display: flex;
   justify-content: space-between;
-  padding: 10px 0 10px 30px;
+  padding-left: 8px;
 
-  @media (max-width: 902px) {
+  @media ${device.mobileM} {
     padding-left: 15px;
   }
-  @media (max-width: 380px) {
-    padding-left: 8px;
+
+  @media ${device.tablet} {
+    padding: 10px 0 10px 30px;
   }
 
   ul {
     display: flex;
+    padding-right: 10px;
 
-    @media (max-width: 586px) {
-      padding-right: 10px;
+    @media ${device.tablet} {
+      padding-right: 30px;
     }
     li {
-      padding: 10px 30px;
+      padding: 8px;
 
-      @media (max-width: 902px) {
-        padding: 10px 15px;
-      }
-      @media (max-width: 630px) {
+      @media ${device.mobileM} {
         padding: 10px;
       }
-      @media (max-width: 380px) {
-        padding: 8px;
+      @media ${device.tablet} {
+        padding: 10px 15px;
+      }
+      @media ${device.laptop} {
+        padding: 10px 30px;
       }
     }
     li:nth-child(-n + 2) {
-      @media (min-width: 617px) {
+      display: inline;
+      @media (min-width: 585px) {
         display: none;
       }
     }
     li:nth-child(3),
     li:nth-child(4) {
-      @media (max-width: 616px) {
-        display: none;
+      display: none;
+      @media (min-width: 585px) {
+        display: inline;
       }
     }
     li:nth-child(5) {
-      display:flex;
-      
+      display: flex;
+
       p {
         color: ${(props) => props.theme.colors.secondary};
-        padding-right: 30px;
+        display: none;
 
-        @media (max-width: 496px) {
-          display: none;
+        @media ${device.mobileL} {
+          padding-right: 30px;
+          display: inline;
         }
       }
-      button{
-        margin-top:-6px;
+      button {
+        margin-top: -6px;
       }
-
     }
   }
 `;
@@ -80,32 +86,31 @@ const StyledNavLink = styled(NavLink)`
   color: ${(props) => props.theme.colors.whiteText};
   font-family: ${(props) => props.theme.fonts.main};
   text-align: center;
-  min-width: 149px;
 
   &.active {
     border-bottom: 2px solid ${(props) => props.theme.colors.secondary};
   }
 
-  @media (max-width: 702px) {
-    min-width: 0;
+  @media ${device.tablet} {
+    min-width: 149px;
   }
 `;
 const StyledLogoLink = styled(StyledNavLink)`
   font-family: ${(props) => props.theme.fonts.header};
-  font-size: 1.6rem;
+  font-size: 1rem;
   text-align: left;
-  padding: 10px 30px;
+  padding: 10px;
   min-width: 75px;
 
-  @media (max-width: 962px) {
-    font-size: 1.4rem;
-    padding: 10px;
-  }
-  @media (max-width: 768px) {
+  @media ${device.mobileL} {
     font-size: 1.11rem;
   }
-  @media (max-width: 436px) {
-    font-size: 1rem;
+  @media ${device.tablet} {
+    font-size: 1.4rem;
+  }
+  @media ${device.laptop} {
+    font-size: 1.6rem;
+    padding: 10px 30px;
   }
 `;
 

@@ -5,6 +5,8 @@ import styled from "styled-components";
 
 //components
 import Button from "../components/Button";
+import AuthHeader from "../components/AuthHeader";
+import ErrorMessage from "../components/ErrorMessage";
 
 // types
 import { UserObj } from "../types";
@@ -20,16 +22,8 @@ const Wrapper = styled.div`
   margin: 0 auto;
   height: 100vh;
 
-  header {
-    a {
-      color: ${(props) => props.theme.colors.whiteText};
-      font-family: ${(props) => props.theme.fonts.header};
-      font-size: 1.8rem;
-
-      @media ${device.mobileS} {
-        font-size: 2rem;
-      }
-    }
+  @media (orientation: landscape) and (hover: none) and (pointer: coarse) and (max-width: 1023px){
+    height: 100%;
   }
 
   main {
@@ -40,10 +34,24 @@ const Wrapper = styled.div`
     width: 100%;
     height: 100%;
     max-width: 876px;
-    margin: 0px auto;
+    margin: 30px auto;
 
     h1 {
-      margin-bottom: 75px;
+      margin-top: 40px;
+      margin-bottom: 40px;
+
+      @media ${device.mobileL}{
+        margin-bottom: 75px;
+        margin-top: 10px;
+      }
+      @media ${device.mobileM}{
+        margin-top: 50px;
+        margin-bottom: 50px;
+      }
+      @media (orientation: landscape) and (hover: none) and (pointer: coarse){
+        margin-top: 50px;
+        margin-bottom: 50px;
+      }
     }
 
     form {
@@ -67,6 +75,7 @@ const Wrapper = styled.div`
         color: ${(props) => props.theme.colors.blackText};
         background-color: ${(props) => props.theme.colors.secondary};
         border: 3px solid ${(props) => props.theme.colors.secondary};
+        border-radius: 5px;
 
         @media ${device.mobileL} {
           margin-left: 10px;
@@ -132,11 +141,9 @@ const Login: React.FC = () => {
   };
   return (
     <Wrapper>
-      <header>
-        <Link to="/" title="home">
-          Book Keeper
-        </Link>
-      </header>
+      <AuthHeader to="/" title="home">
+        Book Keeper
+      </AuthHeader>
       <main>
         <h1>Login</h1>
         <form onSubmit={handleSubmit}>
@@ -161,7 +168,7 @@ const Login: React.FC = () => {
             />
           </label>
           <Button type="submit">Login</Button>
-          {error && <p className="error">{error}</p>}
+          {error && <ErrorMessage>{error}</ErrorMessage>}
           <p>
             Don't have an account? <Link to="/register">Register</Link>
           </p>

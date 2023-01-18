@@ -79,7 +79,7 @@ const StyledNav = styled.nav`
   padding-left: 8px;
 
   @media ${device.mobileM} {
-    padding-left: 15px;
+    padding-left: 10px;
   }
 
   @media ${device.tablet} {

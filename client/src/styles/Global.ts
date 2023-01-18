@@ -1,8 +1,6 @@
-import  { createGlobalStyle } from "styled-components";
+import { createGlobalStyle } from "styled-components";
 
-
-
-export const GlobalStyles= createGlobalStyle`
+export const GlobalStyles = createGlobalStyle`
 *,
 *::before,
 ::after {
@@ -18,11 +16,11 @@ html{
 body{
     width: 100%;
     text-rendering: optimizeSpeed;
-    font-family: ${props => props.theme.fonts.main}, sans-serif;
+    font-family: ${(props) => props.theme.fonts.main}, sans-serif;
     font-size: 1rem;
- 
-    background-color: ${props => props.theme.colors.background};
     line-height: 1;
+    color: ${(props) => props.theme.colors.whiteText};
+    background-color: ${(props) => props.theme.colors.background};
 }
 ul{
     list-style: none;
@@ -40,4 +38,4 @@ input,button, textarea, select {
 a{
     text-decoration: none;
 }
-`
+`;

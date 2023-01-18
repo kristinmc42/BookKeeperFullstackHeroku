@@ -1,4 +1,6 @@
 import { BookInfo, DbBookInfo } from "../types";
+import convertAuthors from "./convertAuthors";
+import convertGenres from "./convertGenres";
 
   // function to convert GoogleBook info to DB format
  export const convertBookToDbFormat = (
@@ -6,18 +8,18 @@ import { BookInfo, DbBookInfo } from "../types";
     bookshelf: string | undefined,
     dateReadString: string | undefined,
     userId: number
-  ) => {
+ ) => {
+   const newAuthorString: string | undefined = convertAuthors((bookInfo.volumeInfo.authors)?.join(","));
+   
+   const newGenreString: string | undefined = convertGenres((bookInfo.volumeInfo.categories)?.join(","));
+   
     const bookToStore: DbBookInfo = {
       title: bookInfo.volumeInfo.title,
       subtitle: bookInfo.volumeInfo.subtitle
         ? bookInfo.volumeInfo.subtitle
         : undefined,
-      author: bookInfo.volumeInfo.authors
-        ? bookInfo.volumeInfo.authors.join(",")
-        : undefined,
-      genre: bookInfo.volumeInfo.categories
-        ? bookInfo.volumeInfo.categories.join(",")
-        : undefined,
+      author: newAuthorString,
+      genre: newGenreString,
       img: bookInfo.volumeInfo.imageLinks?.smallThumbnail
         ? bookInfo.volumeInfo.imageLinks.smallThumbnail
         : undefined,

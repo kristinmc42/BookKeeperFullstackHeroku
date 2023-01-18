@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import styled from "styled-components";
 
 //components
 import { DisplayDbBook } from "../components/DisplayBook";
@@ -11,6 +12,8 @@ import useAllBooksInDb from "../hooks/useAllBooksInDb";
 
 // types
 import { DbBookInfo } from "../types";
+
+
 
 // gets all users book from db and displays them
 // user can filter books displayed by bookshelf(status)
@@ -32,15 +35,9 @@ const Books: React.FC = () => {
     return <span>Error: {(allBooks.error as Error).message}</span>;
   }
 
-  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const target = e.target;
-  //   if (target.checked) {
-  //     setDisplayFilter(target.value);
-  //   }
-  // };
 
   return (
-    <div className="pageContainer">
+    <Wrapper>
       {userId ? null : (
         <>
           <h2>Login to see your bookshelves</h2>
@@ -48,6 +45,7 @@ const Books: React.FC = () => {
       )}
       {allBooks && allBooks.data ? (
         <>
+          <h1>My Books</h1>
           <BookshelfFilter displayFilter={displayFilter} setDisplayFilter = {setDisplayFilter} />
           <ul className="books">
             {allBooks.data.length > 0 ? (
@@ -116,8 +114,19 @@ const Books: React.FC = () => {
           </ul>
         </>
       ) : null}
-    </div>
+    </Wrapper>
   );
 };
 
 export default Books;
+
+// styled components
+const Wrapper = styled.div`
+max-width: 1600px;
+  margin: 0 auto;
+
+
+h1{
+  padding-left: 1em;
+}
+`

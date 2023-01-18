@@ -14,9 +14,65 @@ import Button from "./Button";
 //types
 import { ContextState } from "../types";
 
-// styled components
+// styles
 import { device } from "../styles/Breakpoints";
 
+export default function Nav() {
+  const navigate: NavigateFunction = useNavigate();
+
+  // deconstructs the currentUser and logout function from the AuthContext
+  const userContext: ContextState | null = useContext(AuthContext);
+  if (!userContext) return null;
+  const { currentUser, logout } = userContext;
+
+  const handleLogout = () => {
+    // logs out user(clears cookie), search info (local storage) and navigates back to home page
+    logout();
+    localStorage.clear();
+    navigate("/");
+  };
+
+  return (
+    <StyledNav>
+      <StyledLogoLink to="/" title="home page">
+        Book Keeper
+      </StyledLogoLink>
+
+      <ul>
+        <li key={1}>
+          <StyledMobileLink to="books" title="my books">
+            {<FontAwesomeIcon icon={faBookOpen} />}
+          </StyledMobileLink>
+        </li>
+        <li key={2}>
+          <StyledMobileLink to="search" title="find new book">
+            {<FontAwesomeIcon icon={faMagnifyingGlassPlus} />}
+          </StyledMobileLink>
+        </li>
+        <li key={3}>
+          <StyledNavLink to="books">My Books</StyledNavLink>
+        </li>
+        <li key={4}>
+          <StyledNavLink to="search">Find New Book</StyledNavLink>
+        </li>
+        {currentUser ? (
+          <>
+            <li key={5}>
+              <p>{currentUser?.username}</p>
+              <Button onClick={handleLogout}>Logout</Button>
+            </li>
+          </>
+        ) : (
+          <li key={6}>
+            <Button onClick={() => navigate("/login")}>Login</Button>
+          </li>
+        )}
+      </ul>
+    </StyledNav>
+  );
+}
+
+// styled components
 const StyledNav = styled.nav`
   display: flex;
   justify-content: space-between;
@@ -113,62 +169,4 @@ const StyledLogoLink = styled(StyledNavLink)`
     padding: 10px 30px;
   }
 `;
-
 const StyledMobileLink = styled(StyledNavLink)``;
-
-const Nav: React.FC = () => {
-  const navigate: NavigateFunction = useNavigate();
-
-  // deconstructs the currentUser and logout function from the AuthContext
-  const userContext: ContextState | null = useContext(AuthContext);
-  if (!userContext) return null;
-  const { currentUser, logout } = userContext;
-
-  const handleLogout = () => {
-    // logs out user(clears cookie), search info (local storage) and navigates back to home page
-    logout();
-    localStorage.clear();
-    navigate("/");
-  };
-
-  return (
-    <StyledNav>
-      <StyledLogoLink to="/" title="home page">
-        Book Keeper
-      </StyledLogoLink>
-
-      <ul>
-        <li key={1}>
-          <StyledMobileLink to="books" title="my books">
-            {<FontAwesomeIcon icon={faBookOpen} />}
-          </StyledMobileLink>
-        </li>
-        <li key={2}>
-          <StyledMobileLink to="search" title="find new book">
-            {<FontAwesomeIcon icon={faMagnifyingGlassPlus} />}
-          </StyledMobileLink>
-        </li>
-        <li key={3}>
-          <StyledNavLink to="books">My Books</StyledNavLink>
-        </li>
-        <li key={4}>
-          <StyledNavLink to="search">Find New Book</StyledNavLink>
-        </li>
-        {currentUser ? (
-          <>
-            <li key={5}>
-              <p>{currentUser?.username}</p>
-              <Button onClick={handleLogout}>Logout</Button>
-            </li>
-          </>
-        ) : (
-          <li key={6}>
-            <Button onClick={() => navigate("/login")}>Login</Button>
-          </li>
-        )}
-      </ul>
-    </StyledNav>
-  );
-};
-
-export default Nav;

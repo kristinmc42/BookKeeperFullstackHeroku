@@ -8,7 +8,18 @@ interface ButtonProps {
   children?: React.ReactNode;
 }
 
-// styles
+
+const Button = ({ type, onClick, disabled, children }: ButtonProps) => {
+  return (
+    <StyledButton type={type} onClick={onClick} disabled={disabled}>
+      {children}
+    </StyledButton>
+  );
+};
+
+export default Button;
+
+// styled components
 const StyledButton = styled.button`
   color: ${props => props.theme.colors.blackText};
   background-color: ${props => props.theme.colors.secondary};
@@ -26,13 +37,3 @@ const StyledButton = styled.button`
     cursor: pointer;
   }
 `
-
-const Button = ({ type, onClick, disabled, children }: ButtonProps) => {
-  return (
-    <StyledButton type={type} onClick={onClick} disabled={disabled}>
-      {children}
-    </StyledButton>
-  );
-};
-
-export default Button;

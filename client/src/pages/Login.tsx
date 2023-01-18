@@ -14,6 +14,84 @@ import { UserObj } from "../types";
 // styles
 import { device } from "../styles/Breakpoints";
 
+
+const Login: React.FC = () => {
+  // values from input fields inputted by user
+  const [inputs, setInputs] = useState<UserObj>({
+    username: "",
+    password: "",
+  });
+  
+  // error in axios call
+  const [error, setError] = useState<string | null>(null);
+  
+  const navigate = useNavigate();
+  
+  const userContext = useContext(AuthContext);
+  
+  if (!userContext) return null;
+  
+  const { login } = userContext;
+  
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // sets state as user input changes in all fields
+    setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+  
+  const handleSubmit = async (e: React.SyntheticEvent) => {
+    // makes axios post call when user clicks login button
+    e.preventDefault();
+    try {
+      // if login successful, redirects user to bookshelf page
+      await login(inputs);
+      navigate("/books");
+    } catch (err: unknown | any) {
+      // sets error message in state
+      setError(err.response.data);
+    }
+  };
+  return (
+    <Wrapper>
+      <AuthHeader to="/" title="home">
+        Book Keeper
+      </AuthHeader>
+      <main>
+        <h1>Login</h1>
+        <form onSubmit={handleSubmit}>
+          <label htmlFor="usernameLogin">
+            Username:
+            <input
+              required
+              type="text"
+              id="usernameLogin"
+              name="username"
+              onChange={handleChange}
+              />
+          </label>
+          <label htmlFor="passwordLogin">
+            Password:
+            <input
+              required
+              type="password"
+              id="passwordLogin"
+              name="password"
+              onChange={handleChange}
+              />
+          </label>
+          <Button type="submit">Login</Button>
+          {error && <ErrorMessage>{error}</ErrorMessage>}
+          <p>
+            Don't have an account? <Link to="/register">Register</Link>
+          </p>
+        </form>
+      </main>
+    </Wrapper>
+  );
+};
+
+export default Login;
+
+// styled components
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -103,79 +181,3 @@ const Wrapper = styled.div`
     color: ${(props) => props.theme.colors.whiteText};
   }
 `;
-
-const Login: React.FC = () => {
-  // values from input fields inputted by user
-  const [inputs, setInputs] = useState<UserObj>({
-    username: "",
-    password: "",
-  });
-
-  // error in axios call
-  const [error, setError] = useState<string | null>(null);
-
-  const navigate = useNavigate();
-
-  const userContext = useContext(AuthContext);
-
-  if (!userContext) return null;
-  //deconstructs login function from AuthContext
-  const { login } = userContext;
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // sets state as user input changes in all fields
-    setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
-
-  const handleSubmit = async (e: React.SyntheticEvent) => {
-    // makes axios post call when user clicks login button
-    e.preventDefault();
-    try {
-      // if login successful, redirects user to bookshelf page
-      await login(inputs);
-      navigate("/books");
-    } catch (err: unknown | any) {
-      // sets error message in state
-      setError(err.response.data);
-    }
-  };
-  return (
-    <Wrapper>
-      <AuthHeader to="/" title="home">
-        Book Keeper
-      </AuthHeader>
-      <main>
-        <h1>Login</h1>
-        <form onSubmit={handleSubmit}>
-          <label htmlFor="usernameLogin">
-            Username:
-            <input
-              required
-              type="text"
-              id="usernameLogin"
-              name="username"
-              onChange={handleChange}
-            />
-          </label>
-          <label htmlFor="passwordLogin">
-            Password:
-            <input
-              required
-              type="password"
-              id="passwordLogin"
-              name="password"
-              onChange={handleChange}
-            />
-          </label>
-          <Button type="submit">Login</Button>
-          {error && <ErrorMessage>{error}</ErrorMessage>}
-          <p>
-            Don't have an account? <Link to="/register">Register</Link>
-          </p>
-        </form>
-      </main>
-    </Wrapper>
-  );
-};
-
-export default Login;

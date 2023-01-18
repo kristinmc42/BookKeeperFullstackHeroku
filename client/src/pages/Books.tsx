@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 //components
 import { DisplayDbBook } from "../components/DisplayBook";
+import BookshelfFilter from "../components/BookshelfFilter";
 
 // hooks
 import useUserId from "../hooks/useUserId";
@@ -31,12 +32,12 @@ const Books: React.FC = () => {
     return <span>Error: {(allBooks.error as Error).message}</span>;
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const target = e.target;
-    if (target.checked) {
-      setDisplayFilter(target.value);
-    }
-  };
+  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const target = e.target;
+  //   if (target.checked) {
+  //     setDisplayFilter(target.value);
+  //   }
+  // };
 
   return (
     <div className="pageContainer">
@@ -47,49 +48,7 @@ const Books: React.FC = () => {
       )}
       {allBooks && allBooks.data ? (
         <>
-          <fieldset>
-            <legend></legend>
-            <label htmlFor="allBooks">
-              <input
-                type="radio"
-                id="allBooks"
-                value="all"
-                checked={displayFilter === "all"}
-                onChange={handleChange}
-              />
-              ALL
-            </label>
-            <label htmlFor="readBooks">
-              <input
-                type="radio"
-                id="readBooks"
-                value="read"
-                checked={displayFilter === "read"}
-                onChange={handleChange}
-              />
-              READ
-            </label>
-            <label htmlFor="currentlyReadingBooks">
-              <input
-                type="radio"
-                id="currentlyReadingBooks"
-                value="currentlyReading"
-                checked={displayFilter === "currentlyReading"}
-                onChange={handleChange}
-              />
-              CURRENTLY READING
-            </label>
-            <label htmlFor="toReadBooks">
-              <input
-                type="radio"
-                id="toReadBooks"
-                value="toRead"
-                checked={displayFilter === "toRead"}
-                onChange={handleChange}
-              />
-              TO READ
-            </label>
-          </fieldset>
+          <BookshelfFilter displayFilter={displayFilter} setDisplayFilter = {setDisplayFilter} />
           <ul className="books">
             {allBooks.data.length > 0 ? (
               displayFilter === "all" ? (

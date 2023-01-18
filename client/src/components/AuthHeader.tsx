@@ -12,6 +12,17 @@ interface PropTypes {
   title?: string;
 }
 
+
+export default function AuthHeader({ children, to, title }: PropTypes) {
+  return (
+    <StyledHeader>
+      <Link to={to} title={title}>
+        {children}
+      </Link>
+    </StyledHeader>
+  );
+};
+
 // styled components
 
 const StyledHeader = styled.header`
@@ -26,13 +37,3 @@ const StyledHeader = styled.header`
     }
   }
 `;
-
-export default function AuthHeader({ children, to, title }: PropTypes) {
-  return (
-    <StyledHeader>
-      <Link to={to} title={title}>
-        {children}
-      </Link>
-    </StyledHeader>
-  );
-}

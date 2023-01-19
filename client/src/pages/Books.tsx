@@ -13,8 +13,6 @@ import useAllBooksInDb from "../hooks/useAllBooksInDb";
 // types
 import { DbBookInfo } from "../types";
 
-
-
 // gets all users book from db and displays them
 // user can filter books displayed by bookshelf(status)
 const Books: React.FC = () => {
@@ -35,7 +33,6 @@ const Books: React.FC = () => {
     return <span>Error: {(allBooks.error as Error).message}</span>;
   }
 
-
   return (
     <Wrapper>
       {userId ? null : (
@@ -46,18 +43,24 @@ const Books: React.FC = () => {
       {allBooks && allBooks.data ? (
         <>
           <h1>My Books</h1>
-          <BookshelfFilter displayFilter={displayFilter} setDisplayFilter = {setDisplayFilter} />
-          <ul className="books">
+          <BookshelfFilter
+            displayFilter={displayFilter}
+            setDisplayFilter={setDisplayFilter}
+          />
+          <BookList>
             {allBooks.data.length > 0 ? (
               displayFilter === "all" ? (
                 <>
                   {allBooks.data.map((book: DbBookInfo, index: number) => {
                     return (
-                      <li key={`${book.bookid}${index}`}>
+                      <ListItem
+                        key={`${book.bookid}${index}`}
+                        title="book details"
+                      >
                         <Link to={`${book.bookid}`} state={{ book: book }}>
                           <DisplayDbBook item={book} format={"short"} />
                         </Link>
-                      </li>
+                      </ListItem>
                     );
                   })}
                 </>
@@ -66,11 +69,15 @@ const Books: React.FC = () => {
                   {allBooks.data.map((book: DbBookInfo, index: number) => {
                     if (book.status === "read") {
                       return (
-                        <li key={`${book.bookid}${index}`}>
-                          <Link to={`${book.bookid}`} state={{ book: book }}>
+                        <ListItem key={`${book.bookid}${index}`}>
+                          <Link
+                            to={`${book.bookid}`}
+                            state={{ book: book }}
+                            title="book details"
+                          >
                             <DisplayDbBook item={book} format={"short"} />
                           </Link>
-                        </li>
+                        </ListItem>
                       );
                     } else {
                       return null;
@@ -82,11 +89,15 @@ const Books: React.FC = () => {
                   {allBooks.data.map((book: DbBookInfo, index: number) => {
                     if (book.status === "currentlyReading") {
                       return (
-                        <li key={`${book.bookid}${index}`}>
-                          <Link to={`${book.bookid}`} state={{ book: book }}>
+                        <ListItem key={`${book.bookid}${index}`}>
+                          <Link
+                            to={`${book.bookid}`}
+                            state={{ book: book }}
+                            title="book details"
+                          >
                             <DisplayDbBook item={book} format={"short"} />
                           </Link>
-                        </li>
+                        </ListItem>
                       );
                     } else {
                       return null;
@@ -98,11 +109,15 @@ const Books: React.FC = () => {
                   {allBooks.data.map((book: DbBookInfo, index: number) => {
                     if (book.status === "toRead") {
                       return (
-                        <li key={`${book.bookid}${index}`}>
-                          <Link to={`${book.bookid}`} state={{ book: book }}>
+                        <ListItem key={`${book.bookid}${index}`}>
+                          <Link
+                            to={`${book.bookid}`}
+                            state={{ book: book }}
+                            title="book details"
+                          >
                             <DisplayDbBook item={book} format={"short"} />
                           </Link>
-                        </li>
+                        </ListItem>
                       );
                     } else {
                       return null;
@@ -111,7 +126,7 @@ const Books: React.FC = () => {
                 </>
               ) : null
             ) : null}
-          </ul>
+          </BookList>
         </>
       ) : null}
     </Wrapper>
@@ -122,11 +137,27 @@ export default Books;
 
 // styled components
 const Wrapper = styled.div`
-max-width: 1600px;
+  max-width: 1600px;
   margin: 0 auto;
 
+  h1 {
+    padding-left: 1em;
+  }
+`;
 
-h1{
-  padding-left: 1em;
-}
-`
+const ListItem = styled.li`
+  width: 320px;
+  margin: 20px auto;
+  height: 100%;
+
+  @media (orientation: landscape) and (hover: none) and (pointer: coarse) and (max-width: 1023px) {
+  }
+`;
+
+const BookList = styled.ul`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-rows: repeat(1fr);
+  align-items: stretch;
+  gap: 0.5em;
+`;

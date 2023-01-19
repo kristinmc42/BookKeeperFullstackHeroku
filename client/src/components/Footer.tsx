@@ -26,4 +26,7 @@ const StyledFooter = styled.footer`
   p:first-of-type {
     font-family: ${(props) => props.theme.fonts.header};
   }
+  p:nth-of-type(2){
+    text-align: right;
+  }
 `;

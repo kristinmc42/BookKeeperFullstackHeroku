@@ -145,10 +145,9 @@ export const DisplayGoogleBook = ({
 
 // styled components
 const BookInfoCard = styled.article`
-  margin: 20px auto;
-  max-width: 320px;
   color: ${(props) => props.theme.colors.whiteText};
   border: 2px solid ${(props) => props.theme.colors.secondary};
+  height: 87%
 `;
 const ShortFormBookInfo = styled.section`
   display: flex;
@@ -157,7 +156,7 @@ const ShortFormBookInfo = styled.section`
   padding: .5em;
 
   img{
-    min-width: 85px;
+    width: 85px;
     padding-top: .8em;
   }
 

@@ -2,14 +2,17 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useMutation } from "react-query";
 import { useNavigate, useLocation } from "react-router-dom";
+import styled from "styled-components";
 
 //components
 import Button from "../components/Button";
 import { DisplayDbBook } from "../components/DisplayBook";
+import { device } from "../styles/Breakpoints";
 
 //types
 import { DbBookInfo } from "../types";
 
+// displays details of book from the db
 export default function SingleDbBook() {
   const navigate = useNavigate();
 
@@ -51,15 +54,19 @@ export default function SingleDbBook() {
   };
 
   return (
-    <div className="pageContainer">
+    <Wrapper>
       {mutation.isSuccess ? (
-        <h2>Your book has been deleted</h2>
+        <DeletedBookContainer>
+        <DeletedBookHeader>Your book has been deleted.</DeletedBookHeader>
+        </DeletedBookContainer>
       ) : (
         <>
           <Button onClick={() => navigate(-1)}>Back</Button>
           <DisplayDbBook item={bookInfo} format={"full"} />
-          <div className="selectContainer">
-            <label htmlFor="bookshelfSelect"></label>
+          <BookStatusSection>
+            <label htmlFor="bookshelfSelect">
+              Select a different bookshelf
+            </label>
             <select
               name="bookshelfSelect"
               id="bookshelfSelect"
@@ -84,19 +91,154 @@ export default function SingleDbBook() {
                 ) : null}
               </>
             )}
+          </BookStatusSection>
             {confirmDelete ? (
-              <div className="deleteModal">
+              <DeleteBookOverlay>
+              <DeleteBookModal>
                 <h2>
                   Are you sure you want to permanently delete this book from
                   your bookshelf?
                 </h2>
                 <Button onClick={() => setConfirmDelete(false)}>Cancel</Button>
                 <Button onClick={handleDelete}>Delete Book</Button>
-              </div>
+              </DeleteBookModal>
+              </DeleteBookOverlay>
             ) : null}
-          </div>
         </>
       )}
-    </div>
+    </Wrapper>
   );
 }
+
+// styled components
+const Wrapper = styled.div`
+  max-width: 1600px;
+  width: 89%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+
+  button {
+    max-width: 75px;
+    margin-bottom: 0.5em;
+  }
+
+  article {
+    @media ${device.tablet} {
+      min-height: 60vh;
+    }
+  }
+
+  @media (min-width: 600px) {
+    min-height: 85vh;
+  }
+  @media ${device.tablet} {
+    min-height: 80vh;
+  }
+
+  @media (orientation: landscape) and (hover: none) and (pointer: coarse) and (min-width: 600px) {
+    justify-content: center;
+    align-items: center;
+    min-height: 65vh;
+  }
+  @media (orientation: landscape) and (hover: none) and (pointer: coarse) and (min-width: 830px) {
+    min-height: 75vh;
+  }
+`;
+
+const BookStatusSection = styled.section`
+  display: flex;
+  justify-content: space-between;
+  align-itmes: center;
+  padding-top: 1em;
+  width: 100%;
+  min-height: 50px;
+
+  label {
+    position: absolute;
+    width: 0;
+    height: 0;
+    opacity: 0;
+  }
+  select {
+    height: 37px;
+    color: ${(props) => props.theme.colors.whiteText};
+    background-color: ${(props) => props.theme.colors.primary};
+    border: 2px solid ${(props) => props.theme.colors.secondary};
+    border-radius: 5px;
+    padding: 0 0.5em;
+    width: 45%;
+  }
+
+  button {
+    width: 45%;
+    max-width: 160px;
+    font-size: 0.9rem;
+
+    @media ${device.mobileM} {
+      min-height: 37px;
+      font-size: 1rem;
+    }
+  }
+`;
+
+const DeleteBookOverlay = styled.div`
+position: fixed;
+top: 0;
+right: 0;
+bottom: 0;
+left: 0;
+background-color: ${(props) => props.theme.colors.primary};
+display: flex;
+justify-content: center;
+align-items: center;
+
+`
+const DeleteBookModal = styled.div`
+display: flex;
+flex-direction: column;
+justify-content: space-evenly;
+align-items: center;
+background-color: ${(props) => props.theme.colors.background};
+width: 70%;
+min-height: 65vh;
+padding: .8em;
+
+h2{
+  font-size: 1.4em;
+  text-align: center;
+  line-height: 1.2;
+}
+button{
+  min-width: 150px;
+}
+button:first-of-type{
+  background-color: ${(props) => props.theme.colors.white};
+}
+
+@media ${device.tablet}{
+  padding: 1em;
+  width: 55%;
+  min-height: 50vh;
+
+  h2{
+    padding: 0 2em 1em 2em;
+  }
+
+ 
+}
+`
+const DeletedBookContainer = styled.section`
+display: flex;
+justify-content: center;
+align-items: center;
+height: 80vh;
+
+@media (orientation: landscape) and (hover: none) and (pointer: coarse) and (max-width: 1023px) {
+  height: 60vh;
+}
+`
+const DeletedBookHeader = styled.h2`
+text-align: center;
+`

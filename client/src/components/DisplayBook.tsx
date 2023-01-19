@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 
-
 //types
 import { BookInfo, DbBookInfo } from "../types";
 // styles
@@ -16,8 +15,6 @@ export const DisplayDbBook = ({
   item: DbBookInfo;
   format: string;
 }) => {
-
-
   // const [descArray, setDescArray] = useState<string[] | undefined>();
   // // move this inside convertBookToDb
   // // let descArray: string[] | undefined;
@@ -25,12 +22,10 @@ export const DisplayDbBook = ({
   //   if (item.desc) {
   //     setDescArray((item.desc).split("<br><br>"));
   //     // console.log(descArray)
-      
+
   //   }
 
   // },[])
-
-
 
   // turn string of genres into a string of unique genres
   // const newGenreString: string | undefined = convertGenres(item.genre);
@@ -43,10 +38,10 @@ export const DisplayDbBook = ({
           <img src={item.img} alt={`Cover of ${item.title}`} />
         ) : null}
         <div>
-        <h2>{item.title}</h2>
-        {item.subtitle ? <h3>{item.subtitle}</h3> : null}
-        {item.author ? <h3>By: {item.author}</h3> : null}
-        {item.genre ? <h4>{item.genre}</h4> : null}
+          <h2>{item.title}</h2>
+          {item.subtitle ? <h3>{item.subtitle}</h3> : null}
+          {item.author ? <h3>By: {item.author}</h3> : null}
+          {item.genre ? <h4>{item.genre}</h4> : null}
         </div>
       </ShortFormBookInfo>
 
@@ -145,45 +140,52 @@ export const DisplayGoogleBook = ({
 
 // styled components
 const BookInfoCard = styled.article`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   color: ${(props) => props.theme.colors.whiteText};
   border: 2px solid ${(props) => props.theme.colors.secondary};
-  height: 87%
+  height: 87%;
 `;
 const ShortFormBookInfo = styled.section`
   display: flex;
   align-items: flex-start;
-  gap: .8em;
-  padding: .5em;
+  gap: 0.8em;
+  padding: 0.5em;
 
-  img{
+  img {
     width: 85px;
-    padding-top: .8em;
+    padding-top: 0.8em;
   }
 
-  h2, h3, h4{
-    padding: .3em 0;
+  h2,
+  h3,
+  h4 {
+    padding: 0.3em 0;
     line-height: 1.3;
     font-size: 1.2rem;
   }
 
-  h3{
+  h3 {
     font-size: 1rem;
   }
-  h4{
-    font-size: .7rem;
+  h4 {
+    font-size: 0.7rem;
   }
 `;
 
 const FullFormBookInfo = styled.section`
-display: flex;
-flex-direction: column;
-gap: .8em;
-padding: .5em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8em;
+  padding: 0.5em;
 
-h4, p, a{
-  font-size: .8rem;
-}
-a{
-  color: ${props => props.theme.colors.secondary}
-}
-`
+  h4,
+  p,
+  a {
+    font-size: 0.8rem;
+  }
+  a {
+    color: ${(props) => props.theme.colors.secondary};
+  }
+`;

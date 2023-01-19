@@ -12,6 +12,7 @@ import useAllBooksInDb from "../hooks/useAllBooksInDb";
 
 // types
 import { DbBookInfo } from "../types";
+import { device } from "../styles/Breakpoints";
 
 // gets all users book from db and displays them
 // user can filter books displayed by bookshelf(status)
@@ -150,6 +151,7 @@ const ListItem = styled.li`
   margin: 20px auto;
   height: 100%;
 
+
   @media (orientation: landscape) and (hover: none) and (pointer: coarse) and (max-width: 1023px) {
   }
 `;
@@ -160,4 +162,9 @@ const BookList = styled.ul`
   grid-template-rows: repeat(1fr);
   align-items: stretch;
   gap: 0.5em;
+  
+  @media ${device.mobileM}{
+    padding: 0.5em;
+
+  }
 `;

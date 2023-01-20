@@ -14,8 +14,7 @@ type BookParams = {
 };
 
 // Displays more information on the book from Google books API that was selected by the user
-// gets current info on book with useQuery through the custim useBook hook
-// if user clicks button to add to their bookshelf, they are navigated to the update page and the book info is passed in state
+
 const SingleSearchBook: React.FC = () => {
   const navigate = useNavigate();
   const { bookId } = useParams<BookParams>();

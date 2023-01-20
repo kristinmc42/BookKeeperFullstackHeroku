@@ -57,13 +57,14 @@ export default function SingleDbBook() {
     <Wrapper>
       {mutation.isSuccess ? (
         <DeletedBookContainer>
-        <DeletedBookHeader>Your book has been deleted.</DeletedBookHeader>
+          <DeletedBookHeader>Your book has been deleted.</DeletedBookHeader>
         </DeletedBookContainer>
       ) : (
         <>
           <Button onClick={() => navigate(-1)}>Back</Button>
           <DisplayDbBook item={bookInfo} format={"full"} />
           <BookStatusSection>
+            {bookInfo.dateRead && <h4>Date read: {bookInfo.dateRead}</h4>}
             <label htmlFor="bookshelfSelect">
               Select a different bookshelf
             </label>
@@ -77,7 +78,6 @@ export default function SingleDbBook() {
               <option value="toRead">Want to Read</option>
               <option value="currentlyReading">Currently Reading</option>
             </select>
-            {bookInfo.dateRead ? <h4>Date read: {bookInfo.dateRead}</h4> : null}
             <Button onClick={() => setConfirmDelete(true)}>Delete Book</Button>
 
             {mutation.isLoading ? (
@@ -92,8 +92,8 @@ export default function SingleDbBook() {
               </>
             )}
           </BookStatusSection>
-            {confirmDelete ? (
-              <DeleteBookOverlay>
+          {confirmDelete ? (
+            <DeleteBookOverlay>
               <DeleteBookModal>
                 <h2>
                   Are you sure you want to permanently delete this book from
@@ -102,8 +102,8 @@ export default function SingleDbBook() {
                 <Button onClick={() => setConfirmDelete(false)}>Cancel</Button>
                 <Button onClick={handleDelete}>Delete Book</Button>
               </DeleteBookModal>
-              </DeleteBookOverlay>
-            ) : null}
+            </DeleteBookOverlay>
+          ) : null}
         </>
       )}
     </Wrapper>
@@ -118,10 +118,12 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
+  align-items: center;
 
   button {
     max-width: 75px;
     margin-bottom: 0.5em;
+    align-self: start;
   }
 
   article {
@@ -149,12 +151,15 @@ const Wrapper = styled.div`
 
 const BookStatusSection = styled.section`
   display: flex;
-  justify-content: space-between;
-  align-itmes: center;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   padding-top: 1em;
   width: 100%;
-  min-height: 50px;
 
+  h4 {
+    text-align: center;
+  }
   label {
     position: absolute;
     width: 0;
@@ -168,14 +173,15 @@ const BookStatusSection = styled.section`
     border: 2px solid ${(props) => props.theme.colors.secondary};
     border-radius: 5px;
     padding: 0 0.5em;
-    width: 45%;
+    min-width: 150px;
+    margin: 1em;
   }
 
   button {
-    width: 45%;
-    max-width: 160px;
+    align-self: center;
+    max-width: 260px;
     font-size: 0.9rem;
-
+    margin: 1em;
     @media ${device.mobileM} {
       min-height: 37px;
       font-size: 1rem;
@@ -184,61 +190,59 @@ const BookStatusSection = styled.section`
 `;
 
 const DeleteBookOverlay = styled.div`
-position: fixed;
-top: 0;
-right: 0;
-bottom: 0;
-left: 0;
-background-color: ${(props) => props.theme.colors.primary};
-display: flex;
-justify-content: center;
-align-items: center;
-
-`
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: ${(props) => props.theme.colors.primary};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 const DeleteBookModal = styled.div`
-display: flex;
-flex-direction: column;
-justify-content: space-evenly;
-align-items: center;
-background-color: ${(props) => props.theme.colors.background};
-width: 70%;
-min-height: 65vh;
-padding: .8em;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  background-color: ${(props) => props.theme.colors.background};
+  width: 70%;
+  min-height: 65vh;
+  padding: 0.8em;
 
-h2{
-  font-size: 1.4em;
-  text-align: center;
-  line-height: 1.2;
-}
-button{
-  min-width: 150px;
-}
-button:first-of-type{
-  background-color: ${(props) => props.theme.colors.white};
-}
-
-@media ${device.tablet}{
-  padding: 1em;
-  width: 55%;
-  min-height: 50vh;
-
-  h2{
-    padding: 0 2em 1em 2em;
+  h2 {
+    font-size: 1.4em;
+    text-align: center;
+    line-height: 1.2;
+  }
+  button {
+    min-width: 150px;
+    align-self: center;
+  }
+  button:first-of-type {
+    background-color: ${(props) => props.theme.colors.white};
   }
 
- 
-}
-`
-const DeletedBookContainer = styled.section`
-display: flex;
-justify-content: center;
-align-items: center;
-height: 80vh;
+  @media ${device.tablet} {
+    padding: 1em;
+    width: 55%;
+    min-height: 50vh;
 
-@media (orientation: landscape) and (hover: none) and (pointer: coarse) and (max-width: 1023px) {
-  height: 60vh;
-}
-`
+    h2 {
+      padding: 0 2em 1em 2em;
+    }
+  }
+`;
+const DeletedBookContainer = styled.section`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+
+  @media (orientation: landscape) and (hover: none) and (pointer: coarse) and (max-width: 1023px) {
+    height: 60vh;
+  }
+`;
 const DeletedBookHeader = styled.h2`
-text-align: center;
-`
+  text-align: center;
+`;

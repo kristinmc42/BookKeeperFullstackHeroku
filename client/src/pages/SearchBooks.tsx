@@ -86,7 +86,7 @@ const SearchBooks: React.FC = () => {
 
   return (
     <Wrapper>
-      <h1>Search for a new book!!</h1>
+      <h1>Find your next great read!</h1>
       <SearchBar
         onSubmit={handleSubmit}
         onChange={handleChange}
@@ -138,6 +138,10 @@ const Wrapper = styled.div`
 
   h1 {
     padding-left: 1em;
+
+    @media ${device.laptop}{
+      padding-left: 1.5em;
+    }
   }
 `;
 const ListItem = styled.li`

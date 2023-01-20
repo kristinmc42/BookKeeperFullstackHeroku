@@ -10,4 +10,8 @@ It gave me a chance to redesign the look of the site as well. I used Styled Comp
 
 I built the back end with NodeJS, Express, and MySQL for the database. For authentication I used jwt and bcrypt. I used Typescript in the back end as well. MySQL Workbench was very handy for interacting with the db.
 
-This is a work and progress and I am continuing to see what else I can do with it!
+The book information is from the Google Books API. Currently it limits search results to 40 results which may not cover an author's whole catalogue in many cases. I am also still trying to decide how to handle styling the content from the api without having to completely redo it.
+
+This is a work in progress and I am continuing to see what else I can do with it!
+
+Enjoy!

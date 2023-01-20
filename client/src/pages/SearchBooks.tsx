@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import styled from "styled-components";
 
 // components
 import SearchBar from "../components/SearchBar";
@@ -83,17 +84,16 @@ const SearchBooks: React.FC = () => {
   );
 
   return (
-    <div className="searchContainer">
+    <Wrapper>
       <SearchBar
         onSubmit={handleSubmit}
         onChange={handleChange}
+        onClick={handleClear}
         value={text}
         placeholderText={"Title, Author, Keyword..."}
       />
 
-      <Button type="button" onClick={handleClear}>
-        Clear Search
-      </Button>
+  
 
       <ul>
         {isSuccess && data && data.length > 0 ? (
@@ -124,8 +124,19 @@ const SearchBooks: React.FC = () => {
           An error occurred: {(error as Error).message}
         </span>
       ) : null}
-    </div>
+    </Wrapper>
   );
 };
 
 export default SearchBooks;
+
+// styled component
+const Wrapper = styled.div`
+max-width: 1600px;
+width: 90%;
+min-height: 85vh;
+margin: 0 auto;
+display: flex;
+flex-direction: column;
+justify-content: space-around;
+`

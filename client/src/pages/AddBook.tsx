@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { DayPicker } from "react-day-picker";
-import { format } from "date-fns";
 import axios, { AxiosError } from "axios";
 import { useMutation } from "react-query";
 
@@ -10,6 +8,7 @@ import { useMutation } from "react-query";
 // components
 import { DisplayGoogleBook } from "../components/DisplayBook";
 import Button from "../components/Button";
+import BookshelfOptionsFieldset from "../components/BookshelfOptionsFieldset";
 
 //functions
 import { convertBookToDbFormat } from "../functions/convertBookToDbFormat";
@@ -92,9 +91,7 @@ const AddBook: React.FC = () => {
   return (
     <>
       <div className="bookContainer">
-        <Button onClick={() => navigate(-1) } >Back</Button>
-  
-      
+        <Button onClick={() => navigate(-1)}>Back</Button>
 
         <DisplayGoogleBook item={bookInfo} format={"short"} />
       </div>
@@ -108,55 +105,12 @@ const AddBook: React.FC = () => {
             <span className="message">Book added!</span>
           ) : (
             <form className="optionsForm" onSubmit={handleSubmit}>
-              <fieldset>
-                <legend>Select a bookshelf for this title</legend>
-                <div className="readContainer">
-                  <label htmlFor="read">
-                    <input
-                      type="radio"
-                      name="bookshelfOptions"
-                      id="read"
-                      value="read"
-                      onChange={handleChange}
-                    />
-                    Read
-                  </label>
-                  {bookshelf === "read" && (
-                    <DayPicker
-                      mode="single"
-                      selected={dateRead}
-                      onSelect={setDateRead}
-                      footer={
-                        dateRead ? (
-                          <p>You picked {format(dateRead, "PP")}.</p>
-                        ) : (
-                          <p>Select the date you finished reading.</p>
-                        )
-                      }
-                    />
-                  )}
-                </div>
-                <label htmlFor="currentlyReading">
-                  <input
-                    type="radio"
-                    name="bookshelfOptions"
-                    id="currentlyReading"
-                    value="currentlyReading"
-                    onChange={handleChange}
-                  />
-                  Currently Reading
-                </label>
-                <label htmlFor="toRead">
-                  <input
-                    type="radio"
-                    name="bookshelfOptions"
-                    id="toRead"
-                    value="toRead"
-                    onChange={handleChange}
-                  />
-                  To Read
-                </label>
-              </fieldset>
+              <BookshelfOptionsFieldset
+                bookshelf={bookshelf}
+                handleChange={handleChange}
+                dateRead={dateRead}
+                setDateRead={setDateRead}
+              />
 
               {mutation.isError ? null : (
                 <Button disabled={!bookshelf}>Add Book </Button>

@@ -10,14 +10,13 @@ const RootLayout: React.FC = () => {
   return (
     <PageContainer>
       <Wrapper>
-      <header>
-        <Nav />
-      </header>
+        <header>
+          <Nav />
+        </header>
 
-      <main>
-        <Outlet />
-      </main>
-
+        <main>
+          <Outlet />
+        </main>
       </Wrapper>
 
       <Footer />
@@ -28,8 +27,7 @@ const RootLayout: React.FC = () => {
 export default RootLayout;
 
 //styled component
-const Wrapper = styled.div`
-`
+const Wrapper = styled.div``;
 const PageContainer = styled.div`
   min-height: 100vh;
   display: flex;

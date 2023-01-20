@@ -142,6 +142,7 @@ const StyledNavLink = styled(NavLink)`
   color: ${(props) => props.theme.colors.whiteText};
   font-family: ${(props) => props.theme.fonts.main};
   text-align: center;
+  line-height: 1.3;
 
   &.active {
     border-bottom: 2px solid ${(props) => props.theme.colors.secondary};
@@ -157,6 +158,7 @@ const StyledLogoLink = styled(StyledNavLink)`
   text-align: left;
   padding: 10px;
   min-width: 75px;
+  line-height: 1;
 
   @media ${device.mobileL} {
     font-size: 1.11rem;
@@ -169,4 +171,6 @@ const StyledLogoLink = styled(StyledNavLink)`
     padding: 10px 30px;
   }
 `;
-const StyledMobileLink = styled(StyledNavLink)``;
+const StyledMobileLink = styled(StyledNavLink)`
+  line-height: 0;
+`;

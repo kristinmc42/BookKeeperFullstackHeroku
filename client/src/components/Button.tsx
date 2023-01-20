@@ -29,6 +29,7 @@ const StyledButton = styled.button`
   border-radius: 8px;
   font-weight: 500;
   letter-spacing: 1px;
+  transition: 1s ease-out;
 
   &:hover{
     color: ${props => props.theme.colors.secondary};

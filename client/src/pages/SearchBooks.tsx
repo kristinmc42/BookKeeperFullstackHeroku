@@ -137,6 +137,7 @@ const Wrapper = styled.div`
   margin: 0 auto;
 
   h1 {
+    font-size: 1.9em;
     padding-left: 1em;
 
     @media ${device.laptop}{

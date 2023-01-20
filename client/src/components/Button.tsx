@@ -6,6 +6,7 @@ interface ButtonProps {
   onClick?: () => void | undefined;
   disabled?: boolean | undefined;
   children?: React.ReactNode;
+  className?: string | undefined
 }
 
 

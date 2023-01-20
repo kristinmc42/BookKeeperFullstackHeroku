@@ -27,7 +27,7 @@ const SearchBar = (props: SearchProps) => {
         value={props.value}
         placeholder={props.placeholderText}
       />
-      <Button type="submit">Search</Button>
+        <Button type="submit">Search</Button>
 
       </SearchBarDiv>
       <Button type="button" onClick={props.onClick}>
@@ -39,15 +39,38 @@ const SearchBar = (props: SearchProps) => {
 
 export default SearchBar;
 
+const SearchBarDiv = styled.div`
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+gap: .35em;
+width: 100%;
+
+
+input{
+  width: 100%;
+}
+
+@media ${device.mobileL}{
+  flex-direction: row;
+}
+
+`
 const StyledForm = styled.form`
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: repeat(1fr);
-  justify-items: center;
-  row-gap: 0.5em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5em;
   padding: 1em;
   margin: 0 auto;
   width: 80%;
+  max-width: 1000px;
+
+  @media ${device.tablet} {
+    width: 70%;
+  }
 
   label{
     opacity:0;
@@ -60,43 +83,18 @@ const StyledForm = styled.form`
   button {
     width: 160px;
   }
-  // button:nth-of-type(2) {
-  //   color: ${(props) => props.theme.colors.secondary};
-  //   background-color: ${(props) => props.theme.colors.primary};
-  //   border: 1px solid ${(props) => props.theme.colors.secondary};
 
-  //   &:hover {
-  //     color: ${(props) => props.theme.colors.primary};
-  //     background-color: ${(props) => props.theme.colors.secondary};
-  //     border: 1px solid ${(props) => props.theme.colors.primary};
-  //   }
-  // }
+  ${SearchBarDiv} + button{
+    color: ${props => props.theme.colors.secondary};
+    background-color: ${props => props.theme.colors.primary};
+    border: 1px solid ${props => props.theme.colors.secondary};
 
-  @media ${device.tablet} {
-    grid-template-columns: 1fr 1fr;
-    width: 70%;
-
-    // button:nth-of-type(1) {
-    //   grid-column-start: 2;
-    //   grid-column-end: 3;
-    //   grid-row-start: 2;
-    //   grid-row-end: 3;
-    // }
-    button:nth-of-type(2) {
-      grid-column-start: 1;
-      grid-column-end: 2;
-      grid-row-start: 2;
-      grid-row-end: 3;
+    &:hover{
+      color: ${props => props.theme.colors.primary};
+      background-color: ${props => props.theme.colors.secondary};
+      border: 1px solid ${props => props.theme.colors.primary};
+      cursor: pointer;
     }
   }
+
 `;
-
-const SearchBarDiv = styled.div`
-display: flex;
-width: 100%;
-
-input{
-  width: 100%;
-}
-
-`

@@ -9,6 +9,7 @@ import { useMutation } from "react-query";
 import { DisplayGoogleBook } from "../components/DisplayBook";
 import Button from "../components/Button";
 import BookshelfOptionsFieldset from "../components/BookshelfOptionsFieldset";
+import ErrorMessage from "../components/ErrorMessage";
 
 //functions
 import { convertBookToDbFormat } from "../functions/convertBookToDbFormat";
@@ -20,6 +21,8 @@ import useBookInDb from "../hooks/useBookInDb";
 
 // types
 import { BookInfo, DbBookInfo } from "../types";
+import styled from "styled-components";
+import { device } from "../styles/Breakpoints";
 
 // displays select info on the book and allows the user to choose a status(bookshelf) for the book and then add to db
 const AddBook: React.FC = () => {
@@ -27,7 +30,7 @@ const AddBook: React.FC = () => {
 
   // get book info from location and save bookId string in variables
   const { state } = useLocation();
-  const bookInfo: BookInfo = state.bookInfo; // bookInfo Object
+  const bookInfo: BookInfo = state.bookInfo;
   const bookId: string = bookInfo.id;
 
   // get userid of current user
@@ -89,22 +92,23 @@ const AddBook: React.FC = () => {
   };
 
   return (
-    <>
-      <div className="bookContainer">
+    <Wrapper>
+      <div>
         <Button onClick={() => navigate(-1)}>Back</Button>
 
         <DisplayGoogleBook item={bookInfo} format={"short"} />
       </div>
+
       {bookData.isSuccess && bookData.data.length > 0 ? (
-        <span className="message">
+        <StyledMessage className="message">
           You already have this book on your bookshelf!
-        </span>
+        </StyledMessage>
       ) : (
         <>
           {mutation.isSuccess ? (
-            <span className="message">Book added!</span>
+            <StyledMessage className="message">Book added!</StyledMessage>
           ) : (
-            <form className="optionsForm" onSubmit={handleSubmit}>
+            <StyledForm onSubmit={handleSubmit}>
               <BookshelfOptionsFieldset
                 bookshelf={bookshelf}
                 handleChange={handleChange}
@@ -115,39 +119,68 @@ const AddBook: React.FC = () => {
               {mutation.isError ? null : (
                 <Button disabled={!bookshelf}>Add Book </Button>
               )}
-            </form>
+            </StyledForm>
           )}
         </>
       )}
 
       {/* loading/error messages */}
-      {bookData.isError ? (
-        <span className="message">
+      {bookData.isError && (
+        <ErrorMessage>
           An error occurred: {(bookData.error as Error).message}
-        </span>
-      ) : null}
+        </ErrorMessage>
+      )}
 
       {mutation.isLoading ? (
-        <span className="message">"Adding book to bookshelf..."</span>
+        <StyledMessage>"Adding book to bookshelf..."</StyledMessage>
       ) : (
         <>
           {mutation.isError &&
           (mutation.error as AxiosError).response?.status === 500 ? (
-            <span className="message">
+            <ErrorMessage>
               Please login to add the book to your bookshelf.
-            </span>
+            </ErrorMessage>
           ) : null}
 
           {mutation.isError &&
           (mutation.error as AxiosError).response?.status !== 500 ? (
-            <span className="message">
+            <ErrorMessage>
               An error occurred: {(mutation.error as Error).message}
-            </span>
+            </ErrorMessage>
           ) : null}
         </>
       )}
-    </>
+    </Wrapper>
   );
 };
 
 export default AddBook;
+
+// styled components
+const Wrapper = styled.div`
+max-width: 1200px;
+width: 89%;
+min-height: 85vh;
+margin: 0 auto;
+display: flex;
+flex-direction: column;
+justify-content: space-around;
+
+  button{
+    margin-bottom: 1.5em;
+  }
+`;
+const StyledForm = styled.form`
+  button {
+    max-width: 200px;
+    margin-top: 0;
+  }
+`;
+const StyledMessage = styled.h2`
+  text-align: center;
+  font-size: 1.8rem;
+
+  @media ${device.tablet} {
+    font-size: 2.2rem;
+  }
+`;

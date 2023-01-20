@@ -138,7 +138,7 @@ export default UpdateBook;
 
 // styled components
 const Wrapper = styled.div`
-  max-width: 1600px;
+  max-width: 1200px;
   width: 89%;
   min-height: 85vh;
   margin: 0 auto;

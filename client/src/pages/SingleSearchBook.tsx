@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import styled from "styled-components";
 
 // components
 import { DisplayGoogleBook } from "../components/DisplayBook";
@@ -35,7 +36,7 @@ const SingleSearchBook: React.FC = () => {
   data && console.log(data);
 
   return (
-    <div className="pageContainer">
+    <Wrapper>
       <Button onClick={() => navigate(-1)}>Back</Button>
       <DisplayGoogleBook item={data} format={"full"} />
       <Button
@@ -44,8 +45,24 @@ const SingleSearchBook: React.FC = () => {
       >
         Add to my books
       </Button>
-    </div>
+    </Wrapper>
   );
 };
 
 export default SingleSearchBook;
+
+// styled components
+const Wrapper = styled.div`
+  max-width: 1600px;
+  width: 89%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: flex-start;
+  min-height: 85vh;
+
+  button {
+    margin: 1em 0;
+  }
+`;

@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import styled from "styled-components";
 
 //components
 import { DisplayDbBook } from "../components/DisplayBook";
+import BookshelfFilter from "../components/BookshelfFilter";
 
 // hooks
 import useUserId from "../hooks/useUserId";
@@ -10,6 +12,7 @@ import useAllBooksInDb from "../hooks/useAllBooksInDb";
 
 // types
 import { DbBookInfo } from "../types";
+import { device } from "../styles/Breakpoints";
 
 // gets all users book from db and displays them
 // user can filter books displayed by bookshelf(status)
@@ -31,15 +34,8 @@ const Books: React.FC = () => {
     return <span>Error: {(allBooks.error as Error).message}</span>;
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const target = e.target;
-    if (target.checked) {
-      setDisplayFilter(target.value);
-    }
-  };
-
   return (
-    <div className="pageContainer">
+    <Wrapper>
       {userId ? null : (
         <>
           <h2>Login to see your bookshelves</h2>
@@ -47,60 +43,25 @@ const Books: React.FC = () => {
       )}
       {allBooks && allBooks.data ? (
         <>
-          <fieldset>
-            <legend></legend>
-            <label htmlFor="allBooks">
-              <input
-                type="radio"
-                id="allBooks"
-                value="all"
-                checked={displayFilter === "all"}
-                onChange={handleChange}
-              />
-              ALL
-            </label>
-            <label htmlFor="readBooks">
-              <input
-                type="radio"
-                id="readBooks"
-                value="read"
-                checked={displayFilter === "read"}
-                onChange={handleChange}
-              />
-              READ
-            </label>
-            <label htmlFor="currentlyReadingBooks">
-              <input
-                type="radio"
-                id="currentlyReadingBooks"
-                value="currentlyReading"
-                checked={displayFilter === "currentlyReading"}
-                onChange={handleChange}
-              />
-              CURRENTLY READING
-            </label>
-            <label htmlFor="toReadBooks">
-              <input
-                type="radio"
-                id="toReadBooks"
-                value="toRead"
-                checked={displayFilter === "toRead"}
-                onChange={handleChange}
-              />
-              TO READ
-            </label>
-          </fieldset>
-          <ul className="books">
+          <h1>My Books</h1>
+          <BookshelfFilter
+            displayFilter={displayFilter}
+            setDisplayFilter={setDisplayFilter}
+          />
+          <BookList>
             {allBooks.data.length > 0 ? (
               displayFilter === "all" ? (
                 <>
                   {allBooks.data.map((book: DbBookInfo, index: number) => {
                     return (
-                      <li key={`${book.bookid}${index}`}>
+                      <ListItem
+                        key={`${book.bookid}${index}`}
+                        title="book details"
+                      >
                         <Link to={`${book.bookid}`} state={{ book: book }}>
                           <DisplayDbBook item={book} format={"short"} />
                         </Link>
-                      </li>
+                      </ListItem>
                     );
                   })}
                 </>
@@ -109,11 +70,15 @@ const Books: React.FC = () => {
                   {allBooks.data.map((book: DbBookInfo, index: number) => {
                     if (book.status === "read") {
                       return (
-                        <li key={`${book.bookid}${index}`}>
-                          <Link to={`${book.bookid}`} state={{ book: book }}>
+                        <ListItem key={`${book.bookid}${index}`}>
+                          <Link
+                            to={`${book.bookid}`}
+                            state={{ book: book }}
+                            title="book details"
+                          >
                             <DisplayDbBook item={book} format={"short"} />
                           </Link>
-                        </li>
+                        </ListItem>
                       );
                     } else {
                       return null;
@@ -125,11 +90,15 @@ const Books: React.FC = () => {
                   {allBooks.data.map((book: DbBookInfo, index: number) => {
                     if (book.status === "currentlyReading") {
                       return (
-                        <li key={`${book.bookid}${index}`}>
-                          <Link to={`${book.bookid}`} state={{ book: book }}>
+                        <ListItem key={`${book.bookid}${index}`}>
+                          <Link
+                            to={`${book.bookid}`}
+                            state={{ book: book }}
+                            title="book details"
+                          >
                             <DisplayDbBook item={book} format={"short"} />
                           </Link>
-                        </li>
+                        </ListItem>
                       );
                     } else {
                       return null;
@@ -141,11 +110,15 @@ const Books: React.FC = () => {
                   {allBooks.data.map((book: DbBookInfo, index: number) => {
                     if (book.status === "toRead") {
                       return (
-                        <li key={`${book.bookid}${index}`}>
-                          <Link to={`${book.bookid}`} state={{ book: book }}>
+                        <ListItem key={`${book.bookid}${index}`}>
+                          <Link
+                            to={`${book.bookid}`}
+                            state={{ book: book }}
+                            title="book details"
+                          >
                             <DisplayDbBook item={book} format={"short"} />
                           </Link>
-                        </li>
+                        </ListItem>
                       );
                     } else {
                       return null;
@@ -154,11 +127,39 @@ const Books: React.FC = () => {
                 </>
               ) : null
             ) : null}
-          </ul>
+          </BookList>
         </>
       ) : null}
-    </div>
+    </Wrapper>
   );
 };
 
 export default Books;
+
+// styled components
+const Wrapper = styled.div`
+  max-width: 1600px;
+  margin: 0 auto;
+
+  h1 {
+    padding-left: 1em;
+  }
+`;
+
+const ListItem = styled.li`
+  width: 320px;
+  margin: 20px auto;
+  height: 100%;
+`;
+
+const BookList = styled.ul`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-rows: repeat(1fr);
+  align-items: stretch;
+  gap: 0.5em;
+
+  @media ${device.mobileM} {
+    padding: 0.5em;
+  }
+`;

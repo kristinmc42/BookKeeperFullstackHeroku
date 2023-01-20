@@ -1,9 +1,32 @@
 import React from "react";
+import styled from "styled-components";
 
-export default function Footer() {
+
+const Footer: React.FC = () => {
   return (
-    <footer>
+    <StyledFooter>
       <p>Book Keeper</p>
-    </footer>
+      <p>Designed by Kristin McCollum</p>
+    </StyledFooter>
   );
-}
+};
+
+export default Footer;
+
+// styled components
+const StyledFooter = styled.footer`
+  display: flex;
+  justify-content: space-between;
+  color: ${(props) => props.theme.colors.whiteText};
+
+  p {
+    font-size: 0.8rem;
+    padding: 10px 30px;
+  }
+  p:first-of-type {
+    font-family: ${(props) => props.theme.fonts.header};
+  }
+  p:nth-of-type(2){
+    text-align: right;
+  }
+`;

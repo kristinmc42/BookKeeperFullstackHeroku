@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import styled from "styled-components";
 
 // components
 import SearchBar from "../components/SearchBar";
 import { DisplayGoogleBook } from "../components/DisplayBook";
+import { device } from "../styles/Breakpoints";
 
 // searches Google Books API based on input from user and displays results
 const SearchBooks: React.FC = () => {
@@ -59,7 +61,8 @@ const SearchBooks: React.FC = () => {
         `https://www.googleapis.com/books/v1/volumes?q=${inputValue}&maxResults=40&startIndex=0&key=${process.env.REACT_APP_GOOGLE_API_KEY}`
       )
       .then((res) => {
-        console.log(res.data);
+        console.log(res.data.items)
+        // console.log(res.data.items[1].volumeInfo.categories.join("/"));
         if (res.data.items && res.data.items.length > 0) {
           return res.data.items;
         }
@@ -82,27 +85,25 @@ const SearchBooks: React.FC = () => {
   );
 
   return (
-    <div className="searchContainer">
+    <Wrapper>
+      <h1>Find your next great read!</h1>
       <SearchBar
         onSubmit={handleSubmit}
         onChange={handleChange}
+        onClick={handleClear}
         value={text}
         placeholderText={"Title, Author, Keyword..."}
       />
 
-      <button type="button" className="clearSearch" onClick={handleClear}>
-        Clear Search
-      </button>
-
-      <ul>
+      <BookList>
         {isSuccess && data && data.length > 0 ? (
           data.map((item: any, index: number) => {
             return (
-              <li key={index}>
+              <ListItem key={index}>
                 <Link to={`${item.id}`}>
                   <DisplayGoogleBook item={item} format={"short"} />
                 </Link>
-              </li>
+              </ListItem>
             );
           })
         ) : isSuccess && !data ? (
@@ -112,7 +113,7 @@ const SearchBooks: React.FC = () => {
             </span>
           </>
         ) : null}
-      </ul>
+      </BookList>
 
       {/* loading and error messages for useQuery*/}
       {isLoading || isFetching ? (
@@ -123,8 +124,40 @@ const SearchBooks: React.FC = () => {
           An error occurred: {(error as Error).message}
         </span>
       ) : null}
-    </div>
+    </Wrapper>
   );
 };
 
 export default SearchBooks;
+
+// styled component
+const Wrapper = styled.div`
+  max-width: 1600px;
+  min-height: 85vh;
+  margin: 0 auto;
+
+  h1 {
+    font-size: 1.9em;
+    padding-left: 1em;
+
+    @media ${device.laptop}{
+      padding-left: 1.5em;
+    }
+  }
+`;
+const ListItem = styled.li`
+  width: 300px;
+  margin: 20px auto;
+  height: 100%;
+`;
+const BookList = styled.ul`
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+grid-template-rows: repeat(1fr);
+align-items: stretch;
+gap: 0.5em;
+
+@media ${device.mobileM} {
+  padding: 0.5em;
+}
+`;

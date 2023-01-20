@@ -7,10 +7,7 @@ import {
 } from "react-router-dom";
 import { QueryClientProvider, QueryClient } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
-
-// styles
-import "react-day-picker/dist/style.css"; 
-
+import { ThemeProvider } from "styled-components";
 
 //pages
 import Books from "./pages/Books";
@@ -28,13 +25,16 @@ import RootLayout from "./layouts/RootLayout";
 
 // styles
 import "./App.css";
+import "react-day-picker/dist/style.css";
+import { theme } from "./styles/Theme";
+import { GlobalStyles } from "./styles/Global";
 
 const queryClient: QueryClient = new QueryClient({
   defaultOptions: {
     queries: {
       cacheTime: 1000 * 60 * 60 * 24, // 24 hrs
-    }
-  }
+    },
+  },
 });
 
 const router = createBrowserRouter(
@@ -57,10 +57,13 @@ const router = createBrowserRouter(
 
 const App: React.FC = () => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools initialIsOpen={false} />
-      <RouterProvider router={router} />
-    </QueryClientProvider>
+    <ThemeProvider theme={theme}>
+      <QueryClientProvider client={queryClient}>
+        <GlobalStyles />
+        <ReactQueryDevtools initialIsOpen={false} />
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    </ThemeProvider>
   );
 };
 

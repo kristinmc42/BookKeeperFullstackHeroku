@@ -1,20 +1,36 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import Header from "../components/Header";
+
+//components
+import Nav from "../components/Nav";
 import Footer from "../components/Footer";
+import styled from "styled-components";
 
 const RootLayout: React.FC = () => {
   return (
-    <div className="rootLayout">
-      <Header />
+    <PageContainer>
+      <Wrapper>
+        <header>
+          <Nav />
+        </header>
 
-      <main>
-        <Outlet />
-      </main>
+        <main>
+          <Outlet />
+        </main>
+      </Wrapper>
 
       <Footer />
-    </div>
+    </PageContainer>
   );
 };
 
 export default RootLayout;
+
+//styled component
+const Wrapper = styled.div``;
+const PageContainer = styled.div`
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;

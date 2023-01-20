@@ -18,7 +18,8 @@ const SearchBar = (props: SearchProps) => {
 
   return (
     <StyledForm onSubmit={props.onSubmit}>
-      <label htmlFor="searchBarContents">Search for a new book!</label>
+      <label htmlFor="searchBarContents">Search by Title, Author, Keyword...</label>
+      <SearchBarDiv>
       <input
         type="text"
         id="searchBarContents"
@@ -27,6 +28,8 @@ const SearchBar = (props: SearchProps) => {
         placeholder={props.placeholderText}
       />
       <Button type="submit">Search</Button>
+
+      </SearchBarDiv>
       <Button type="button" onClick={props.onClick}>
         Clear Search
       </Button>
@@ -46,31 +49,39 @@ const StyledForm = styled.form`
   margin: 0 auto;
   width: 80%;
 
+  label{
+    opacity:0;
+    width: 0;
+    height: 0;
+    position: absolute;
+  }
+
+
   button {
     width: 160px;
   }
-  button:nth-of-type(2) {
-    color: ${(props) => props.theme.colors.secondary};
-    background-color: ${(props) => props.theme.colors.primary};
-    border: 1px solid ${(props) => props.theme.colors.secondary};
+  // button:nth-of-type(2) {
+  //   color: ${(props) => props.theme.colors.secondary};
+  //   background-color: ${(props) => props.theme.colors.primary};
+  //   border: 1px solid ${(props) => props.theme.colors.secondary};
 
-    &:hover {
-      color: ${(props) => props.theme.colors.primary};
-      background-color: ${(props) => props.theme.colors.secondary};
-      border: 1px solid ${(props) => props.theme.colors.primary};
-    }
-  }
+  //   &:hover {
+  //     color: ${(props) => props.theme.colors.primary};
+  //     background-color: ${(props) => props.theme.colors.secondary};
+  //     border: 1px solid ${(props) => props.theme.colors.primary};
+  //   }
+  // }
 
   @media ${device.tablet} {
     grid-template-columns: 1fr 1fr;
     width: 70%;
 
-    button:nth-of-type(1) {
-      grid-column-start: 2;
-      grid-column-end: 3;
-      grid-row-start: 2;
-      grid-row-end: 3;
-    }
+    // button:nth-of-type(1) {
+    //   grid-column-start: 2;
+    //   grid-column-end: 3;
+    //   grid-row-start: 2;
+    //   grid-row-end: 3;
+    // }
     button:nth-of-type(2) {
       grid-column-start: 1;
       grid-column-end: 2;
@@ -79,3 +90,13 @@ const StyledForm = styled.form`
     }
   }
 `;
+
+const SearchBarDiv = styled.div`
+display: flex;
+width: 100%;
+
+input{
+  width: 100%;
+}
+
+`

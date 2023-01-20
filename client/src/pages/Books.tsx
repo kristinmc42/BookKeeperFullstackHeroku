@@ -150,10 +150,6 @@ const ListItem = styled.li`
   width: 320px;
   margin: 20px auto;
   height: 100%;
-
-
-  @media (orientation: landscape) and (hover: none) and (pointer: coarse) and (max-width: 1023px) {
-  }
 `;
 
 const BookList = styled.ul`
@@ -162,9 +158,8 @@ const BookList = styled.ul`
   grid-template-rows: repeat(1fr);
   align-items: stretch;
   gap: 0.5em;
-  
-  @media ${device.mobileM}{
-    padding: 0.5em;
 
+  @media ${device.mobileM} {
+    padding: 0.5em;
   }
 `;

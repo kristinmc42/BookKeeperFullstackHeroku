@@ -16,4 +16,5 @@ export default function ErrorMessage({ children }: ErrorProps) {
 const StyledError = styled.h2`
   color: red;
   font-size: 1rem;
+  text-align: center;
 `;

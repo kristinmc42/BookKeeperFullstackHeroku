@@ -9,6 +9,9 @@
     "build": "tsc -p .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "engines":{
+    "node":">=v16.13.0"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

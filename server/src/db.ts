@@ -1,12 +1,14 @@
-import mysql from "mysql";
+import mysql from "mysql"
+
 
 export const db = mysql.createConnection({
-  host: "localhost",
+  host: process.env.MY_SQL_DB_HOST,
   user: process.env.MY_SQL_DB_USER,
   password: process.env.MY_SQL_DB_PASSWORD,
   database: process.env.MY_SQL_DB_DATABASE,
-  port: 7358,
+  debug: true
 });
+
 
 db.connect(function (error) {
   if (error) {

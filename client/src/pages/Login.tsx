@@ -14,36 +14,35 @@ import { UserObj } from "../types";
 // styles
 import { device } from "../styles/Breakpoints";
 
-
 const Login: React.FC = () => {
   // values from input fields inputted by user
   const [inputs, setInputs] = useState<UserObj>({
     username: "",
     password: "",
   });
-  
+
   // error in axios call
   const [error, setError] = useState<string | null>(null);
-  
+
   const navigate = useNavigate();
-  
+
   const userContext = useContext(AuthContext);
-  
+
   if (!userContext) return null;
-  
+
   const { login } = userContext;
-  
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // sets state as user input changes in all fields
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
-  
+
   const handleSubmit = async (e: React.SyntheticEvent) => {
     // makes axios post call when user clicks login button
     e.preventDefault();
     try {
       // if login successful, redirects user to bookshelf page
-      await login(inputs);
+      login(inputs);
       navigate("/books");
     } catch (err: unknown | any) {
       // sets error message in state
@@ -66,7 +65,7 @@ const Login: React.FC = () => {
               id="usernameLogin"
               name="username"
               onChange={handleChange}
-              />
+            />
           </label>
           <label htmlFor="passwordLogin">
             Password:
@@ -76,7 +75,7 @@ const Login: React.FC = () => {
               id="passwordLogin"
               name="password"
               onChange={handleChange}
-              />
+            />
           </label>
           <Button type="submit">Login</Button>
           {error && <ErrorMessage>{error}</ErrorMessage>}
@@ -100,7 +99,7 @@ const Wrapper = styled.div`
   margin: 0 auto;
   height: 100vh;
 
-  @media (orientation: landscape) and (hover: none) and (pointer: coarse) and (max-width: 1023px){
+  @media (orientation: landscape) and (hover: none) and (pointer: coarse) and (max-width: 1023px) {
     height: 100%;
   }
 
@@ -118,15 +117,15 @@ const Wrapper = styled.div`
       margin-top: 40px;
       margin-bottom: 40px;
 
-      @media ${device.mobileL}{
+      @media ${device.mobileL} {
         margin-bottom: 75px;
         margin-top: 10px;
       }
-      @media ${device.mobileM}{
+      @media ${device.mobileM} {
         margin-top: 50px;
         margin-bottom: 50px;
       }
-      @media (orientation: landscape) and (hover: none) and (pointer: coarse){
+      @media (orientation: landscape) and (hover: none) and (pointer: coarse) {
         margin-top: 50px;
         margin-bottom: 50px;
       }

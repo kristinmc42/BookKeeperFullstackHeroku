@@ -48,7 +48,7 @@ export default function SingleDbBook() {
     navigate("/update", {
       state: {
         bookInfo: bookInfo,
-        selectedStatus: (e.target as HTMLSelectElement).value,
+        selectedStatus: e.target.value,
       },
     });
   };

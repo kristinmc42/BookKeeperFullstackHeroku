@@ -17,7 +17,6 @@ const SearchBooks: React.FC = () => {
     // get stored value from local storage if there is one
     const saved: string | null = localStorage.getItem("searchValue");
     if (saved) {
-      console.log(saved);
       return JSON.parse(saved);
     } else {
       return null;
@@ -26,12 +25,6 @@ const SearchBooks: React.FC = () => {
 
   // for search bar input
   const [text, setText] = useState<string>("");
-
-  // when user types in search bar input
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const target = e.target;
-    setText(target.value);
-  };
 
   // to clear search
   const handleClear = () => {
@@ -61,8 +54,6 @@ const SearchBooks: React.FC = () => {
         `https://www.googleapis.com/books/v1/volumes?q=${inputValue}&maxResults=40&startIndex=0&key=${process.env.REACT_APP_GOOGLE_API_KEY}`
       )
       .then((res) => {
-        console.log(res.data.items)
-        // console.log(res.data.items[1].volumeInfo.categories.join("/"));
         if (res.data.items && res.data.items.length > 0) {
           return res.data.items;
         }
@@ -89,7 +80,9 @@ const SearchBooks: React.FC = () => {
       <h1>Find your next great read!</h1>
       <SearchBar
         onSubmit={handleSubmit}
-        onChange={handleChange}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setText(e.target.value)
+        }
         onClick={handleClear}
         value={text}
         placeholderText={"Title, Author, Keyword..."}
@@ -140,7 +133,7 @@ const Wrapper = styled.div`
     font-size: 1.9em;
     padding-left: 1em;
 
-    @media ${device.laptop}{
+    @media ${device.laptop} {
       padding-left: 1.5em;
     }
   }
@@ -151,13 +144,13 @@ const ListItem = styled.li`
   height: 100%;
 `;
 const BookList = styled.ul`
-display: grid;
-grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-grid-template-rows: repeat(1fr);
-align-items: stretch;
-gap: 0.5em;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-rows: repeat(1fr);
+  align-items: stretch;
+  gap: 0.5em;
 
-@media ${device.mobileM} {
-  padding: 0.5em;
-}
+  @media ${device.mobileM} {
+    padding: 0.5em;
+  }
 `;

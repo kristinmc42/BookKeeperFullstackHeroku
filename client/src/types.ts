@@ -36,9 +36,9 @@ export interface DbBookInfo{
   id?: number; 
   title: string;
   subtitle?: string;
-  author?: string;// need to toString/Split string of authors
-  genre?: string;// need to toString/Split string of genres
-  img?: string;//save smallThumbnail url here
+  author?: string;
+  genre?: string;
+  img?: string;// smallThumbnail url
   desc?: string;
   pageCount?: number;
   previewLink?: string;

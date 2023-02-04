@@ -8,10 +8,6 @@ export const register = (req: Request, res: Response) => {
   const q: string = "SELECT * FROM users WHERE email = ? OR username = ?";
 
   db.query(q, [req.body.email, req.body.username], (err, data) => {
-    console.log(err);
-    
-    // 🚨 IF MAKE USERNAME AND EMAIL UNIQUE IN DB WHAT WILL BE ERROR MESSAGES TO HANDLE
-
     // handle error or exisiting user
     if (err) return res.status(500).json(err);
     if (data.length) return res.status(409).json("User already exists!");
@@ -60,10 +56,9 @@ export const login = (req: Request, res: Response) => {
     const { password, ...other } = data[0]; // separating out password so that we are not sending it with the other information
 
     res
-      .cookie("access_token", token, { httpOnly: true })
+      .cookie("access_token", token, { httpOnly: true }) // only for making API requests
       .status(200)
       .json(other);
-    // hhtpOnly means any script in browser can not reach cookie directly it is only for making API requests
   });
 };
 

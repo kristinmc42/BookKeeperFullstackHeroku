@@ -22,3 +22,5 @@ app.use("/api/books", bookRoutes);
 app.use("/api/users", userRoutes);
 
 app.listen(PORT, () => console.log("Server is running"));
+
+module.exports = app;

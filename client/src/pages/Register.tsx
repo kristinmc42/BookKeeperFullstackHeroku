@@ -41,7 +41,7 @@ const Register: React.FC = () => {
     e.preventDefault();
     try {
       // if registration successful, redirects user to login page
-      await axios.post("/auth/register", inputs);
+      await axios.post(`https://${process.env.REACT_APP_API_URL}/api/auth/register`, inputs);
       navigate("/login");
     } catch (err: unknown | any) {
       // sets error message in state

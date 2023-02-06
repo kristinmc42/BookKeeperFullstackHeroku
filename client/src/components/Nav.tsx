@@ -41,12 +41,14 @@ export default function Nav() {
       <ul>
         <li key={1}>
           <StyledMobileLink to="books" title="my books">
-            {<FontAwesomeIcon icon={faBookOpen} />}
+            <FontAwesomeIcon icon={faBookOpen} />
+            <span>My books</span>
           </StyledMobileLink>
         </li>
         <li key={2}>
           <StyledMobileLink to="search" title="find new book">
-            {<FontAwesomeIcon icon={faMagnifyingGlassPlus} />}
+            <FontAwesomeIcon icon={faMagnifyingGlassPlus} />
+            <span>Find book</span>
           </StyledMobileLink>
         </li>
         <li key={3}>
@@ -76,7 +78,6 @@ export default function Nav() {
 const StyledNav = styled.nav`
   display: flex;
   justify-content: space-between;
-  padding-left: 8px;
 
   @media ${device.mobileM} {
     padding-left: 10px;
@@ -107,7 +108,9 @@ const StyledNav = styled.nav`
       }
     }
     li:nth-child(-n + 2) {
-      display: inline;
+      height: 40px;
+      width: 50px;
+
       @media (min-width: 585px) {
         display: none;
       }
@@ -132,7 +135,14 @@ const StyledNav = styled.nav`
         }
       }
       button {
-        margin-top: -6px;
+        height: 38px;
+        font-size: 0.8rem;
+        @media ${device.mobileL} {
+          font-size: 1rem;
+        }
+        @media ${device.tablet} {
+          margin-top: -3px;
+        }
       }
     }
   }
@@ -173,4 +183,11 @@ const StyledLogoLink = styled(StyledNavLink)`
 `;
 const StyledMobileLink = styled(StyledNavLink)`
   line-height: 0;
+  display: flex;
+  flex-direction: column;
+  height: 40px;
+  span {
+    padding-top: 10px;
+    font-size: 10px;
+  }
 `;

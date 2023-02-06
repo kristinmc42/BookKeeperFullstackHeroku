@@ -44,7 +44,7 @@ const AddBook: React.FC = () => {
   const [bookshelf, setBookshelf] = useState<string | undefined>();
 
   // for the day selected by user in DayPicker
-  const [dateRead, setDateRead] = useState<Date | undefined>();
+  const [dateRead, setDateRead] = useState<Date | undefined | null>();
 
   // date as a string
   let dateReadString: string | undefined;

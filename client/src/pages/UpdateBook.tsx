@@ -46,7 +46,7 @@ const UpdateBook: React.FC = () => {
   );
 
   // for the day selected by user in DayPicker
-  const [dateRead, setDateRead] = useState<Date>();
+  const [dateRead, setDateRead] = useState<Date | null | undefined>();
 
   // to update the book info in the db
   const updateBook = (

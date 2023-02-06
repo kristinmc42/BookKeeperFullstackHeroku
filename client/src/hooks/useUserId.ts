@@ -15,7 +15,7 @@ export default function useUserId() {
   // get userId from db based on username
   const getUser = async () => {
     return axios
-      .get(`http://localhost:5000/api/users/${username}`)
+      .get(`https://${process.env.REACT_APP_API_URL}/api/users/${username}`)
       .then((res) => {
         return res.data;
       });

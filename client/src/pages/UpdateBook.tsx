@@ -55,7 +55,7 @@ const UpdateBook: React.FC = () => {
     userId: number | undefined
   ) => {
     return axios.put(
-      `http://localhost:5000/api/books/${bookId}/users/${userId}`,
+      `https://${process.env.REACT_APP_API_URL}/api/books/${bookId}/users/${userId}`,
       book
     );
   };

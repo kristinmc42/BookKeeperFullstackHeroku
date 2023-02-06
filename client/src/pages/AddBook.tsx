@@ -60,7 +60,7 @@ const AddBook: React.FC = () => {
   // to ADD the book to the db
   const addBook = (book: DbBookInfo | undefined) => {
     console.log(book);
-    return axios.post(`http://localhost:5000/api/books/`, book);
+    return axios.post(`https://${process.env.REACT_APP_API_URL}/api/books/`, book);
   };
   const mutation = useMutation(addBook);
 

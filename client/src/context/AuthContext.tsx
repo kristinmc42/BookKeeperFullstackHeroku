@@ -18,12 +18,12 @@ export const AuthContextProvider: React.FC<ComponentProps> = ({
   );
 
   const login = async (inputs: UserObj) => {
-    const res = await axios.post("/auth/login", inputs);
+    const res = await axios.post(`https://${process.env.REACT_APP_API_URL}/api/auth/login`, inputs);
     setCurrentUser(res.data);
   };
 
   const logout = async () => {
-    await axios.post("/auth/logout");
+    await axios.post(`https://${process.env.REACT_APP_API_URL}/api/auth/logout`);
     setCurrentUser(null);
   };
 

@@ -127,6 +127,7 @@ const Wrapper = styled.div`
   }
 
   article {
+    border: 2px solid ${(props) => props.theme.colors.secondary};
     @media ${device.tablet} {
       min-height: 60vh;
     }

@@ -18,6 +18,7 @@ const StyledFooter = styled.footer`
   display: flex;
   justify-content: space-between;
   color: ${(props) => props.theme.colors.whiteText};
+  padding-top: 1em;
 
   p {
     font-size: 0.8rem;

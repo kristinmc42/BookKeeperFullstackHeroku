@@ -77,7 +77,7 @@ const SearchBooks: React.FC = () => {
 
   return (
     <Wrapper>
-      <h1>Find your next great read!</h1>
+      <h1>Let's find a book!</h1>
       <SearchBar
         onSubmit={handleSubmit}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -142,6 +142,7 @@ const ListItem = styled.li`
   width: 300px;
   margin: 20px auto;
   height: 100%;
+  border: 2px solid ${(props) => props.theme.colors.secondary};
 `;
 const BookList = styled.ul`
   display: grid;

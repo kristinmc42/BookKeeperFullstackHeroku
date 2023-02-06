@@ -198,7 +198,6 @@ const BookInfoCard = styled.article`
   flex-direction: column;
   justify-content: center;
   color: ${(props) => props.theme.colors.whiteText};
-  border: 2px solid ${(props) => props.theme.colors.secondary};
   height: 87%;
 `;
 const ShortFormBookInfo = styled.section`

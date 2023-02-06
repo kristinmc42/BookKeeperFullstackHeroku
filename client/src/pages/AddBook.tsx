@@ -166,6 +166,10 @@ display: flex;
 flex-direction: column;
 justify-content: space-around;
 
+article{
+  border: 2px solid ${(props) => props.theme.colors.secondary};
+}
+
   button{
     margin-bottom: 1.5em;
   }

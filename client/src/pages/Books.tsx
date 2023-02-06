@@ -58,8 +58,9 @@ const Books: React.FC = () => {
                         key={`${book.bookid}${index}`}
                         title="book details"
                       >
+                        <DisplayDbBook item={book} format={"short"} />
                         <Link to={`${book.bookid}`} state={{ book: book }}>
-                          <DisplayDbBook item={book} format={"short"} />
+                          More Info
                         </Link>
                       </ListItem>
                     );
@@ -71,12 +72,13 @@ const Books: React.FC = () => {
                     if (book.status === "read") {
                       return (
                         <ListItem key={`${book.bookid}${index}`}>
+                          <DisplayDbBook item={book} format={"short"} />
                           <Link
                             to={`${book.bookid}`}
                             state={{ book: book }}
                             title="book details"
                           >
-                            <DisplayDbBook item={book} format={"short"} />
+                            More Info
                           </Link>
                         </ListItem>
                       );
@@ -91,12 +93,14 @@ const Books: React.FC = () => {
                     if (book.status === "currentlyReading") {
                       return (
                         <ListItem key={`${book.bookid}${index}`}>
+                          <DisplayDbBook item={book} format={"short"} />
                           <Link
                             to={`${book.bookid}`}
                             state={{ book: book }}
                             title="book details"
                           >
-                            <DisplayDbBook item={book} format={"short"} />
+                            {" "}
+                            More Info
                           </Link>
                         </ListItem>
                       );
@@ -111,12 +115,13 @@ const Books: React.FC = () => {
                     if (book.status === "toRead") {
                       return (
                         <ListItem key={`${book.bookid}${index}`}>
+                          <DisplayDbBook item={book} format={"short"} />
                           <Link
                             to={`${book.bookid}`}
                             state={{ book: book }}
                             title="book details"
                           >
-                            <DisplayDbBook item={book} format={"short"} />
+                            More Info
                           </Link>
                         </ListItem>
                       );
@@ -144,12 +149,18 @@ const Wrapper = styled.div`
   h1 {
     padding-left: 1em;
   }
+
+  a{
+    color: ${(props) => props.theme.colors.secondary};
+    padding-left: .5em;
+  }
 `;
 
 const ListItem = styled.li`
   width: 320px;
   margin: 20px auto;
   height: 100%;
+  border: 2px solid ${(props) => props.theme.colors.secondary};
 `;
 
 const BookList = styled.ul`

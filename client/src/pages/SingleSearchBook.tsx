@@ -61,7 +61,9 @@ const Wrapper = styled.div`
   min-height: 85vh;
 
   article {
+    align-items: flex-start;
     border: 2px solid ${(props) => props.theme.colors.secondary};
+    padding: 1.5em .5em 2em .5em;
   }
   button {
     margin: 1em 0;

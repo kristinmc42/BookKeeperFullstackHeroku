@@ -176,7 +176,9 @@ const Wrapper = styled.div`
   justify-content: space-around;
 
   article {
+    align-items: flex-start;
     border: 2px solid ${(props) => props.theme.colors.secondary};
+    padding: 1.5em .5em 2em .5em;
   }
 
   button {

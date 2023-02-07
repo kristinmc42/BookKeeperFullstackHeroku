@@ -131,7 +131,10 @@ const Wrapper = styled.div`
   }
 
   article {
+    align-items: flex-start;
     border: 2px solid ${(props) => props.theme.colors.secondary};
+    padding: 1.5em .5em 2em .5em;
+
     @media ${device.tablet} {
       min-height: 60vh;
     }

@@ -109,10 +109,16 @@ export const DisplayGoogleBook = ({
             />
           )}
           <div>
-            {item.volumeInfo.title.length <= 65 ? (
-              <h2>{item.volumeInfo.title}</h2>
-            ) : (
-              <h2>{item.volumeInfo.title.substring(0, 65)}...</h2>
+            {item.volumeInfo.title && (
+              <>
+                (
+                {item.volumeInfo.title.length <= 65 ? (
+                  <h3>{item.volumeInfo.title}</h3>
+                ) : (
+                  <h3>{item.volumeInfo.title.substring(0, 65)}...</h3>
+                )}
+                )
+              </>
             )}
             {item.volumeInfo.subtitle && (
               <>
@@ -198,7 +204,6 @@ const BookInfoCard = styled.article`
   flex-direction: column;
   justify-content: center;
   color: ${(props) => props.theme.colors.whiteText};
-  border: 2px solid ${(props) => props.theme.colors.secondary};
   height: 87%;
 `;
 const ShortFormBookInfo = styled.section`

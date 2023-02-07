@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 
-
 const Footer: React.FC = () => {
   return (
     <StyledFooter>
@@ -18,6 +17,7 @@ const StyledFooter = styled.footer`
   display: flex;
   justify-content: space-between;
   color: ${(props) => props.theme.colors.whiteText};
+  padding-top: 1em;
 
   p {
     font-size: 0.8rem;
@@ -26,7 +26,7 @@ const StyledFooter = styled.footer`
   p:first-of-type {
     font-family: ${(props) => props.theme.fonts.header};
   }
-  p:nth-of-type(2){
+  p:nth-of-type(2) {
     text-align: right;
   }
 `;

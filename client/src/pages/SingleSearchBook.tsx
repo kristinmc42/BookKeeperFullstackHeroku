@@ -33,8 +33,6 @@ const SingleSearchBook: React.FC = () => {
     }
   }
 
-  data && console.log(data);
-
   return (
     <Wrapper>
       <Button onClick={() => navigate(-1)}>Back</Button>
@@ -62,6 +60,9 @@ const Wrapper = styled.div`
   align-items: flex-start;
   min-height: 85vh;
 
+  article {
+    border: 2px solid ${(props) => props.theme.colors.secondary};
+  }
   button {
     margin: 1em 0;
   }

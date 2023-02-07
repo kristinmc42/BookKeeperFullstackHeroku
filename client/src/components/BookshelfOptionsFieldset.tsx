@@ -1,6 +1,5 @@
 import React from "react";
-import { DayPicker } from "react-day-picker";
-import { format } from "date-fns";
+import DatePicker from "react-datepicker";
 import styled from "styled-components";
 import { device } from "../styles/Breakpoints";
 
@@ -8,8 +7,8 @@ import { device } from "../styles/Breakpoints";
 interface FieldsetProps {
   bookshelf: string | undefined;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  dateRead: Date | undefined;
-  setDateRead: React.Dispatch<React.SetStateAction<Date | undefined>>;
+  dateRead: Date | undefined | null;
+  setDateRead: React.Dispatch<React.SetStateAction<Date | undefined | null>>;
 }
 
 export default function BookshelfOptionsFieldset({
@@ -21,7 +20,7 @@ export default function BookshelfOptionsFieldset({
   return (
     <StyledFieldset>
       <legend>Select a bookshelf for this title</legend>
-      <div className="readContainer">
+      <StyledReadContainer>
         <StyledItem>
           <StyledInput
             type="radio"
@@ -35,21 +34,18 @@ export default function BookshelfOptionsFieldset({
         </StyledItem>
         {bookshelf === "read" && (
           <CalendarContainer>
-            <DayPicker
-              mode="single"
-              selected={dateRead}
-              onSelect={setDateRead}
-              footer={
-                dateRead ? (
-                  <p>You picked {format(dateRead, "PP")}.</p>
-                ) : (
-                  <p>Select the date you finished reading.</p>
-                )
-              }
+            <DatePicker
+              selected={dateRead ? dateRead : new Date()}
+              onChange={(date) => setDateRead(date)}
+              showYearDropdown
+              yearDropdownItemNumber={100}
+              scrollableYearDropdown
+              openToDate={new Date()}
+              maxDate={new Date()}
             />
           </CalendarContainer>
         )}
-      </div>
+      </StyledReadContainer>
       <StyledItem>
         <StyledInput
           type="radio"
@@ -91,7 +87,14 @@ const StyledItem = styled.div`
 const StyledLabel = styled.label`
   max-width: 200px;
 `;
+const StyledReadContainer = styled.div`
+  display: flex;
+  flex-direction: column;
 
+  @media ${device.tablet} {
+    flex-direction: row;
+  }
+`;
 const StyledInput = styled.input`
   appearance: none;
   -webkit-appearance: none;
@@ -110,52 +113,46 @@ const StyledInput = styled.input`
     color: ${(props) => props.theme.colors.secondary};
   }
 `;
+
 const CalendarContainer = styled.aside`
-  position: absolute;
-  left: 5%;
-  bottom: 7.5em;
-  right: 5%;
   background: ${(props) => props.theme.colors.black};
-  outline: 1px solid;
-  max-width: 300px;
   display: flex;
   justify-contents: center;
   align-items: center;
 
-  .rdp {
-    margin: 1em auto;
-    --rdp-cell-size: 32px;
-
-    .rdp-caption {
-      font-size: 0.85rem;
-    }
-
-    button {
-      margin: 0;
-    }
-    .rdp-day_selected {
-      color: ${(props) => props.theme.colors.black};
-      font-weight: 600;
-      background: ${(props) => props.theme.colors.secondary};
-    }
-
-    p {
-      color: ${(props) => props.theme.colors.secondary};
-      padding: 0.3em;
+  .react-datepicker__input-container {
+    border: 1px solid ${(props) => props.theme.colors.secondary};
+    background-color: ${(props) => props.theme.colors.black};
+    padding-left: 2em;
+    width: 88%;
+    max-width: 302px;
+    input {
+      height: 1.8em;
+      border: none;
+      max-width: 200px;
+      background-color: ${(props) => props.theme.colors.black};
+      color: ${(props) => props.theme.colors.whiteText};
     }
   }
-
-  @media ${device.mobileM} {
-    max-width: 400px;
-
-    .rdp {
-      --rdp-cell-size: 40px;
-    }
+  .react-datepicker__header,
+  .react-datepicker__year-dropdown {
+    background-color: ${(props) => props.theme.colors.secondary};
   }
+
+  .react-datepicker__day--selected,
+  .react-datepicker__day--keyboard-selected {
+    background-color: ${(props) => props.theme.colors.secondary};
+    color: ${(props) => props.theme.colors.black};
+    font-weight: 500;
+  }
+
   @media (orientation: landscape) and (min-width: 300px) {
     bottom: 5em;
   }
-  @media ${device.tablet}{
-    left: 8em;
+  @media ${device.tablet} {
+    margin-left: 3em;
+    max-width: 300px;
+    .react-datepicker__input-container {
+    }
   }
 `;

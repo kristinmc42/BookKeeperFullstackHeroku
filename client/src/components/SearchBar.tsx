@@ -18,17 +18,18 @@ const SearchBar = (props: SearchProps) => {
 
   return (
     <StyledForm onSubmit={props.onSubmit}>
-      <label htmlFor="searchBarContents">Search by Title, Author, Keyword...</label>
+      <label htmlFor="searchBarContents">
+        Search by Title, Author, Keyword...
+      </label>
       <SearchBarDiv>
-      <input
-        type="text"
-        id="searchBarContents"
-        onChange={props.onChange}
-        value={props.value}
-        placeholder={props.placeholderText}
-      />
+        <input
+          type="text"
+          id="searchBarContents"
+          onChange={props.onChange}
+          value={props.value}
+          placeholder={props.placeholderText}
+        />
         <Button type="submit">Search</Button>
-
       </SearchBarDiv>
       <Button type="button" onClick={props.onClick}>
         Clear Search
@@ -40,23 +41,21 @@ const SearchBar = (props: SearchProps) => {
 export default SearchBar;
 
 const SearchBarDiv = styled.div`
-display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
-gap: .35em;
-width: 100%;
-
-
-input{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.35em;
   width: 100%;
-}
 
-@media ${device.mobileL}{
-  flex-direction: row;
-}
+  input {
+    width: 100%;
+  }
 
-`
+  @media ${device.tablet} {
+    flex-direction: row;
+  }
+`;
 const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
@@ -68,33 +67,39 @@ const StyledForm = styled.form`
   width: 80%;
   max-width: 1000px;
 
-  @media ${device.tablet} {
-    width: 70%;
-  }
-
-  label{
-    opacity:0;
+  label {
+    opacity: 0;
     width: 0;
     height: 0;
     position: absolute;
   }
 
-
   button {
-    width: 160px;
+    min-width: 190px;
   }
 
-  ${SearchBarDiv} + button{
-    color: ${props => props.theme.colors.secondary};
-    background-color: ${props => props.theme.colors.primary};
-    border: 1px solid ${props => props.theme.colors.secondary};
+  ${SearchBarDiv} + button {
+    color: ${(props) => props.theme.colors.secondary};
+    background-color: ${(props) => props.theme.colors.primary};
+    border: 1px solid ${(props) => props.theme.colors.secondary};
 
-    &:hover{
-      color: ${props => props.theme.colors.primary};
-      background-color: ${props => props.theme.colors.secondary};
-      border: 1px solid ${props => props.theme.colors.primary};
+    &:hover {
+      color: ${(props) => props.theme.colors.primary};
+      background-color: ${(props) => props.theme.colors.secondary};
+      border: 1px solid ${(props) => props.theme.colors.primary};
       cursor: pointer;
     }
   }
 
+  @media ${device.tablet} {
+    width: 70%;
+
+    button {
+      margin-left: 20px;
+    }
+
+    button.sc-pyfCe:nth-child(3) {
+      align-self: flex-end;
+    }
+  }
 `;

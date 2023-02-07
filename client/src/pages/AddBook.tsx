@@ -10,6 +10,8 @@ import { DisplayGoogleBook } from "../components/DisplayBook";
 import Button from "../components/Button";
 import BookshelfOptionsFieldset from "../components/BookshelfOptionsFieldset";
 import ErrorMessage from "../components/ErrorMessage";
+import MessageCard from "../components/MessageCard";
+import CardOverlay from "../components/CardOverlay";
 
 //functions
 import { convertBookToDbFormat } from "../functions/convertBookToDbFormat";
@@ -44,7 +46,7 @@ const AddBook: React.FC = () => {
   const [bookshelf, setBookshelf] = useState<string | undefined>();
 
   // for the day selected by user in DayPicker
-  const [dateRead, setDateRead] = useState<Date | undefined>();
+  const [dateRead, setDateRead] = useState<Date | undefined | null>();
 
   // date as a string
   let dateReadString: string | undefined;
@@ -60,7 +62,10 @@ const AddBook: React.FC = () => {
   // to ADD the book to the db
   const addBook = (book: DbBookInfo | undefined) => {
     console.log(book);
-    return axios.post(`https://${process.env.REACT_APP_API_URL}/api/books/`, book);
+    return axios.post(
+      `https://${process.env.REACT_APP_API_URL}/api/books/`,
+      book
+    );
   };
   const mutation = useMutation(addBook);
 
@@ -85,29 +90,17 @@ const AddBook: React.FC = () => {
         bookToAdd.dateRead = dateReadString;
       }
     }
-
-    console.log(bookToAdd);
     // add book to db
     mutation.mutate(bookToAdd);
   };
 
   return (
     <Wrapper>
-      <div>
+      <>
         <Button onClick={() => navigate(-1)}>Back</Button>
-
-        <DisplayGoogleBook item={bookInfo} format={"short"} />
-      </div>
-
-      {bookData.isSuccess && bookData.data.length > 0 ? (
-        <StyledMessage className="message">
-          You already have this book on your bookshelf!
-        </StyledMessage>
-      ) : (
         <>
-          {mutation.isSuccess ? (
-            <StyledMessage className="message">Book added!</StyledMessage>
-          ) : (
+          <DisplayGoogleBook item={bookInfo} format={"short"} />
+          {bookData.isSuccess && bookData.data.length === 0 ? (
             <StyledForm onSubmit={handleSubmit}>
               <BookshelfOptionsFieldset
                 bookshelf={bookshelf}
@@ -120,9 +113,13 @@ const AddBook: React.FC = () => {
                 <Button disabled={!bookshelf}>Add Book </Button>
               )}
             </StyledForm>
+          ) : (
+            <ErrorMessage>
+              You already have this book in your bookshelf.
+            </ErrorMessage>
           )}
         </>
-      )}
+      </>
 
       {/* loading/error messages */}
       {bookData.isError && (
@@ -135,19 +132,31 @@ const AddBook: React.FC = () => {
         <StyledMessage>"Adding book to bookshelf..."</StyledMessage>
       ) : (
         <>
-          {mutation.isError &&
-          (mutation.error as AxiosError).response?.status === 500 ? (
-            <ErrorMessage>
-              Please login to add the book to your bookshelf.
-            </ErrorMessage>
-          ) : null}
+          {mutation.isSuccess ? (
+            <>
+              <CardOverlay>
+                <MessageCard navigateTo="/books">
+                  <h2>Book added!</h2>
+                </MessageCard>
+              </CardOverlay>
+            </>
+          ) : (
+            <>
+              {mutation.isError &&
+              (mutation.error as AxiosError).response?.status === 500 ? (
+                <ErrorMessage>
+                  Please login to add the book to your bookshelf.
+                </ErrorMessage>
+              ) : null}
 
-          {mutation.isError &&
-          (mutation.error as AxiosError).response?.status !== 500 ? (
-            <ErrorMessage>
-              An error occurred: {(mutation.error as Error).message}
-            </ErrorMessage>
-          ) : null}
+              {mutation.isError &&
+              (mutation.error as AxiosError).response?.status !== 500 ? (
+                <ErrorMessage>
+                  An error occurred: {(mutation.error as Error).message}
+                </ErrorMessage>
+              ) : null}
+            </>
+          )}
         </>
       )}
     </Wrapper>
@@ -158,15 +167,20 @@ export default AddBook;
 
 // styled components
 const Wrapper = styled.div`
-max-width: 1200px;
-width: 89%;
-min-height: 85vh;
-margin: 0 auto;
-display: flex;
-flex-direction: column;
-justify-content: space-around;
+  max-width: 1200px;
+  width: 89%;
+  min-height: 85vh;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 
-  button{
+  article {
+    border: 2px solid ${(props) => props.theme.colors.secondary};
+  }
+
+  button {
+    max-width: 75px;
     margin-bottom: 1.5em;
   }
 `;
@@ -178,9 +192,10 @@ const StyledForm = styled.form`
 `;
 const StyledMessage = styled.h2`
   text-align: center;
-  font-size: 1.8rem;
+  font-size: 1.3rem;
+  padding-left: 0.5em;
 
   @media ${device.tablet} {
-    font-size: 2.2rem;
+    font-size: 1.7rem;
   }
 `;

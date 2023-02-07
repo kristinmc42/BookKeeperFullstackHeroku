@@ -26,6 +26,7 @@ import RootLayout from "./layouts/RootLayout";
 // styles
 import "./App.css";
 import "react-day-picker/dist/style.css";
+import "react-datepicker/dist/react-datepicker.css";
 import { theme } from "./styles/Theme";
 import { GlobalStyles } from "./styles/Global";
 

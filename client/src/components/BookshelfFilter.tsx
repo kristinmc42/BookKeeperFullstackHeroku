@@ -98,6 +98,10 @@ const StyledFieldset = styled.fieldset`
 const StyledLabel = styled.label`
   color: ${(props) => props.theme.colors.whiteText};
   font-size: .9em;
+
+ :hover{
+  cursor: pointer;
+ }
   
   &:nth-of-type(3){
     max-width: 120px;
@@ -121,9 +125,14 @@ const StyledInput = styled.input`
   opacity: 0;
   height: 0;
   width: 0;
+  
 
   &:checked + ${StyledLabel} {
     color: ${(props) => props.theme.colors.secondary};
     border-bottom: 2px solid ${(props) => props.theme.colors.secondary};
+  }
+  &:focus-visible + ${StyledLabel} {
+   
+    border-bottom: 2px solid ${(props) => props.theme.colors.white};
   }
 `;

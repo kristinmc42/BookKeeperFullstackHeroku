@@ -41,19 +41,21 @@ export default function Nav() {
       <ul>
         <li key={1}>
           <StyledMobileLink to="books" title="my books">
-            {<FontAwesomeIcon icon={faBookOpen} />}
+            <FontAwesomeIcon icon={faBookOpen} />
+            <span>My books</span>
           </StyledMobileLink>
         </li>
         <li key={2}>
-          <StyledMobileLink to="search" title="find new book">
-            {<FontAwesomeIcon icon={faMagnifyingGlassPlus} />}
+          <StyledMobileLink to="search" title="add a new book">
+            <FontAwesomeIcon icon={faMagnifyingGlassPlus} />
+            <span>Add book</span>
           </StyledMobileLink>
         </li>
         <li key={3}>
           <StyledNavLink to="books">My Books</StyledNavLink>
         </li>
         <li key={4}>
-          <StyledNavLink to="search">Find New Book</StyledNavLink>
+          <StyledNavLink to="search">Add A Book</StyledNavLink>
         </li>
         {currentUser ? (
           <>
@@ -76,7 +78,6 @@ export default function Nav() {
 const StyledNav = styled.nav`
   display: flex;
   justify-content: space-between;
-  padding-left: 8px;
 
   @media ${device.mobileM} {
     padding-left: 10px;
@@ -107,7 +108,9 @@ const StyledNav = styled.nav`
       }
     }
     li:nth-child(-n + 2) {
-      display: inline;
+      height: 40px;
+      width: 50px;
+
       @media (min-width: 585px) {
         display: none;
       }
@@ -121,18 +124,37 @@ const StyledNav = styled.nav`
     }
     li:nth-child(5) {
       display: flex;
+      padding: 10px 0;
+
+      @media ${device.tablet} {
+        padding: 10px;
+      }
 
       p {
         color: ${(props) => props.theme.colors.secondary};
         display: none;
+        font-size: .8rem;
+        padding-top: 8px;
+        padding-right: 8px;
 
-        @media ${device.mobileL} {
-          padding-right: 30px;
+        @media (min-width: 585px) {
           display: inline;
+          font-size: 1rem;
+          padding-top: 3px;
+        }
+        @media ${device.tablet} {
+          padding-right: 30px;
         }
       }
       button {
-        margin-top: -6px;
+        height: 38px;
+        font-size: 0.8rem;
+        @media ${device.mobileL} {
+        }
+        @media ${device.tablet} {
+          font-size: 1rem;
+          margin-top: -3px;
+        }
       }
     }
   }
@@ -167,10 +189,16 @@ const StyledLogoLink = styled(StyledNavLink)`
     font-size: 1.4rem;
   }
   @media ${device.laptop} {
-    font-size: 1.6rem;
     padding: 10px 30px;
   }
 `;
 const StyledMobileLink = styled(StyledNavLink)`
   line-height: 0;
+  display: flex;
+  flex-direction: column;
+  height: 40px;
+  span {
+    padding-top: 10px;
+    font-size: 11px;
+  }
 `;

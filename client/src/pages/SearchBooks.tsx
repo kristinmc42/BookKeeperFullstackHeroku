@@ -14,8 +14,8 @@ const SearchBooks: React.FC = () => {
   const queryClient = useQueryClient(); // get queryClient from the context
 
   const [inputValue, setInputValue] = useState(() => {
-    // get stored value from local storage if there is one
-    const saved: string | null = localStorage.getItem("searchValue");
+    // get stored value from session storage if there is one
+    const saved: string | null = sessionStorage.getItem("searchValue");
     if (saved) {
       return JSON.parse(saved);
     } else {
@@ -28,13 +28,13 @@ const SearchBooks: React.FC = () => {
 
   // to clear search
   const handleClear = () => {
-    localStorage.clear();
+    sessionStorage.clear();
     setText("");
     setInputValue(null);
     queryClient.invalidateQueries("googleBooks", inputValue);
   };
 
-  // when form submitted, save input value in local storage
+  // when form submitted, save input value in session storage
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -44,7 +44,7 @@ const SearchBooks: React.FC = () => {
     };
     const value = formElements.searchBarContents.value;
     setInputValue(value);
-    localStorage.setItem("searchValue", JSON.stringify(value));
+    sessionStorage.setItem("searchValue", JSON.stringify(value));
   };
 
   // returns array of book objects (max that can be returned is 40 items)
@@ -77,7 +77,7 @@ const SearchBooks: React.FC = () => {
 
   return (
     <Wrapper>
-      <h1>Find your next great read!</h1>
+      <h1>Let's find a book!</h1>
       <SearchBar
         onSubmit={handleSubmit}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -142,6 +142,7 @@ const ListItem = styled.li`
   width: 300px;
   margin: 20px auto;
   height: 100%;
+  border: 2px solid ${(props) => props.theme.colors.secondary};
 `;
 const BookList = styled.ul`
   display: grid;

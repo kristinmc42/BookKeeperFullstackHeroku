@@ -6,16 +6,17 @@ interface OverlayProps {
     className?: string;
   }
 
-export default function 
-({children, className}:OverlayProps) {
+ const CardOverlay = ({children, className}:OverlayProps) => {
   return (
-    <CardOverlay className={className}>
+    <StyledCardOverlay className={className}>
         {children}
-    </CardOverlay>
+    </StyledCardOverlay>
   )
 }
 
-const CardOverlay = styled.div`
+export default CardOverlay;
+
+const StyledCardOverlay = styled.div`
   position: fixed;
   top: 3em;
   right: 0;

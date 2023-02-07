@@ -23,7 +23,6 @@ import useBookInDb from "../hooks/useBookInDb";
 
 // types
 import { DbBookInfo } from "../types";
-import { device } from "../styles/Breakpoints";
 
 // displays select info on the book and allows the user to modify the status of the book in the db
 const UpdateBook: React.FC = () => {

@@ -11,6 +11,8 @@ import { DisplayDbBook } from "../components/DisplayBook";
 import Button from "../components/Button";
 import BookshelfOptionsFieldset from "../components/BookshelfOptionsFieldset";
 import ErrorMessage from "../components/ErrorMessage";
+import MessageCard from "../components/MessageCard";
+import CardOverlay from "../components/CardOverlay";
 
 //functions
 import { convertDateToString } from "../functions/convertDateToString";
@@ -93,15 +95,9 @@ const UpdateBook: React.FC = () => {
 
   return (
     <Wrapper>
-      <div>
-        {mutation.isSuccess ? null : (
-          <Button onClick={() => navigate(-1)}>Back</Button>
-        )}
+      <>
+        <Button onClick={() => navigate(-1)}>Back</Button>
         <DisplayDbBook item={bookInfo} format={"short"} />
-      </div>
-      {mutation.isSuccess ? (
-        <SuccessMessage>Book updated!</SuccessMessage>
-      ) : (
         <StyledForm className="optionsForm" onSubmit={handleSubmit}>
           <BookshelfOptionsFieldset
             bookshelf={bookshelf}
@@ -117,17 +113,27 @@ const UpdateBook: React.FC = () => {
             </ErrorMessage>
           )}
         </StyledForm>
-      )}
+      </>
 
       {mutation.isLoading ? (
         "Adding book to bookshelf..."
       ) : (
         <>
-          {mutation.isError ? (
-            <ErrorMessage>
-              An error occurred: {(mutation.error as Error).message}
-            </ErrorMessage>
-          ) : null}
+          {mutation.isSuccess ? (
+            <CardOverlay>
+              <MessageCard navigateTo="books">
+                <h2>Book updated!</h2>
+              </MessageCard>
+            </CardOverlay>
+          ) : (
+            <>
+              {mutation.isError ? (
+                <ErrorMessage>
+                  An error occurred: {(mutation.error as Error).message}
+                </ErrorMessage>
+              ) : null}
+            </>
+          )}
         </>
       )}
     </Wrapper>
@@ -159,13 +165,5 @@ const StyledForm = styled.form`
   button {
     max-width: 100px;
     margin-top: 0;
-  }
-`;
-const SuccessMessage = styled.h2`
-  text-align: center;
-  font-size: 1.8rem;
-
-  @media ${device.tablet} {
-    font-size: 2.2rem;
   }
 `;

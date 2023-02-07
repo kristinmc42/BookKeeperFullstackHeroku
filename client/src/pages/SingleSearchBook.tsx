@@ -33,8 +33,6 @@ const SingleSearchBook: React.FC = () => {
     }
   }
 
-  data && console.log(data);
-
   return (
     <Wrapper>
       <Button onClick={() => navigate(-1)}>Back</Button>

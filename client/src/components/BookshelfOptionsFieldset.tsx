@@ -17,7 +17,6 @@ export default function BookshelfOptionsFieldset({
   dateRead,
   setDateRead,
 }: FieldsetProps) {
-
   return (
     <StyledFieldset>
       <legend>Select a bookshelf for this title</legend>
@@ -36,7 +35,7 @@ export default function BookshelfOptionsFieldset({
         {bookshelf === "read" && (
           <CalendarContainer>
             <DatePicker
-              selected={dateRead ?dateRead :new Date()}
+              selected={dateRead ? dateRead : new Date()}
               onChange={(date) => setDateRead(date)}
               showYearDropdown
               yearDropdownItemNumber={100}
@@ -141,7 +140,7 @@ const CalendarContainer = styled.aside`
   }
 
   .react-datepicker__day--selected,
-  .react-datepicker__day--keyboard-selected{
+  .react-datepicker__day--keyboard-selected {
     background-color: ${(props) => props.theme.colors.secondary};
     color: ${(props) => props.theme.colors.black};
     font-weight: 500;

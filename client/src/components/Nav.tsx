@@ -46,16 +46,16 @@ export default function Nav() {
           </StyledMobileLink>
         </li>
         <li key={2}>
-          <StyledMobileLink to="search" title="find new book">
+          <StyledMobileLink to="search" title="add a new book">
             <FontAwesomeIcon icon={faMagnifyingGlassPlus} />
-            <span>Find book</span>
+            <span>Add book</span>
           </StyledMobileLink>
         </li>
         <li key={3}>
           <StyledNavLink to="books">My Books</StyledNavLink>
         </li>
         <li key={4}>
-          <StyledNavLink to="search">Find New Book</StyledNavLink>
+          <StyledNavLink to="search">Add A Book</StyledNavLink>
         </li>
         {currentUser ? (
           <>
@@ -124,23 +124,35 @@ const StyledNav = styled.nav`
     }
     li:nth-child(5) {
       display: flex;
+      padding: 10px 0;
+
+      @media ${device.tablet} {
+        padding: 10px;
+      }
 
       p {
         color: ${(props) => props.theme.colors.secondary};
         display: none;
+        font-size: .8rem;
+        padding-top: 8px;
+        padding-right: 8px;
 
-        @media ${device.mobileL} {
-          padding-right: 30px;
+        @media (min-width: 585px) {
           display: inline;
+          font-size: 1rem;
+          padding-top: 3px;
+        }
+        @media ${device.tablet} {
+          padding-right: 30px;
         }
       }
       button {
         height: 38px;
         font-size: 0.8rem;
         @media ${device.mobileL} {
-          font-size: 1rem;
         }
         @media ${device.tablet} {
+          font-size: 1rem;
           margin-top: -3px;
         }
       }
@@ -177,7 +189,6 @@ const StyledLogoLink = styled(StyledNavLink)`
     font-size: 1.4rem;
   }
   @media ${device.laptop} {
-    font-size: 1.6rem;
     padding: 10px 30px;
   }
 `;
@@ -188,6 +199,6 @@ const StyledMobileLink = styled(StyledNavLink)`
   height: 40px;
   span {
     padding-top: 10px;
-    font-size: 10px;
+    font-size: 11px;
   }
 `;

@@ -7,6 +7,10 @@ import styled from "styled-components";
 //components
 import Button from "../components/Button";
 import { DisplayDbBook } from "../components/DisplayBook";
+import MessageCard from "../components/MessageCard";
+import CardOverlay from "../components/CardOverlay";
+
+//styles
 import { device } from "../styles/Breakpoints";
 
 //types
@@ -57,7 +61,7 @@ export default function SingleDbBook() {
     <Wrapper>
       {mutation.isSuccess ? (
         <DeletedBookContainer>
-          <DeletedBookHeader>Your book has been deleted.</DeletedBookHeader>
+          <MessageCard navigateTo="/books"><h2>Your book has been deleted.</h2></MessageCard>
         </DeletedBookContainer>
       ) : (
         <>
@@ -93,7 +97,7 @@ export default function SingleDbBook() {
             )}
           </BookStatusSection>
           {confirmDelete ? (
-            <DeleteBookOverlay>
+            <CardOverlay className="delete">
               <DeleteBookModal>
                 <h2>
                   Are you sure you want to permanently delete this book from
@@ -102,7 +106,7 @@ export default function SingleDbBook() {
                 <Button onClick={() => setConfirmDelete(false)}>Cancel</Button>
                 <Button onClick={handleDelete}>Delete Book</Button>
               </DeleteBookModal>
-            </DeleteBookOverlay>
+            </CardOverlay>
           ) : null}
         </>
       )}
@@ -131,6 +135,10 @@ const Wrapper = styled.div`
     @media ${device.tablet} {
       min-height: 60vh;
     }
+  }
+
+  .delete{
+    top:0;
   }
 
   @media (min-width: 600px) {
@@ -190,17 +198,9 @@ const BookStatusSection = styled.section`
   }
 `;
 
-const DeleteBookOverlay = styled.div`
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  background-color: ${(props) => props.theme.colors.primary};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
+
+
+
 const DeleteBookModal = styled.div`
   display: flex;
   flex-direction: column;
@@ -222,6 +222,11 @@ const DeleteBookModal = styled.div`
   }
   button:first-of-type {
     background-color: ${(props) => props.theme.colors.white};
+
+    &:hover{
+      color: ${(props) => props.theme.colors.secondary};
+      background-color: ${(props) => props.theme.colors.black};
+    }
   }
 
   @media ${device.tablet} {
@@ -244,6 +249,4 @@ const DeletedBookContainer = styled.section`
     height: 60vh;
   }
 `;
-const DeletedBookHeader = styled.h2`
-  text-align: center;
-`;
+

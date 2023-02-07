@@ -34,6 +34,7 @@ const Books: React.FC = () => {
     return <span>Error: {(allBooks.error as Error).message}</span>;
   }
 
+
   return (
     <Wrapper>
       {userId ? null : (
@@ -52,7 +53,7 @@ const Books: React.FC = () => {
             {allBooks.data.length > 0 ? (
               displayFilter === "all" ? (
                 <>
-                  {allBooks.data.map((book: DbBookInfo, index: number) => {
+                  { [...allBooks.data].reverse().map((book: DbBookInfo, index: number) => {
                     return (
                       <ListItem
                         key={`${book.bookid}${index}`}
@@ -68,7 +69,7 @@ const Books: React.FC = () => {
                 </>
               ) : displayFilter === "read" ? (
                 <>
-                  {allBooks.data.map((book: DbBookInfo, index: number) => {
+                  {[...allBooks.data].reverse().map((book: DbBookInfo, index: number) => {
                     if (book.status === "read") {
                       return (
                         <ListItem key={`${book.bookid}${index}`}>
@@ -89,7 +90,7 @@ const Books: React.FC = () => {
                 </>
               ) : displayFilter === "currentlyReading" ? (
                 <>
-                  {allBooks.data.map((book: DbBookInfo, index: number) => {
+                  {[...allBooks.data].reverse().map((book: DbBookInfo, index: number) => {
                     if (book.status === "currentlyReading") {
                       return (
                         <ListItem key={`${book.bookid}${index}`}>
@@ -111,7 +112,7 @@ const Books: React.FC = () => {
                 </>
               ) : displayFilter === "toRead" ? (
                 <>
-                  {allBooks.data.map((book: DbBookInfo, index: number) => {
+                  {[...allBooks.data].reverse().map((book: DbBookInfo, index: number) => {
                     if (book.status === "toRead") {
                       return (
                         <ListItem key={`${book.bookid}${index}`}>
@@ -147,12 +148,19 @@ const Wrapper = styled.div`
   margin: 0 auto;
 
   h1 {
-    padding-left: 1em;
+    padding-left: 0.5em;
+
+    @media ${device.tablet} {
+      padding-left: 1em;
+    }
+    @media ${device.laptop} {
+      padding-left: 1.5em;
+    }
   }
 
-  a{
+  a {
     color: ${(props) => props.theme.colors.secondary};
-    padding-left: .5em;
+    padding-left: 0.5em;
   }
 `;
 

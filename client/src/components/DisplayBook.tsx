@@ -1,5 +1,10 @@
 import React from "react";
 import styled from "styled-components";
+
+//components
+import ConvertDescriptionToHTML from "./ConvertDescriptionToHTML";
+
+// functions
 import convertGenres from "../functions/convertGenres";
 
 //types
@@ -16,6 +21,8 @@ export const DisplayDbBook = ({
   item: DbBookInfo;
   format: string;
 }) => {
+ 
+
   return (
     <BookInfoCard key={item.id}>
       {format && format === "short" ? (
@@ -72,7 +79,7 @@ export const DisplayDbBook = ({
             {item.publishedDate && (
               <h4>Date Published: {item.publishedDate}</h4>
             )}
-            {item.desc && <p>Description: {item.desc}</p>}
+              {item.desc && <ConvertDescriptionToHTML description={item.desc} />}
 
             {item.previewLink && (
               <a href={item.previewLink} target="_blank" rel="noreferrer">
@@ -111,24 +118,20 @@ export const DisplayGoogleBook = ({
           <div>
             {item.volumeInfo.title && (
               <>
-                (
                 {item.volumeInfo.title.length <= 65 ? (
-                  <h3>{item.volumeInfo.title}</h3>
+                  <h2>{item.volumeInfo.title}</h2>
                 ) : (
-                  <h3>{item.volumeInfo.title.substring(0, 65)}...</h3>
+                  <h2>{item.volumeInfo.title.substring(0, 65)}...</h2>
                 )}
-                )
               </>
             )}
             {item.volumeInfo.subtitle && (
               <>
-                (
                 {item.volumeInfo.subtitle.length <= 65 ? (
                   <h3>{item.volumeInfo.subtitle}</h3>
                 ) : (
                   <h3>{item.volumeInfo.subtitle.substring(0, 65)}...</h3>
                 )}
-                )
               </>
             )}
 
@@ -179,9 +182,9 @@ export const DisplayGoogleBook = ({
             {item.volumeInfo.publishedDate && (
               <h4>Date Published: {item.volumeInfo.publishedDate}</h4>
             )}
-            {item.volumeInfo.description && (
-              <p>Description: {item.volumeInfo.description}</p>
-            )}
+            {item.volumeInfo.description && 
+              <ConvertDescriptionToHTML description={item.volumeInfo.description} />
+            }
             {item.volumeInfo.previewLink && (
               <a
                 href={item.volumeInfo.previewLink}
@@ -202,7 +205,8 @@ export const DisplayGoogleBook = ({
 const BookInfoCard = styled.article`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
+  align-items: end;
   color: ${(props) => props.theme.colors.whiteText};
   height: 87%;
 `;
@@ -220,13 +224,13 @@ const ShortFormBookInfo = styled.section`
   h2,
   h3,
   h4 {
-    padding: 0.3em 0;
+    padding: 0.5em 0;
     line-height: 1.3;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
   }
 
   h3 {
-    font-size: 1rem;
+    font-size: 0.8rem;
   }
   h4 {
     font-size: 0.7rem;

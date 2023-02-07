@@ -147,7 +147,7 @@ const Wrapper = styled.div`
   max-width: 1600px;
   margin: 0 auto;
 
-  h1 {
+  h1, h2 {
     padding-left: 0.5em;
 
     @media ${device.tablet} {
@@ -155,6 +155,11 @@ const Wrapper = styled.div`
     }
     @media ${device.laptop} {
       padding-left: 1.5em;
+    }
+  }
+  h2{
+    @media ${device.laptop} {
+      padding-left: 2em;
     }
   }
 
@@ -169,6 +174,10 @@ const ListItem = styled.li`
   margin: 20px auto;
   height: 100%;
   border: 2px solid ${(props) => props.theme.colors.secondary};
+
+  h2{
+    padding-left: 0;
+  }
 `;
 
 const BookList = styled.ul`

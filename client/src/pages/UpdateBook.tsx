@@ -157,7 +157,9 @@ const Wrapper = styled.div`
     margin-bottom: 1.5em;
   }
   article {
-    padding: 0.5em 0.5em 1em 0.5em;
+    align-items: flex-start;
+    padding: 1.5em .5em 2em .5em;
+    border: 2px solid ${(props) => props.theme.colors.secondary};
   }
 `;
 const StyledForm = styled.form`

@@ -39,7 +39,7 @@ const UpdateBook: React.FC = () => {
   const userId: number = user?.id;
 
   //  get book from db that matches bookId
-  const bookData = useBookInDb(bookId, userId, bookInfo);
+  const bookData = useBookInDb(bookId, bookInfo, userId );
 
   // for the bookshelf category selected by the user
   const [bookshelf, setBookshelf] = useState<string | undefined>(

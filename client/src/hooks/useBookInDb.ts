@@ -9,19 +9,21 @@ import { DbBookInfo } from "../types";
 
 export default function useBookInDb(
   bookId: string | undefined,
-  userId: number | undefined,
-  initialBookData: DbBookInfo | undefined
+  initialBookData: DbBookInfo | undefined,
+  userId?: number | undefined,
 ): UseQueryResult<any, unknown> {
-  const getBookByUserId = async () => {
+  const getBookByBookId = async () => {
+    console.log(bookId)
     return axios
-      .get(`https://${process.env.REACT_APP_API_URL}/api/books/${bookId}/users/${userId}`)
+    // .get(`https://localhost:5000/api/books/${bookId}`)
+      .get(`https://${process.env.REACT_APP_API_URL}/api/books/${bookId}`)
       .then((res) => {
         return res.data;
       });
   };
 
-  return useQuery(["book", userId], getBookByUserId, {
-    enabled: !!userId,
+  return useQuery(["book", bookId], getBookByBookId, {
+    enabled: !!bookId,
     initialData: initialBookData ?initialBookData :undefined
   });
 }

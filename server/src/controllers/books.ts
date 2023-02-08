@@ -5,6 +5,7 @@ import { db } from "../db";
 
 export const getAllBooks = (req: Request, res: Response) => {
   //  get all books for the current user
+  console.log(req.cookies)
   const token: string | null = req.cookies.access_token;
   
   if (!token) return res.status(401).json("Not authenticated!");
@@ -27,7 +28,7 @@ export const getAllBooks = (req: Request, res: Response) => {
 export const getBook = (req: Request, res: Response) => {
   // gets a specific book in the current user's bookshelf
   const token: string | null = req.cookies.access_token;
-  
+  console.log(req)
   if (!token) return res.status(401).json("Not authenticated!");
 
   jwt.verify(token, process.env.JWT_KEY as string, (err, userId) => {

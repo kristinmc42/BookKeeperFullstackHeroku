@@ -18,14 +18,22 @@ export const AuthContextProvider: React.FC<ComponentProps> = ({
   );
 
   const login = async (inputs: UserObj) => {
-    const res = await axios.post(`https://${process.env.REACT_APP_API_URL}/api/auth/login`, inputs);
+    const res = await axios.post(`http://localhost:5000/api/auth/login`, inputs);
     setCurrentUser(res.data);
   };
+  // const login = async (inputs: UserObj) => {
+  //   const res = await axios.post(`https://${process.env.REACT_APP_API_URL}/api/auth/login`, inputs);
+  //   setCurrentUser(res.data);
+  // };
 
   const logout = async () => {
-    await axios.post(`https://${process.env.REACT_APP_API_URL}/api/auth/logout`);
+    await axios.post(`http://localhost:5000/api/auth/logout`);
     setCurrentUser(null);
   };
+  // const logout = async () => {
+  //   await axios.post(`https://${process.env.REACT_APP_API_URL}/api/auth/logout`);
+  //   setCurrentUser(null);
+  // };
 
   useEffect(() => {
     localStorage.setItem("user", JSON.stringify(currentUser));

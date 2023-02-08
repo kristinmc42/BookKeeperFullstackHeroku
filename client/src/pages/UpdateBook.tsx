@@ -56,9 +56,14 @@ const UpdateBook: React.FC = () => {
     userId: number | undefined
   ) => {
     return axios.put(
-      `https://${process.env.REACT_APP_API_URL}/api/books/${bookId}/users/${userId}`,
+      `http://localhost:5000/api/books/${bookId}`,
       book
     );
+
+    // return axios.put(
+    //   `https://${process.env.REACT_APP_API_URL}/api/books/${bookId}/users/${userId}`,
+    //   book
+    // );
   };
   const mutation = useMutation({
     mutationFn: ({

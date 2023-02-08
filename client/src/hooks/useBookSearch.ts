@@ -16,7 +16,6 @@ export default function useBookSearch(
     return axios
       .get(`https://www.googleapis.com/books/v1/volumes/${bookId}`)
       .then((res) => {
-        console.log(res.data);
         return res.data;
       });
   };

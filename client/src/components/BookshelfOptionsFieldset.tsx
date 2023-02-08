@@ -1,6 +1,9 @@
 import React from "react";
 import DatePicker from "react-datepicker";
 import styled from "styled-components";
+
+//styles
+// style sheet for react-datepicker imported in App.tsx
 import { device } from "../styles/Breakpoints";
 
 // types

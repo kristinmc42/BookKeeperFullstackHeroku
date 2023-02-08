@@ -3,8 +3,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import axios, { AxiosError } from "axios";
 import { useMutation } from "react-query";
 
-// style sheet for react-day-picker imported in App.tsx
-
 // components
 import { DisplayGoogleBook } from "../components/DisplayBook";
 import Button from "../components/Button";
@@ -45,7 +43,7 @@ const AddBook: React.FC = () => {
   // for the bookshelf category selected by the user
   const [bookshelf, setBookshelf] = useState<string | undefined>();
 
-  // for the day selected by user in DayPicker
+  // for the day selected by user in BookshelfOptionsFieldset
   const [dateRead, setDateRead] = useState<Date | undefined | null>();
 
   // date as a string
@@ -93,35 +91,34 @@ const AddBook: React.FC = () => {
     // add book to db
     mutation.mutate(bookToAdd);
   };
-
+  console.log(bookData);
+  console.log(mutation);
   return (
     <Wrapper>
       <>
         <Button onClick={() => navigate(-1)}>Back</Button>
-        <>
-          <DisplayGoogleBook item={bookInfo} format={"short"} />
-          {bookData.isSuccess && bookData.data.length === 0 ? (
-            <StyledForm onSubmit={handleSubmit}>
-              <BookshelfOptionsFieldset
-                bookshelf={bookshelf}
-                handleChange={handleChange}
-                dateRead={dateRead}
-                setDateRead={setDateRead}
-              />
 
-              {mutation.isError ? null : (
-                <Button disabled={!bookshelf}>Add Book </Button>
-              )}
-            </StyledForm>
-          ) : (
-            <ErrorMessage>
-              You already have this book in your bookshelf.
-            </ErrorMessage>
-          )}
-        </>
+        <DisplayGoogleBook item={bookInfo} format={"short"} />
+        {bookData.isSuccess && bookData.data.length === 0 && userId && (
+          <StyledForm onSubmit={handleSubmit}>
+            <BookshelfOptionsFieldset
+              bookshelf={bookshelf}
+              handleChange={handleChange}
+              dateRead={dateRead}
+              setDateRead={setDateRead}
+            />
+            <Button disabled={!bookshelf}>Add Book </Button>
+          </StyledForm>
+        )}
       </>
 
       {/* loading/error messages */}
+      {userId && bookData.isSuccess && bookData.data.length > 0 && (
+        <ErrorMessage>
+          You already have this book in your bookshelf.
+        </ErrorMessage>
+      )}
+
       {bookData.isError && (
         <ErrorMessage>
           An error occurred: {(bookData.error as Error).message}
@@ -142,19 +139,20 @@ const AddBook: React.FC = () => {
             </>
           ) : (
             <>
-              {mutation.isError &&
-              (mutation.error as AxiosError).response?.status === 500 ? (
+              {((mutation.isError &&
+                (mutation.error as AxiosError).response?.status === 500) ||
+                !userId) && (
                 <ErrorMessage>
                   Please login to add the book to your bookshelf.
                 </ErrorMessage>
-              ) : null}
+              )}
 
               {mutation.isError &&
-              (mutation.error as AxiosError).response?.status !== 500 ? (
-                <ErrorMessage>
-                  An error occurred: {(mutation.error as Error).message}
-                </ErrorMessage>
-              ) : null}
+                (mutation.error as AxiosError).response?.status !== 500 && (
+                  <ErrorMessage>
+                    An error occurred: {(mutation.error as Error).message}
+                  </ErrorMessage>
+                )}
             </>
           )}
         </>
@@ -178,7 +176,7 @@ const Wrapper = styled.div`
   article {
     align-items: flex-start;
     border: 2px solid ${(props) => props.theme.colors.secondary};
-    padding: 1.5em .5em 2em .5em;
+    padding: 1.5em 0.5em 2em 0.5em;
   }
 
   button {

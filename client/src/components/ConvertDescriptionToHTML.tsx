@@ -4,7 +4,7 @@ const ConvertDescriptionToHTML:({description}:{description:string}) => JSX.Eleme
     let domParser = new DOMParser();
 
     const doc: Document = domParser.parseFromString(description, "text/html");
-    console.log(doc);
+
 
     const newDescription = doc.body.innerText;
     return <p>Description: {newDescription}</p>

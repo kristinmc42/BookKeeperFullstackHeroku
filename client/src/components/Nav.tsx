@@ -26,8 +26,9 @@ export default function Nav() {
   const { currentUser, logout } = userContext;
 
   const handleLogout = () => {
-    // logs out user(clears cookie), search info (local storage) and navigates back to home page
+    // logs out user(clears cookie), search info (session storage) and navigates back to home page
     logout();
+    sessionStorage.clear();
     localStorage.clear();
     navigate("/");
   };

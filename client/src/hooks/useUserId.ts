@@ -10,6 +10,7 @@ export default function useUserId() {
   const userContext: ContextState | null = useContext(AuthContext);
   if (userContext) {
     username = userContext.currentUser;
+    console.log(username)
   }
 
   // get userId from db based on username

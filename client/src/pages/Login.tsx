@@ -1,8 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
-import axios, { AxiosError } from "axios";
-import { useMutation } from "react-query";
+import axios from "axios";
 import styled from "styled-components";
 
 //components
@@ -17,58 +16,59 @@ import { device } from "../styles/Breakpoints";
 import { UserObj } from "../types";
 
 const Login = () => {
-
   // values from input fields inputted by user
   const [inputs, setInputs] = useState<UserObj>({
     email: "",
     password: "",
   });
 
-  const [loginInfo, setLoginInfo] = useState<UserObj | undefined>()
-
   // error in axios call
   const [error, setError] = useState<string | null>(null);
 
   const navigate = useNavigate();
 
+  const userContext = useContext(AuthContext);
 
-  const loginUser = (
-    input: UserObj | undefined
-  ) => {
-    return axios.post(`http://localhost:5000/api/auth/login`, input);
-  }
+  if (!userContext) return null;
 
-  const mutation = useMutation({
-    mutationFn: ({
-      input
-    }: {
-      input: UserObj | undefined
+  const { login } = userContext;
+
+   // const login = async (inputs: UserObj) => {
+  //   const res = await axios.post(`https://${process.env.REACT_APP_API_URL}/api/auth/login`, inputs);
+  //   setCurrentUser(res.data);
+  // };
   
-    }) => loginUser(input),
-  });
+  const loginUser = async () => {
+    return axios
+      .post(`http://localhost:5000/api/auth/login`, inputs)
+      .then((res) => {
+        setError(null);
+        console.log(res.data);
+        sessionStorage.setItem("alias", JSON.stringify(res.data.username));
+        // login function from AuthContext passes alias
+        if (login) {
+          login(res.data.username);
+        }
+        navigate("/books");
+      })
+      .catch((err) => {
+        console.log(err.response);
+        setError(err.response.data);
+      });
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // sets state as user input changes in all fields
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    setError(null);
   };
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
-    // makes axios post call when user clicks login button
+    // makes axios post call when form submitted
     e.preventDefault();
-    mutation.mutate({ input: inputs });
-
-    if (mutation.isSuccess) {
-      navigate("/books");
-    }
-    console.log(mutation)
-    if (mutation.isError) {
-      if (mutation.error) {
-        console.log(mutation.error)
-        
-      }
-    }
+    setError(null);
+    loginUser();
   };
-
 
   return (
     <Wrapper>
@@ -99,11 +99,8 @@ const Login = () => {
             />
           </label>
           <Button type="submit">Login</Button>
-        {mutation.isLoading ? <p>Logging in...</p>
-          
-      : mutation.isError  && <p>{(mutation.error as Error).message}</p>}
-      
-      {/* {error && <ErrorMessage>{error}</ErrorMessage>} */}
+
+          {error && <ErrorMessage>{error}</ErrorMessage>}
 
           <p>
             Don't have an account? <Link to="/register">Register</Link>
@@ -169,10 +166,9 @@ const Wrapper = styled.div`
         max-width: 446px;
         width: 100%;
       }
-    
-      label{
-       
-  width: 100%;
+
+      label {
+        width: 100%;
         @media ${device.mobileL} {
           align-self: flex-start;
         }
@@ -187,7 +183,6 @@ const Wrapper = styled.div`
         border: 3px solid ${(props) => props.theme.colors.secondary};
         border-radius: 5px;
         width: 100%;
-        
       }
 
       p {

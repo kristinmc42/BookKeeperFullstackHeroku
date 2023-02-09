@@ -7,26 +7,31 @@ import Button from "../components/Button";
 import ErrorMessage from "../components/ErrorMessage";
 import AuthHeader from "../components/AuthHeader";
 
-// types
-import { UserObj } from "../types";
-
 // styles
 import styled from "styled-components";
 import { device } from "../styles/Breakpoints";
+// types
+
+import { UserObj } from "../types";
+interface RegisterObj extends UserObj {
+  confirmPassword?: string;
+}
 
 const Register: React.FC = () => {
   // values from input fields inputted by user
-  const [inputs, setInputs] = useState<UserObj>({
+  const [inputs, setInputs] = useState<RegisterObj>({
     username: "",
     email: "",
     password: "",
+    confirmPassword: "",
   });
 
   // for hiding/showing text in password input field
   const [isShown, setIsShown] = useState<boolean>(false);
 
   // error in axios call
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | undefined | null>();
+  const [passwordError, setPasswordError] = useState<string | null>(null);
 
   const navigate = useNavigate();
 
@@ -34,18 +39,31 @@ const Register: React.FC = () => {
     // sets state as user input changes in all fields
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     setError(null);
+    setPasswordError(null);
   };
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     // makes axios post call when user clicks register button
     e.preventDefault();
-    try {
-      // if registration successful, redirects user to login page
-      await axios.post(`https://${process.env.REACT_APP_API_URL}/api/auth/register`, inputs);
-      navigate("/login");
-    } catch (err: unknown | any) {
-      // sets error message in state
-      setError(err.response.data);
+
+    if (inputs.password !== inputs.confirmPassword) {
+      setPasswordError("Passwords do not match");
+    } else {
+      try {
+        // if registration successful, redirects user to login page
+        await axios.post(
+          `http://localhost:5000/api/auth/register`,
+          inputs
+        );
+        // await axios.post(
+        //   `https://${process.env.REACT_APP_API_URL}/api/auth/register`,
+        //   inputs
+        // );
+        navigate("/login");
+      } catch (err: unknown | any) {
+        // sets error message in state
+        setError(err.response.data);
+      }
     }
   };
 
@@ -56,53 +74,69 @@ const Register: React.FC = () => {
       </AuthHeader>
       <main>
         <h1>Register</h1>
-        <form onSubmit={handleSubmit}>
-          <label htmlFor="usernameRegister">
+        <StyledForm onSubmit={handleSubmit}>
+          <StyledLabel htmlFor="usernameRegister">
             Username:
-            <input
+            <StyledInput
               required
               type="text"
               id="usernameRegister"
               name="username"
               onChange={handleChange}
             />
-          </label>
-          <label htmlFor="email">
+          </StyledLabel>
+          <StyledLabel htmlFor="email">
             Email:
-            <input
+            <StyledInput
               required
               type="email"
               id="emailRegister"
               name="email"
               onChange={handleChange}
             />
-          </label>
-          <label htmlFor="password">
-            Password:
-            <input
+          </StyledLabel>
+          <StyledLabel htmlFor="password">
+            <span>Password:
+            {passwordError && <p>{passwordError}</p>}</span>
+            <StyledInput
               required
               type={isShown ? "text" : "password"}
-              id="passwordRegister"
+              id="password"
               name="password"
               onChange={handleChange}
+              value={inputs.password}
+              color={passwordError ?"red" : "#baf3f9"}
             />
-          </label>
-          <label htmlFor="showPassword">
+          </StyledLabel>
+          <StyledLabel htmlFor="confirmPassword">
+            Re-enter Password:
+            <StyledInput
+              required
+              type={isShown ? "text" : "password"}
+              id="confirmPassword"
+              name="confirmPassword"
+              onChange={handleChange}
+              value={inputs.confirmPassword}
+              color={passwordError ?"red" : "#baf3f9"}
+            />
+          </StyledLabel>
+         
+          <StyledLabel htmlFor="showPassword">
             Show password?
-            <input
+            <StyledInput
               type="checkbox"
               id="showPassword"
               name="showPassword"
               checked={isShown}
               onChange={() => setIsShown((isShown) => !isShown)}
             />
-          </label>
+          </StyledLabel>
           {error ? <ErrorMessage>{error}</ErrorMessage> : null}
           <Button type="submit">Register</Button>
           <p>
             Already have an account? <Link to="/login">Login</Link>
           </p>
-        </form>
+        </StyledForm>
       </main>
     </Wrapper>
   );
@@ -150,60 +184,6 @@ const Wrapper = styled.div`
         margin-bottom: 50px;
       }
     }
-
-    form {
-      display: flex;
-      flex-wrap: wrap;
-      flex-direction: column;
-      align-items: center;
-      max-width: 366px;
-      gap: 3em;
-
-      @media ${device.laptop} {
-        flex-direction: row;
-        justify-content: center;
-        max-width: none;
-      }
-
-      label {
-        @media ${device.mobileL} {
-          :nth-of-type(2) {
-            margin-left: 45px;
-          }
-        }
-      }
-
-      input {
-        display: block;
-        margin-left: 0;
-        margin-top: 8px;
-        color: ${(props) => props.theme.colors.blackText};
-        background-color: ${(props) => props.theme.colors.secondary};
-        border: 3px solid ${(props) => props.theme.colors.secondary};
-        border-radius: 5px;
-
-        @media ${device.mobileL} {
-          margin-left: 10px;
-          display: inline;
-
-          :nth-of-type(2) {
-            margin-left: 45px;
-          }
-        }
-      }
-
-      p {
-        text-align: center;
-
-        a {
-          color: ${(props) => props.theme.colors.secondary};
-        }
-      }
-
-      button {
-        max-width: 110px;
-      }
-    }
   }
 
   h1,
@@ -212,3 +192,92 @@ const Wrapper = styled.div`
     color: ${(props) => props.theme.colors.whiteText};
   }
 `;
+
+const StyledForm = styled.form`
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  max-width: 366px;
+  gap: 3em;
+
+  @media ${device.tablet} {
+    align-items: flex-start;
+    max-width: 446px;
+  }
+
+  
+ 
+
+ 
+  p {
+    text-align: center;
+    align-self: center;
+    a {
+      color: ${(props) => props.theme.colors.secondary};
+    }
+  }
+
+  button:first-of-type {
+    align-self: center;
+    max-width: 110px;
+  }
+`;
+
+const StyledLabel = styled.label.attrs(props => ({
+color: props.color
+}))`
+
+  max-width: 446px;
+  width: 100%;
+
+
+&:nth-of-type(3){
+  display: flex;
+  flex-wrap: wrap;
+  span{
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 100%
+  }
+  p{
+    text-align: left;
+    display:block;
+    color: red;
+
+    @media ${device.mobileM}{
+      display: inline;
+      padding-left: 2%;
+    }
+  }
+
+}
+&:nth-of-type(3),
+&:nth-of-type(4){
+  color: ${(props) => props.color};
+}
+
+&:last-of-type{
+  align-self: center;
+  width: 200px;
+  input{
+    display: inline;
+    width: 20px;
+    margin-left: 10px;
+  }
+}
+`
+
+const StyledInput = styled.input.attrs(props => ({
+  color: props.color
+  }))`
+
+  margin-left: 0;
+  margin-top: 8px;
+  color: ${(props) => props.theme.colors.blackText};
+  background-color: ${(props) => props.theme.colors.secondary};
+  border: 3px solid ${(props) => props.color};
+  border-radius: 5px;
+  width: 100%;
+`

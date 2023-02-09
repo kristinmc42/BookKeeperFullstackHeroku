@@ -8,6 +8,7 @@ import {
 import { QueryClientProvider, QueryClient } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { ThemeProvider } from "styled-components";
+import { AuthContextProvider } from "./context/AuthContext";
 
 //pages
 import Books from "./pages/Books";
@@ -60,9 +61,12 @@ const App: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <QueryClientProvider client={queryClient}>
+          <AuthContextProvider>
         <GlobalStyles />
         <ReactQueryDevtools initialIsOpen={false} />
         <RouterProvider router={router} />
+
+          </AuthContextProvider>
       </QueryClientProvider>
     </ThemeProvider>
   );

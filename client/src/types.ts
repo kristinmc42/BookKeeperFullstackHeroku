@@ -9,7 +9,7 @@ export interface UserObj {
 
 export interface ContextState {
   currentUser: string | null;
-  login: (inputs: UserObj) => void;
+  Login: (inputs: UserObj|undefined) => void;
   logout: () => void;
 }
 

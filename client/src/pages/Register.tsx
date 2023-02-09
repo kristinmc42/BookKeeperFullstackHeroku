@@ -51,10 +51,7 @@ const Register: React.FC = () => {
     } else {
       try {
         // if registration successful, redirects user to login page
-        await axios.post(
-          `http://localhost:5000/api/auth/register`,
-          inputs
-        );
+        await axios.post(`http://localhost:5000/api/auth/register`, inputs);
         // await axios.post(
         //   `https://${process.env.REACT_APP_API_URL}/api/auth/register`,
         //   inputs
@@ -96,8 +93,10 @@ const Register: React.FC = () => {
             />
           </StyledLabel>
           <StyledLabel htmlFor="password">
-            <span>Password:
-            {passwordError && <p>{passwordError}</p>}</span>
+            <span>
+              Password:
+              {passwordError && <p>{passwordError}</p>}
+            </span>
             <StyledInput
               required
               type={isShown ? "text" : "password"}
@@ -105,7 +104,7 @@ const Register: React.FC = () => {
               name="password"
               onChange={handleChange}
               value={inputs.password}
-              color={passwordError ?"red" : "#baf3f9"}
+              color={passwordError ? "red" : "#baf3f9"}
             />
           </StyledLabel>
           <StyledLabel htmlFor="confirmPassword">
@@ -117,10 +116,10 @@ const Register: React.FC = () => {
               name="confirmPassword"
               onChange={handleChange}
               value={inputs.confirmPassword}
-              color={passwordError ?"red" : "#baf3f9"}
+              color={passwordError ? "red" : "#baf3f9"}
             />
           </StyledLabel>
-         
+
           <StyledLabel htmlFor="showPassword">
             Show password?
             <StyledInput
@@ -206,10 +205,6 @@ const StyledForm = styled.form`
     max-width: 446px;
   }
 
-  
- 
-
- 
   p {
     text-align: center;
     align-self: center;
@@ -224,55 +219,51 @@ const StyledForm = styled.form`
   }
 `;
 
-const StyledLabel = styled.label.attrs(props => ({
-color: props.color
+const StyledLabel = styled.label.attrs((props) => ({
+  color: props.color,
 }))`
-
   max-width: 446px;
   width: 100%;
 
-
-&:nth-of-type(3){
-  display: flex;
-  flex-wrap: wrap;
-  span{
-    display:flex;
+  &:nth-of-type(3) {
+    display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
-    width: 100%
-  }
-  p{
-    text-align: left;
-    display:block;
-    color: red;
+    span {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      width: 100%;
+    }
+    p {
+      text-align: left;
+      display: block;
+      color: red;
 
-    @media ${device.mobileM}{
-      display: inline;
-      padding-left: 2%;
+      @media ${device.mobileM} {
+        display: inline;
+        padding-left: 2%;
+      }
     }
   }
-
-}
-&:nth-of-type(3),
-&:nth-of-type(4){
-  color: ${(props) => props.color};
-}
-
-&:last-of-type{
-  align-self: center;
-  width: 200px;
-  input{
-    display: inline;
-    width: 20px;
-    margin-left: 10px;
+  &:nth-of-type(3),
+  &:nth-of-type(4) {
+    color: ${(props) => props.color};
   }
-}
-`
 
-const StyledInput = styled.input.attrs(props => ({
-  color: props.color
-  }))`
+  &:last-of-type {
+    align-self: center;
+    width: 200px;
+    input {
+      display: inline;
+      width: 20px;
+      margin-left: 10px;
+    }
+  }
+`;
 
+const StyledInput = styled.input.attrs((props) => ({
+  color: props.color,
+}))`
   margin-left: 0;
   margin-top: 8px;
   color: ${(props) => props.theme.colors.blackText};
@@ -280,4 +271,4 @@ const StyledInput = styled.input.attrs(props => ({
   border: 3px solid ${(props) => props.color};
   border-radius: 5px;
   width: 100%;
-`
+`;

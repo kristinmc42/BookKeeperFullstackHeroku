@@ -1,6 +1,8 @@
 import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import axios, { AxiosError } from "axios";
+import { useMutation } from "react-query";
 import styled from "styled-components";
 
 //components
@@ -8,29 +10,42 @@ import Button from "../components/Button";
 import AuthHeader from "../components/AuthHeader";
 import ErrorMessage from "../components/ErrorMessage";
 
-// types
-import { UserObj } from "../types";
-
 // styles
 import { device } from "../styles/Breakpoints";
 
-const Login: React.FC = () => {
+// types
+import { UserObj } from "../types";
+
+const Login = () => {
+
   // values from input fields inputted by user
   const [inputs, setInputs] = useState<UserObj>({
-    username: "",
+    email: "",
     password: "",
   });
+
+  const [loginInfo, setLoginInfo] = useState<UserObj | undefined>()
 
   // error in axios call
   const [error, setError] = useState<string | null>(null);
 
   const navigate = useNavigate();
 
-  const userContext = useContext(AuthContext);
 
-  if (!userContext) return null;
+  const loginUser = (
+    input: UserObj | undefined
+  ) => {
+    return axios.post(`http://localhost:5000/api/auth/login`, input);
+  }
 
-  const { login } = userContext;
+  const mutation = useMutation({
+    mutationFn: ({
+      input
+    }: {
+      input: UserObj | undefined
+  
+    }) => loginUser(input),
+  });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // sets state as user input changes in all fields
@@ -40,15 +55,21 @@ const Login: React.FC = () => {
   const handleSubmit = async (e: React.SyntheticEvent) => {
     // makes axios post call when user clicks login button
     e.preventDefault();
-    try {
-      // if login successful, redirects user to bookshelf page
-      login(inputs);
+    mutation.mutate({ input: inputs });
+
+    if (mutation.isSuccess) {
       navigate("/books");
-    } catch (err: unknown | any) {
-      // sets error message in state
-      setError(err.response.data);
+    }
+    console.log(mutation)
+    if (mutation.isError) {
+      if (mutation.error) {
+        console.log(mutation.error)
+        
+      }
     }
   };
+
+
   return (
     <Wrapper>
       <AuthHeader to="/" title="home">
@@ -57,13 +78,13 @@ const Login: React.FC = () => {
       <main>
         <h1>Login</h1>
         <form onSubmit={handleSubmit}>
-          <label htmlFor="usernameLogin">
-            Username:
+          <label htmlFor="emailLogin">
+            Email:
             <input
               required
-              type="text"
-              id="usernameLogin"
-              name="username"
+              type="email"
+              id="emailLogin"
+              name="email"
               onChange={handleChange}
             />
           </label>
@@ -78,7 +99,12 @@ const Login: React.FC = () => {
             />
           </label>
           <Button type="submit">Login</Button>
-          {error && <ErrorMessage>{error}</ErrorMessage>}
+        {mutation.isLoading ? <p>Logging in...</p>
+          
+      : mutation.isError  && <p>{(mutation.error as Error).message}</p>}
+      
+      {/* {error && <ErrorMessage>{error}</ErrorMessage>} */}
+
           <p>
             Don't have an account? <Link to="/register">Register</Link>
           </p>
@@ -139,10 +165,17 @@ const Wrapper = styled.div`
       max-width: 366px;
       gap: 3em;
 
-      @media ${device.laptop} {
-        flex-direction: row;
-        justify-content: center;
-        max-width: none;
+      @media ${device.mobileL} {
+        max-width: 446px;
+        width: 100%;
+      }
+    
+      label{
+       
+  width: 100%;
+        @media ${device.mobileL} {
+          align-self: flex-start;
+        }
       }
 
       input {
@@ -153,11 +186,8 @@ const Wrapper = styled.div`
         background-color: ${(props) => props.theme.colors.secondary};
         border: 3px solid ${(props) => props.theme.colors.secondary};
         border-radius: 5px;
-
-        @media ${device.mobileL} {
-          margin-left: 10px;
-          display: inline;
-        }
+        width: 100%;
+        
       }
 
       p {

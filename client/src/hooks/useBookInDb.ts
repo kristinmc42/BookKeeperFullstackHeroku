@@ -9,8 +9,7 @@ import { DbBookInfo } from "../types";
 
 export default function useBookInDb(
   bookId: string | undefined,
-  initialBookData: DbBookInfo | undefined,
-  userId?: number | undefined,
+  initialBookData: DbBookInfo | undefined
 ): UseQueryResult<any, unknown> {
   const getBookByBookId = async () => {
     console.log(bookId)

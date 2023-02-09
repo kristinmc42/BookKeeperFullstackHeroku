@@ -38,7 +38,7 @@ const AddBook: React.FC = () => {
   const userId: number = user?.id;
 
   //  check if book is in db
-  const bookData = useBookInDb(bookId,  undefined, userId);
+  const bookData = useBookInDb(bookId, undefined);
 
   // for the bookshelf category selected by the user
   const [bookshelf, setBookshelf] = useState<string | undefined>();
@@ -92,8 +92,7 @@ const AddBook: React.FC = () => {
     // add book to db
     mutation.mutate(bookToAdd);
   };
-  console.log(bookData);
-  console.log(mutation);
+
   return (
     <Wrapper>
       <>

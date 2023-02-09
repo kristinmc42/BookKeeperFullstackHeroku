@@ -39,7 +39,7 @@ const UpdateBook: React.FC = () => {
   const userId: number = user?.id;
 
   //  get book from db that matches bookId
-  const bookData = useBookInDb(bookId, bookInfo, userId );
+  const bookData = useBookInDb(bookId, bookInfo);
 
   // for the bookshelf category selected by the user
   const [bookshelf, setBookshelf] = useState<string | undefined>(
@@ -47,21 +47,17 @@ const UpdateBook: React.FC = () => {
   );
 
   // for the day selected by user in DayPicker
-  const [dateRead, setDateRead] = useState<Date | null | undefined>();
+  const [dateRead, setDateRead] = useState<Date | null | undefined>(new Date());
 
   // to update the book info in the db
   const updateBook = (
     book: DbBookInfo | undefined,
-    bookId: string | undefined,
-    userId: number | undefined
+    bookId: string | undefined
   ) => {
-    return axios.put(
-      `http://localhost:5000/api/books/${bookId}`,
-      book
-    );
+    return axios.put(`http://localhost:5000/api/books/${bookId}`, book);
 
     // return axios.put(
-    //   `https://${process.env.REACT_APP_API_URL}/api/books/${bookId}/users/${userId}`,
+    //   `https://${process.env.REACT_APP_API_URL}/api/books/${bookId}`,
     //   book
     // );
   };
@@ -69,12 +65,10 @@ const UpdateBook: React.FC = () => {
     mutationFn: ({
       book,
       bookId,
-      userId,
     }: {
       book: DbBookInfo | undefined;
       bookId: string | undefined;
-      userId: number | undefined;
-    }) => updateBook(book, bookId, userId),
+    }) => updateBook(book, bookId),
   });
 
   // when radio button selection changes
@@ -89,12 +83,14 @@ const UpdateBook: React.FC = () => {
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
     const bookInDb: DbBookInfo = bookData.data[0];
-    if (dateRead) {
+    if (dateRead && bookshelf === "read") {
       bookInDb.dateRead = convertDateToString(dateRead);
+    } else {
+      bookInDb.dateRead = undefined;
     }
     bookInDb.status = bookshelf;
 
-    mutation.mutate({ book: bookInDb, bookId, userId });
+    mutation.mutate({ book: bookInDb, bookId });
   };
 
   return (
@@ -110,7 +106,9 @@ const UpdateBook: React.FC = () => {
             setDateRead={setDateRead}
           />
 
-          <Button type="submit">Update</Button>
+          <Button type="submit" disabled={!userId}>
+            Update
+          </Button>
           {bookData.isError && (
             <ErrorMessage>
               Error: {(bookData.error as Error).message}
@@ -163,7 +161,7 @@ const Wrapper = styled.div`
   }
   article {
     align-items: flex-start;
-    padding: 1.5em .5em 2em .5em;
+    padding: 1.5em 0.5em 2em 0.5em;
     border: 2px solid ${(props) => props.theme.colors.secondary};
   }
 `;

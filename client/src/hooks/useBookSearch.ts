@@ -14,7 +14,7 @@ export default function useBookSearch(
 
   const getBookById = async () => {
     return axios
-      .get(`https://www.googleapis.com/books/v1/volumes/${bookId}`)
+      .get(`https://www.googleapis.com/books/v1/volumes/${bookId}`, { withCredentials: false })
       .then((res) => {
         return res.data;
       });

@@ -1,13 +1,14 @@
 import React from "react";
 
 export interface UserObj {
-  username: string;
+  username?: string;
   email?: string;
-  password: string;
+  password?: string;
+  alias?: string
 }
 
 export interface ContextState {
-  currentUser: UserObj | null;
+  currentUser: string | null;
   login: (inputs: UserObj) => void;
   logout: () => void;
 }

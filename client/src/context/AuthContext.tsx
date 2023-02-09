@@ -13,13 +13,15 @@ export const AuthContextProvider: React.FC<ComponentProps> = ({
 }: {
   children: ReactNode;
 }) => {
-  const [currentUser, setCurrentUser] = useState<UserObj | null>(
-    JSON.parse(localStorage.getItem("user") as string) || null
+  const [currentUser, setCurrentUser] = useState<string | null>(
+    JSON.parse(sessionStorage.getItem("alias") as string) || null
   );
+
+  axios.defaults.withCredentials = true;
 
   const login = async (inputs: UserObj) => {
     const res = await axios.post(`http://localhost:5000/api/auth/login`, inputs);
-    setCurrentUser(res.data);
+    setCurrentUser(res.data.username);
   };
   // const login = async (inputs: UserObj) => {
   //   const res = await axios.post(`https://${process.env.REACT_APP_API_URL}/api/auth/login`, inputs);
@@ -36,7 +38,7 @@ export const AuthContextProvider: React.FC<ComponentProps> = ({
   // };
 
   useEffect(() => {
-    localStorage.setItem("user", JSON.stringify(currentUser));
+    sessionStorage.setItem("alias", JSON.stringify(currentUser));
   }, [currentUser]);
 
   return (

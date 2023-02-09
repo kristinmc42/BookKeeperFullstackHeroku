@@ -61,7 +61,7 @@ export default function Nav() {
         {currentUser ? (
           <>
             <li key={5}>
-              <p>{currentUser?.username}</p>
+              <p>{currentUser}</p>
               <Button onClick={handleLogout}>Logout</Button>
             </li>
           </>

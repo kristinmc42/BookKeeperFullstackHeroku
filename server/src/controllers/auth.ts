@@ -55,6 +55,7 @@ export const login = (req: Request, res: Response) => {
 
     const { password, ...other } = data[0]; // separating out password so that we are not sending it with the other information
 
+    
     res
       .cookie("access_token", token, { httpOnly: true }) // only for making API requests
       .status(200)

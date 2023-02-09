@@ -14,7 +14,9 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-    origin: '*'
+    origin: ['http://localhost:3000', 'http://localhost:5000/',
+`https://bookkeeperfullstack-production.up.railway.app`, 'https://www.googleapis.com/books'],
+    credentials: true
 }));
 
 app.use("/api/auth", authRoutes);

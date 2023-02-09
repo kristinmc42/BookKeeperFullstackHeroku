@@ -6,16 +6,17 @@ import { ContextState } from "../types";
 
 export default function useUserId() {
   // get username from AuthContext
-  let username: string | undefined;
+  let username: string | null | undefined;
   const userContext: ContextState | null = useContext(AuthContext);
   if (userContext) {
-    username = userContext.currentUser?.username;
+    username = userContext.currentUser;
   }
 
   // get userId from db based on username
   const getUser = async () => {
     return axios
-      .get(`https://${process.env.REACT_APP_API_URL}/api/users/${username}`)
+      .get(`http://localhost:5000/api/users/${username}`)
+      // .get(`https://${process.env.REACT_APP_API_URL}/api/users/${username}`)
       .then((res) => {
         return res.data;
       });

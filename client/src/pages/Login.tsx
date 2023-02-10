@@ -31,29 +31,31 @@ const Login = () => {
 
   if (!userContext) return null;
 
+  console.log(userContext)
+
   const { login } = userContext;
 
-   // const login = async (inputs: UserObj) => {
+  // const login = async (inputs: UserObj) => {
   //   const res = await axios.post(`https://${process.env.REACT_APP_API_URL}/api/auth/login`, inputs);
   //   setCurrentUser(res.data);
   // };
-  
+
   const loginUser = async () => {
+    console.log("in loginuser function")
     return axios
       .post(`http://localhost:5000/api/auth/login`, inputs)
       .then((res) => {
         setError(null);
-        console.log(res.data);
-        sessionStorage.setItem("alias", JSON.stringify(res.data.username));
-        // login function from AuthContext passes alias
+        // login function from AuthContext passes alias to context
         if (login) {
           login(res.data.username);
         }
         navigate("/books");
       })
       .catch((err) => {
-        console.log(err.response);
-        setError(err.response.data);
+        console.log("in catch of loginuser")
+        console.log(err.response.data)
+        // setError(err.response.data);
       });
   };
 

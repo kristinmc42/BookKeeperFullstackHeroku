@@ -30,6 +30,7 @@ import "react-day-picker/dist/style.css";
 import "react-datepicker/dist/react-datepicker.css";
 import { theme } from "./styles/Theme";
 import { GlobalStyles } from "./styles/Global";
+import ErrorPage from "./pages/ErrorPage";
 
 const queryClient: QueryClient = new QueryClient({
   defaultOptions: {
@@ -53,6 +54,7 @@ const router = createBrowserRouter(
       </Route>
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="*" element={<ErrorPage /> }/>
     </>
   )
 );

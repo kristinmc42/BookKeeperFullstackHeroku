@@ -19,7 +19,7 @@ export const AuthContextProvider = ({
     JSON.parse(sessionStorage.getItem("alias") as string) || null
   );
 
-  console.log(currentUser)
+
   axios.defaults.withCredentials = true;
 
   // const Login = useMutation(inputs: UserObj) => {
@@ -29,7 +29,8 @@ export const AuthContextProvider = ({
   //     })
   //   }
 
-  const login = async (alias:string) => {
+  const login = async (alias: string) => {
+    sessionStorage.setItem("alias", JSON.stringify(alias));
     setCurrentUser(alias);
   }
   

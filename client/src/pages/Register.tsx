@@ -59,7 +59,12 @@ const Register: React.FC = () => {
         navigate("/login");
       } catch (err: unknown | any) {
         // sets error message in state
-        setError(err.response.data);
+        if (err.response.data) {
+          setError(err.response.data);
+          
+        } else {
+          setError(err.message)
+        }
       }
     }
   };

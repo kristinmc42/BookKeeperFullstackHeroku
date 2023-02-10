@@ -26,13 +26,13 @@ export default function SingleDbBook() {
 
   // get bookId and userId from bookInfo
   const bookId: string = bookInfo.bookid;
-  const userId: number = bookInfo.userid;
+  const userId: number | null | undefined = bookInfo.userid;
 
   // for when user clicks on Delete button
   const [confirmDelete, setConfirmDelete] = useState<boolean>(false);
 
   // handles the mutation to delete the book from the db
-  const deleteBook = (bookId: string, userId: number) => {
+  const deleteBook = (bookId: string) => {
     return axios.delete(
       `http://localhost:5000/api/books/${bookId}`
       // `https://${process.env.REACT_APP_API_URL}/api/books/${bookId}/users/${userId}`
@@ -40,12 +40,12 @@ export default function SingleDbBook() {
   };
 
   const mutation = useMutation({
-    mutationFn: ({ bookId, userId }: { bookId: string; userId: number }) =>
-      deleteBook(bookId, userId),
+    mutationFn: ({ bookId }: { bookId: string}) =>
+      deleteBook(bookId),
   });
 
   const handleDelete = () => {
-    mutation.mutate({ bookId, userId });
+    mutation.mutate({ bookId });
   };
 
   // when user selects a different option, launch UpdateBook component, passing target option and item in state

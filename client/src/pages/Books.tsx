@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
+import { UseQueryResult } from "react-query";
 import styled from "styled-components";
 
 //components
@@ -12,19 +13,19 @@ import useAllBooksInDb from "../hooks/useAllBooksInDb";
 
 // types
 import { DbBookInfo } from "../types";
+
+//styles
 import { device } from "../styles/Breakpoints";
 
 // gets all users book from db and displays them
 // user can filter books displayed by bookshelf(status)
 const Books: React.FC = () => {
-  // get userid of current user
-  const { data: user } = useUserId();
-  const userId: number = user?.id;
-
   const [displayFilter, setDisplayFilter] = useState<string>("all");
+  // get userid of current user
+  const currentUserId: number | null | undefined = useUserId();
 
   // get all books from db for user
-  const allBooks = useAllBooksInDb(userId);
+  const allBooks: UseQueryResult<any, unknown> = useAllBooksInDb();
 
   if (allBooks.isLoading) {
     return <span>Loading...</span>;
@@ -34,14 +35,9 @@ const Books: React.FC = () => {
     return <span>Error: {(allBooks.error as Error).message}</span>;
   }
 
-
   return (
     <Wrapper>
-      {userId ? null : (
-        <>
-          <h2>Login to see your bookshelves</h2>
-        </>
-      )}
+      {!currentUserId && <h2>Login to see your bookshelves</h2>}
       {allBooks && allBooks.data ? (
         <>
           <h1>My Books</h1>
@@ -53,83 +49,91 @@ const Books: React.FC = () => {
             {allBooks.data.length > 0 ? (
               displayFilter === "all" ? (
                 <>
-                  { [...allBooks.data].reverse().map((book: DbBookInfo, index: number) => {
-                    return (
-                      <ListItem
-                        key={`${book.bookid}${index}`}
-                        title="book details"
-                      >
-                        <DisplayDbBook item={book} format={"short"} />
-                        <Link to={`${book.bookid}`} state={{ book: book }}>
-                          More Info
-                        </Link>
-                      </ListItem>
-                    );
-                  })}
+                  {[...allBooks.data]
+                    .reverse()
+                    .map((book: DbBookInfo, index: number) => {
+                      return (
+                        <ListItem
+                          key={`${book.bookid}${index}`}
+                          title="book details"
+                        >
+                          <DisplayDbBook item={book} format={"short"} />
+                          <Link to={`${book.bookid}`} state={{ book: book }}>
+                            More Info
+                          </Link>
+                        </ListItem>
+                      );
+                    })}
                 </>
               ) : displayFilter === "read" ? (
                 <>
-                  {[...allBooks.data].reverse().map((book: DbBookInfo, index: number) => {
-                    if (book.status === "read") {
-                      return (
-                        <ListItem key={`${book.bookid}${index}`}>
-                          <DisplayDbBook item={book} format={"short"} />
-                          <Link
-                            to={`${book.bookid}`}
-                            state={{ book: book }}
-                            title="book details"
-                          >
-                            More Info
-                          </Link>
-                        </ListItem>
-                      );
-                    } else {
-                      return null;
-                    }
-                  })}
+                  {[...allBooks.data]
+                    .reverse()
+                    .map((book: DbBookInfo, index: number) => {
+                      if (book.status === "read") {
+                        return (
+                          <ListItem key={`${book.bookid}${index}`}>
+                            <DisplayDbBook item={book} format={"short"} />
+                            <Link
+                              to={`${book.bookid}`}
+                              state={{ book: book }}
+                              title="book details"
+                            >
+                              More Info
+                            </Link>
+                          </ListItem>
+                        );
+                      } else {
+                        return null;
+                      }
+                    })}
                 </>
               ) : displayFilter === "currentlyReading" ? (
                 <>
-                  {[...allBooks.data].reverse().map((book: DbBookInfo, index: number) => {
-                    if (book.status === "currentlyReading") {
-                      return (
-                        <ListItem key={`${book.bookid}${index}`}>
-                          <DisplayDbBook item={book} format={"short"} />
-                          <Link
-                            to={`${book.bookid}`}
-                            state={{ book: book }}
-                            title="book details"
-                          >
-                            {" "}
-                            More Info
-                          </Link>
-                        </ListItem>
-                      );
-                    } else {
-                      return null;
-                    }
-                  })}
+                  {[...allBooks.data]
+                    .reverse()
+                    .map((book: DbBookInfo, index: number) => {
+                      if (book.status === "currentlyReading") {
+                        return (
+                          <ListItem key={`${book.bookid}${index}`}>
+                            <DisplayDbBook item={book} format={"short"} />
+                            <Link
+                              to={`${book.bookid}`}
+                              state={{ book: book }}
+                              title="book details"
+                            >
+                              {" "}
+                              More Info
+                            </Link>
+                          </ListItem>
+                        );
+                      } else {
+                        return null;
+                      }
+                    })}
                 </>
               ) : displayFilter === "toRead" ? (
                 <>
-                  {[...allBooks.data].reverse().map((book: DbBookInfo, index: number) => {
-                    if (book.status === "toRead") {
-                      return (
-                        <ListItem key={`${book.bookid}${index}`}>
-                          <DisplayDbBook item={book} format={"short"} />
-                          <Link
-                            to={`${book.bookid}`}
-                            state={{ book: book }}
-                            title="book details"
-                          >
-                            More Info
-                          </Link>
-                        </ListItem>
-                      );
-                    } else {
-                      return null;
-                    }
-                  })}
+                  {[...allBooks.data]
+                    .reverse()
+                    .map((book: DbBookInfo, index: number) => {
+                      if (book.status === "toRead") {
+                        return (
+                          <ListItem key={`${book.bookid}${index}`}>
+                            <DisplayDbBook item={book} format={"short"} />
+                            <Link
+                              to={`${book.bookid}`}
+                              state={{ book: book }}
+                              title="book details"
+                            >
+                              More Info
+                            </Link>
+                          </ListItem>
+                        );
+                      } else {
+                        return null;
+                      }
+                    })}
                 </>
               ) : null
             ) : null}
@@ -147,7 +151,8 @@ const Wrapper = styled.div`
   max-width: 1600px;
   margin: 0 auto;
 
-  h1, h2 {
+  h1,
+  h2 {
     padding-left: 0.5em;
 
     @media ${device.tablet} {
@@ -157,7 +162,7 @@ const Wrapper = styled.div`
       padding-left: 1.5em;
     }
   }
-  h2{
+  h2 {
     @media ${device.laptop} {
       padding-left: 2em;
     }
@@ -175,7 +180,7 @@ const ListItem = styled.li`
   height: 100%;
   border: 2px solid ${(props) => props.theme.colors.secondary};
 
-  h2{
+  h2 {
     padding-left: 0;
   }
 `;

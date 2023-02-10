@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
-import axios from "axios";
+// import axios from "axios";
 import styled from "styled-components";
 
 //components
@@ -35,29 +35,28 @@ const Login = () => {
 
   const { login } = userContext;
 
-  // const login = async (inputs: UserObj) => {
-  //   const res = await axios.post(`https://${process.env.REACT_APP_API_URL}/api/auth/login`, inputs);
-  //   setCurrentUser(res.data);
-  // };
 
-  const loginUser = async () => {
-    console.log("in loginuser function")
-    return axios
-      .post(`http://localhost:5000/api/auth/login`, inputs)
-      .then((res) => {
-        setError(null);
-        // login function from AuthContext passes alias to context
-        if (login) {
-          login(res.data.username);
-        }
-        navigate("/books");
-      })
-      .catch((err) => {
-        console.log("in catch of loginuser")
-        console.log(err.response.data)
-        // setError(err.response.data);
-      });
-  };
+  // const loginUser = async () => {
+  //   console.log("in loginuser function")
+  //   return axios
+  //     .post(`http://localhost:5000/api/auth/login`, inputs)
+  //     .then((res) => {
+  //       setError(null);
+  //       // login function from AuthContext passes alias to context
+  //       if (login) {
+  //         login(res.data.username);
+  //       }
+  //       navigate("/books");
+  //     })
+  //     .catch((err) => {
+  //       if (err.response.data) {
+  //         setError(err.response.data);
+          
+  //       } else {
+  //         setError(err.message)
+  //       }
+  //     });
+  // };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // sets state as user input changes in all fields
@@ -66,10 +65,17 @@ const Login = () => {
   };
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
-    // makes axios post call when form submitted
     e.preventDefault();
     setError(null);
-    loginUser();
+    const user = await login(inputs).catch((err) => {
+      if (err.response.data) {
+        setError(err.response.data);
+        
+      } else {
+        setError(err.message)
+      }
+    });
+    if(user) navigate("/books");
   };
 
   return (

@@ -1,12 +1,13 @@
 import * as dotenv from "dotenv";
 dotenv.config();
 
-import express, { Application } from "express";
+import express, { Application, Request, Response, NextFunction } from "express";
 import authRoutes from "./routes/auth";
 import bookRoutes from "./routes/books";
 import userRoutes from "./routes/users";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import { MysqlError } from "mysql";
 
 const app: Application = express();
 const PORT = process.env.PORT || 5000;
@@ -29,6 +30,13 @@ app.use(
 app.use("/api/auth", authRoutes);
 app.use("/api/books", bookRoutes);
 app.use("/api/users", userRoutes);
+
+app.use(
+  (err: MysqlError | any, req: Request, res: Response, next: NextFunction) => {
+    console.error(err.stack);
+    res.status(500).send("Something went wrong!");
+  }
+);
 
 app.listen(PORT, () => console.log("Server is running"));
 

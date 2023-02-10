@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios, { AxiosError } from "axios";
-import { useMutation } from "react-query";
+import { useMutation, UseQueryResult } from "react-query";
 
 // components
 import { DisplayGoogleBook } from "../components/DisplayBook";
@@ -34,11 +34,12 @@ const AddBook: React.FC = () => {
   const bookId: string = bookInfo.id;
 
   // get userid of current user
-  const { data: user } = useUserId();
-  const userId: number = user?.id;
+  // const { data: user } = useUserId();
+  // const userId: number = user?.id;
+  const userId: number | null | undefined = useUserId();
 
   //  check if book is in db
-  const bookData = useBookInDb(bookId, undefined);
+  const bookData: UseQueryResult<any, unknown> = useBookInDb(bookId, undefined);
 
   // for the bookshelf category selected by the user
   const [bookshelf, setBookshelf] = useState<string | undefined>();

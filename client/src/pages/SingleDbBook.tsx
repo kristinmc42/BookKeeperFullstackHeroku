@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import React, { useState } from "react";
 import { useMutation } from "react-query";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -9,6 +9,7 @@ import Button from "../components/Button";
 import { DisplayDbBook } from "../components/DisplayBook";
 import MessageCard from "../components/MessageCard";
 import CardOverlay from "../components/CardOverlay";
+import ErrorMessage from "../components/ErrorMessage";
 
 //styles
 import { device } from "../styles/Breakpoints";
@@ -86,14 +87,14 @@ export default function SingleDbBook() {
             <Button onClick={() => setConfirmDelete(true)}>Delete Book</Button>
 
             {mutation.isLoading ? (
-              "Deleting book from bookshelf..."
+              <StyledMessage>Deleting book from bookshelf...</StyledMessage>
             ) : (
               <>
-                {mutation.isError ? (
-                  <div>
-                    An error occurred: {(mutation.error as Error).message}
-                  </div>
-                ) : null}
+                {mutation.isError && (
+                  <ErrorMessage>
+                    An error occurred: {(mutation.error instanceof AxiosError) ?mutation.error.message :null}
+                  </ErrorMessage>
+                )}
               </>
             )}
           </BookStatusSection>
@@ -248,5 +249,19 @@ const DeletedBookContainer = styled.section`
 
   @media (orientation: landscape) and (hover: none) and (pointer: coarse) and (max-width: 1023px) {
     height: 60vh;
+  }
+`;
+const StyledMessage = styled.h2`
+  text-align: center;
+  font-size: 1rem;
+  padding: 5em 0.5em;
+  letter-spacing: 0.1rem;
+  color: ${(props) => props.theme.colors.secondary};
+
+  @media ${device.tablet} {
+    padding-left: 1em;
+  }
+  @media ${device.laptop} {
+    padding-left: 2em;
   }
 `;

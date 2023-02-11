@@ -44,11 +44,11 @@ export const AuthContextProvider = ({
   
 
   const logout = async () => {
-    await axios.post(`http://localhost:5000/api/auth/logout`);
     setCurrentUser(null);
     setCurrentUserId(null);
     localStorage.clear();
     sessionStorage.clear();
+    await axios.post(`http://localhost:5000/api/auth/logout`);
   };
   // const logout = async () => {
   //   await axios.post(`https://${process.env.REACT_APP_API_URL}/api/auth/logout`);

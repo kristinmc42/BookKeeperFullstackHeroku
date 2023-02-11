@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMutation } from "react-query";
 import styled from "styled-components";
@@ -23,6 +23,7 @@ import useBookInDb from "../hooks/useBookInDb";
 
 // types
 import { DbBookInfo } from "../types";
+import { device } from "../styles/Breakpoints";
 
 // displays select info on the book and allows the user to modify the status of the book in the db
 const UpdateBook: React.FC = () => {
@@ -110,14 +111,14 @@ const UpdateBook: React.FC = () => {
           </Button>
           {bookData.isError && (
             <ErrorMessage>
-              Error: {(bookData.error as Error).message}
+              Error: {(bookData.error instanceof AxiosError) ?bookData.error.message :null}
             </ErrorMessage>
           )}
         </StyledForm>
       </>
 
-      {mutation.isLoading ? (
-        "Adding book to bookshelf..."
+      {mutation.isLoading ? (<StyledMessage>Adding book to bookshelf...</StyledMessage>
+       
       ) : (
         <>
           {mutation.isSuccess ? (
@@ -130,7 +131,7 @@ const UpdateBook: React.FC = () => {
             <>
               {mutation.isError ? (
                 <ErrorMessage>
-                  An error occurred: {(mutation.error as Error).message}
+                  An error occurred: {(mutation.error instanceof Error) ?mutation.error.message :null}
                 </ErrorMessage>
               ) : null}
             </>
@@ -169,4 +170,19 @@ const StyledForm = styled.form`
     max-width: 100px;
     margin-top: 0;
   }
+`;
+const StyledMessage = styled.h2`
+  text-align: center;
+  font-size: 1rem;
+  padding: 5em .5em;
+  letter-spacing: 0.1rem;
+  color: ${(props) => props.theme.colors.secondary};
+
+  @media ${device.tablet} {
+    padding-left: 1em;
+  }
+  @media ${device.laptop} {
+    padding-left: 2em;
+  }
+
 `;

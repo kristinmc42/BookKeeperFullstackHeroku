@@ -58,6 +58,18 @@ export const login = async (req: Request, res: Response) => {
     .json(other);
 };
 
+export const logout = (req: Request, res: Response) => {
+  // clearing cookie from local storage
+  res
+    .clearCookie("access_token", {
+      sameSite: "none",
+      secure: true,
+    })
+    .status(200)
+    .json("User has been logged out.");
+};
+
+
 // export const register = (req: Request, res: Response) => {
 //   // CHECK EXISTING USER
 //   const q: string = "SELECT * FROM users WHERE email = ? OR username = ?";
@@ -116,13 +128,4 @@ export const login = async (req: Request, res: Response) => {
 //   });
 // };
 
-export const logout = (req: Request, res: Response) => {
-  // clearing cookie from local storage
-  res
-    .clearCookie("access_token", {
-      sameSite: "none",
-      secure: true,
-    })
-    .status(200)
-    .json("User has been logged out.");
-};
+

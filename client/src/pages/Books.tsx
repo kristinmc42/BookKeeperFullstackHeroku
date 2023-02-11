@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { UseQueryResult } from "react-query";
 import styled from "styled-components";
+import { AxiosError } from "axios";
 
 //components
 import { DisplayDbBook } from "../components/DisplayBook";
 import BookshelfFilter from "../components/BookshelfFilter";
+import ErrorMessage from "../components/ErrorMessage";
 
 // hooks
 import useUserId from "../hooks/useUserId";
@@ -21,26 +23,40 @@ import { device } from "../styles/Breakpoints";
 // user can filter books displayed by bookshelf(status)
 const Books: React.FC = () => {
   const [displayFilter, setDisplayFilter] = useState<string>("all");
+
   // get userid of current user
   const currentUserId: number | null | undefined = Number(useUserId());
 
   // get all books from db for user
   const allBooks: UseQueryResult<any, unknown> = useAllBooksInDb();
 
-  if (allBooks.isLoading) {
-    return <span>Loading...</span>;
-  }
-
-  if (allBooks.isError) {
-    return <span>Error: {(allBooks.error as Error).message}</span>;
+  if (
+    allBooks.error instanceof AxiosError &&
+    allBooks.error.response?.status === 401
+  ) {
+    console.log(allBooks.error.response?.status);
   }
 
   return (
     <Wrapper>
-      {!currentUserId && <h2>Login to see your bookshelves</h2>}
-      {allBooks && allBooks.data ? (
+      <h1>My Books</h1>
+      {allBooks.isLoading && <StyledMessage>Loading...</StyledMessage>}
+
+      {((allBooks.error instanceof AxiosError &&
+        allBooks.error.response?.status === 401) ||
+        !currentUserId) && (
+        <ErrorMessage>Please login to see your bookshelves</ErrorMessage>
+      )}
+
+      {allBooks.error instanceof AxiosError &&
+        allBooks.error.response?.status !== 401 && (
+          <ErrorMessage>
+            Error: {(allBooks.error as Error).message}
+          </ErrorMessage>
+        )}
+
+      {allBooks.isSuccess && allBooks.data ? (
         <>
-          <h1>My Books</h1>
           <BookshelfFilter
             displayFilter={displayFilter}
             setDisplayFilter={setDisplayFilter}
@@ -150,10 +166,10 @@ export default Books;
 const Wrapper = styled.div`
   max-width: 1600px;
   margin: 0 auto;
+  height: 80vh;
 
-  h1,
-  h2 {
-    padding-left: 0.5em;
+  h1{
+    padding: 0.5em;
 
     @media ${device.tablet} {
       padding-left: 1em;
@@ -162,11 +178,7 @@ const Wrapper = styled.div`
       padding-left: 1.5em;
     }
   }
-  h2 {
-    @media ${device.laptop} {
-      padding-left: 2em;
-    }
-  }
+
 
   a {
     color: ${(props) => props.theme.colors.secondary};
@@ -195,4 +207,19 @@ const BookList = styled.ul`
   @media ${device.mobileM} {
     padding: 0.5em;
   }
+`;
+const StyledMessage = styled.h2`
+  text-align: center;
+  font-size: 1rem;
+  padding: 5em .5em;
+  letter-spacing: 0.1rem;
+  color: ${(props) => props.theme.colors.secondary};
+
+  @media ${device.tablet} {
+    padding-left: 1em;
+  }
+  @media ${device.laptop} {
+    padding-left: 2em;
+  }
+
 `;

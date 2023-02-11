@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import styled from "styled-components";
 
 // components
 import SearchBar from "../components/SearchBar";
 import { DisplayGoogleBook } from "../components/DisplayBook";
 import { device } from "../styles/Breakpoints";
+import ErrorMessage from "../components/ErrorMessage";
 
 // searches Google Books API based on input from user and displays results
 const SearchBooks: React.FC = () => {
@@ -60,7 +61,7 @@ const SearchBooks: React.FC = () => {
         }
       })
       .catch((err: Error) => {
-        console.log(err.message);
+        console.error(err.message);
       });
   };
 
@@ -102,21 +103,21 @@ const SearchBooks: React.FC = () => {
           })
         ) : isSuccess && !data ? (
           <>
-            <span className="message">
+            <StyledMessage className="message">
               Sorry. No results were found. Please try again
-            </span>
+            </StyledMessage>
           </>
         ) : null}
       </BookList>
 
       {/* loading and error messages for useQuery*/}
       {isLoading || isFetching ? (
-        <span className="message">Loading...</span>
+        <StyledMessage>Loading...</StyledMessage>
       ) : null}
       {isError ? (
-        <span className="message">
-          An error occurred: {(error as Error).message}
-        </span>
+        <ErrorMessage>
+          An error occurred: {(error instanceof AxiosError) ?error.message :null}
+        </ErrorMessage>
       ) : null}
     </Wrapper>
   );
@@ -155,4 +156,11 @@ const BookList = styled.ul`
   @media ${device.mobileM} {
     padding: 0.5em;
   }
+`;
+const StyledMessage = styled.h2`
+  text-align: center;
+  font-size: 1rem;
+  padding-left: 0.5em;
+  letter-spacing: .1rem;
+  color: ${(props) => props.theme.colors.secondary};
 `;

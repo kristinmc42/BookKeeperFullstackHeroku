@@ -23,8 +23,6 @@ import useBookInDb from "../hooks/useBookInDb";
 // types
 import { BookInfo, DbBookInfo } from "../types";
 
-
-
 // displays select info on the book and allows the user to choose a status(bookshelf) for the book and then add to db
 const AddBook: React.FC = () => {
   const navigate = useNavigate();
@@ -108,6 +106,7 @@ const AddBook: React.FC = () => {
     <Wrapper>
       <>
         <Button onClick={() => navigate(-1)}>Back</Button>
+
         <DisplayGoogleBook item={bookInfo} format={"short"} />
 
         {bookData.isSuccess && bookData.data.length === 0 && userId && (
@@ -124,6 +123,7 @@ const AddBook: React.FC = () => {
       </>
 
       {/* loading/error messages */}
+
       {bookData.isLoading && <StyledMessage>Checking...</StyledMessage>}
 
       {bookData.isSuccess && bookData.data.length > 0 && userId && (
@@ -147,7 +147,8 @@ const AddBook: React.FC = () => {
           ) : (
             <>
               {((mutation.isError &&
-                (mutation.error as AxiosError).response?.status === 500) ||
+                mutation.error instanceof AxiosError &&
+                mutation.error.response?.status === 500) ||
                 (bookData.isError && !userId)) && (
                 <ErrorMessage>
                   Please login to add the book to your bookshelf.
@@ -155,7 +156,8 @@ const AddBook: React.FC = () => {
               )}
 
               {mutation.isError &&
-                (mutation.error as AxiosError).response?.status !== 500 && (
+                mutation.error instanceof AxiosError &&
+                mutation.error.response?.status !== 500 && (
                   <ErrorMessage>An error occurred: {errorMessage}</ErrorMessage>
                 )}
             </>

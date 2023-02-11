@@ -9,15 +9,3 @@ export const getUserId = async (req: Request, res: Response) => {
   console.log(userId[0]);
   return userId[0];
 };
-
-// export const getAllUsers = (req: Request, res: Response) => {
-//     const q = req.query.status
-//         ? "SELECT * FROM users WHERE status=?"
-//         : "SELECT * FROM users";
-
-//     db.query(q, [req.query.status], (err:any, data:any) => {
-//         if (err) return res.status(500).json(err);
-
-//         return res.status(200).json(data);
-//     });
-// };

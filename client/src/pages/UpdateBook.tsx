@@ -35,9 +35,7 @@ const UpdateBook: React.FC = () => {
   const selectedStatus: string = state.selectedStatus; // bookshelf status to change to
 
   // get userid of current user
-  // const { data: user } = useUserId();
-  // const userId: number = user?.id;
-  const userId: number | null | undefined = useUserId();
+  const userId: number | null | undefined = Number(useUserId());
 
   //  get book from db that matches bookId
   const bookData = useBookInDb(bookId, bookInfo);

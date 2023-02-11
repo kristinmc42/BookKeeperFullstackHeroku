@@ -1,22 +1,39 @@
-import React from 'react';
+import React from "react";
 import { Link } from "react-router-dom";
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export default function ErrorPage() {
   return (
-      <StyledMain>
-          <h1>Oops! You seem to be lost.</h1>
-          <p>Here are some helpful links.</p>
-          <Link to="/">Home</Link>
-          <Link to="/login">Login</Link>
+    <StyledMain>
+      <h1>Book Keeper</h1>
+      <h2>Oops! You seem to be lost.</h2>
+      <p>Here are some helpful links.</p>
+      <nav>
+        <Link to="/">Home</Link>
+        <Link to="/login">Login</Link>
+      </nav>
     </StyledMain>
-  )
+  );
 }
 
 const StyledMain = styled.main`
-display: flex;
-flex-direction: column;
-justify-contents: center;
-align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: 100vh;
 
-`
+  h1,
+  h2,
+  p,
+  a {
+    padding: 1em;
+  }
+  h1 {
+    font-family: ${(props) => props.theme.fonts.header};
+  }
+  a {
+    color: ${(props) => props.theme.colors.secondary};
+  }
+`;

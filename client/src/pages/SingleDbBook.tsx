@@ -24,9 +24,8 @@ export default function SingleDbBook() {
   const { state } = useLocation();
   const bookInfo: DbBookInfo = state.book;
 
-  // get bookId and userId from bookInfo
+  // get bookId  from bookInfo
   const bookId: string = bookInfo.bookid;
-  const userId: number | null | undefined = bookInfo.userid;
 
   // for when user clicks on Delete button
   const [confirmDelete, setConfirmDelete] = useState<boolean>(false);
@@ -35,13 +34,12 @@ export default function SingleDbBook() {
   const deleteBook = (bookId: string) => {
     return axios.delete(
       `http://localhost:5000/api/books/${bookId}`
-      // `https://${process.env.REACT_APP_API_URL}/api/books/${bookId}/users/${userId}`
+      // `https://${process.env.REACT_APP_API_URL}/api/books/${bookId}`
     );
   };
 
   const mutation = useMutation({
-    mutationFn: ({ bookId }: { bookId: string}) =>
-      deleteBook(bookId),
+    mutationFn: ({ bookId }: { bookId: string }) => deleteBook(bookId),
   });
 
   const handleDelete = () => {
@@ -62,7 +60,9 @@ export default function SingleDbBook() {
     <Wrapper>
       {mutation.isSuccess ? (
         <DeletedBookContainer>
-          <MessageCard navigateTo="/books"><h2>Your book has been deleted.</h2></MessageCard>
+          <MessageCard navigateTo="/books">
+            <h2>Your book has been deleted.</h2>
+          </MessageCard>
         </DeletedBookContainer>
       ) : (
         <>
@@ -134,15 +134,15 @@ const Wrapper = styled.div`
   article {
     align-items: flex-start;
     border: 2px solid ${(props) => props.theme.colors.secondary};
-    padding: 1.5em .5em 2em .5em;
+    padding: 1.5em 0.5em 2em 0.5em;
 
     @media ${device.tablet} {
       min-height: 60vh;
     }
   }
 
-  .delete{
-    top:0;
+  .delete {
+    top: 0;
   }
 
   @media (min-width: 600px) {
@@ -202,9 +202,6 @@ const BookStatusSection = styled.section`
   }
 `;
 
-
-
-
 const DeleteBookModal = styled.div`
   display: flex;
   flex-direction: column;
@@ -227,7 +224,7 @@ const DeleteBookModal = styled.div`
   button:first-of-type {
     background-color: ${(props) => props.theme.colors.white};
 
-    &:hover{
+    &:hover {
       color: ${(props) => props.theme.colors.secondary};
       background-color: ${(props) => props.theme.colors.black};
     }
@@ -253,4 +250,3 @@ const DeletedBookContainer = styled.section`
     height: 60vh;
   }
 `;
-

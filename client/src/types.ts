@@ -10,7 +10,7 @@ export interface UserObj {
 
 export interface ContextState {
   currentUser: string | null;
-  currentUserId: number | undefined;
+  currentUserId: string | null;
   login: (inputs: UserObj) => Promise<AxiosResponse<any, any>>;
   logout: () => void;
 }

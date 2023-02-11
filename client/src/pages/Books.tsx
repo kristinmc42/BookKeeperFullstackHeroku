@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { UseQueryResult } from "react-query";
 import styled from "styled-components";
@@ -22,7 +22,7 @@ import { device } from "../styles/Breakpoints";
 const Books: React.FC = () => {
   const [displayFilter, setDisplayFilter] = useState<string>("all");
   // get userid of current user
-  const currentUserId: number | null | undefined = useUserId();
+  const currentUserId: number | null | undefined = Number(useUserId());
 
   // get all books from db for user
   const allBooks: UseQueryResult<any, unknown> = useAllBooksInDb();

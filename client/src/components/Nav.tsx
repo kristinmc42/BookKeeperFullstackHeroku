@@ -28,8 +28,8 @@ export default function Nav() {
   const handleLogout = () => {
     // logs out user(clears cookie), search info (session storage) and navigates back to home page
     logout();
-    sessionStorage.clear();
-    localStorage.clear();
+    // sessionStorage.clear();
+    // localStorage.clear();
     navigate("/");
   };
 

@@ -1,8 +1,5 @@
-import axios from "axios";
 import { useContext } from "react";
-import { useQuery } from "react-query";
 import { AuthContext } from "../context/AuthContext";
-import { ContextState } from "../types";
 
 export default function useUserId() {
   // get username from AuthContext
@@ -10,14 +7,13 @@ export default function useUserId() {
 
   if (!userContext) return null;
 
-  console.log(userContext)
+  console.log(userContext);
 
   const { currentUserId } = userContext;
 
-  console.log(currentUserId)
+  console.log(currentUserId);
   return currentUserId;
 }
-
 
 // export default function useUserId() {
 //   // get username from AuthContext

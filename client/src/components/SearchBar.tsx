@@ -89,6 +89,9 @@ const StyledForm = styled.form`
       border: 1px solid ${(props) => props.theme.colors.primary};
       cursor: pointer;
     }
+    @media ${device.tablet}{
+      align-self: flex-end;
+    }
   }
 
   @media ${device.tablet} {
@@ -98,8 +101,5 @@ const StyledForm = styled.form`
       margin-left: 20px;
     }
 
-    button.sc-pyfCe:nth-child(3) {
-      align-self: flex-end;
-    }
   }
 `;

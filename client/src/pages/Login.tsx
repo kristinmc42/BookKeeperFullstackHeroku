@@ -13,6 +13,7 @@ import { device } from "../styles/Breakpoints";
 
 // types
 import { UserObj } from "../types";
+import { AxiosError, AxiosResponse } from "axios";
 
 const Login = () => {
   // values from input fields inputted by user
@@ -41,9 +42,11 @@ const Login = () => {
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     setError(null);
-    const user = await login(inputs).catch((err) => {
-      if (err.response.data) {
-        setError(err.response.data);
+    const user = await login(inputs).catch((err:AxiosError) => {
+      if (err.response?.data !== undefined || err.response?.data !== null) {
+        const res: AxiosResponse<unknown, any> | undefined = err.response;
+        const mess = res?.data;
+        if(typeof mess === "string") setError(mess);
       } else {
         setError(err.message);
       }

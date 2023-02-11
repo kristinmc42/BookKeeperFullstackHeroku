@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 export default function ErrorPage() {
   return (
-    <StyledMain>
+    <StyledContainer>
       <h1>Book Keeper</h1>
       <h2>Oops! You seem to be lost.</h2>
       <p>Here are some helpful links.</p>
@@ -12,17 +12,17 @@ export default function ErrorPage() {
         <Link to="/">Home</Link>
         <Link to="/login">Login</Link>
       </nav>
-    </StyledMain>
+    </StyledContainer>
   );
 }
 
-const StyledMain = styled.main`
+const StyledContainer = styled.section`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
-  height: 100vh;
+  min-height: 100vh;
 
   h1,
   h2,

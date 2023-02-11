@@ -60,11 +60,10 @@ const AddBook: React.FC = () => {
 
   // to ADD the book to the db
   const addBook = async (book: DbBookInfo | undefined) => {
-    console.log(book);
     return await axios
       .post(
-        `http://localhost:5000/api/books/`,
-        // `https://${process.env.REACT_APP_API_URL}/api/books/`,
+        // `http://localhost:5000/api/books/`,
+        `https://${process.env.REACT_APP_API_URL}/api/books/`,
         book
       )
       .catch((err) => {
@@ -124,7 +123,9 @@ const AddBook: React.FC = () => {
 
       {/* loading/error messages */}
 
-      {bookData.isLoading && <StyledMessage>Checking...</StyledMessage>}
+      {((bookData.isSuccess && !userId) || bookData.isLoading) && (
+        <StyledMessage>Checking...</StyledMessage>
+      )}
 
       {bookData.isSuccess && bookData.data.length > 0 && userId && (
         <ErrorMessage>
@@ -184,6 +185,12 @@ const Wrapper = styled.div`
     align-items: flex-start;
     border: 2px solid ${(props) => props.theme.colors.secondary};
     padding: 1.5em 0.5em 2em 0.5em;
+  }
+  section:first-child {
+    max-width: none;
+    div {
+      padding-right: 1em;
+    }
   }
 
   button {

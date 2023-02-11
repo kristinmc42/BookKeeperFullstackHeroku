@@ -30,13 +30,6 @@ const Books: React.FC = () => {
   // get all books from db for user
   const allBooks: UseQueryResult<any, unknown> = useAllBooksInDb();
 
-  if (
-    allBooks.error instanceof AxiosError &&
-    allBooks.error.response?.status === 401
-  ) {
-    console.log(allBooks.error.response?.status);
-  }
-
   return (
     <Wrapper>
       <h1>My Books</h1>
@@ -166,9 +159,12 @@ export default Books;
 const Wrapper = styled.div`
   max-width: 1600px;
   margin: 0 auto;
-  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 
-  h1{
+  h1 {
     padding: 0.5em;
 
     @media ${device.tablet} {
@@ -179,15 +175,18 @@ const Wrapper = styled.div`
     }
   }
 
+  h1 + h2 {
+    margin-top: 3em;
+  }
 
   a {
     color: ${(props) => props.theme.colors.secondary};
-    padding-left: 0.5em;
+    padding-left: 1em;
   }
 `;
 
 const ListItem = styled.li`
-  width: 320px;
+  width: 300px;
   margin: 20px auto;
   height: 100%;
   border: 2px solid ${(props) => props.theme.colors.secondary};
@@ -203,6 +202,7 @@ const BookList = styled.ul`
   grid-template-rows: repeat(1fr);
   align-items: stretch;
   gap: 0.5em;
+  width: 96%;
 
   @media ${device.mobileM} {
     padding: 0.5em;
@@ -211,7 +211,7 @@ const BookList = styled.ul`
 const StyledMessage = styled.h2`
   text-align: center;
   font-size: 1rem;
-  padding: 5em .5em;
+  padding: 5em 0.5em;
   letter-spacing: 0.1rem;
   color: ${(props) => props.theme.colors.secondary};
 
@@ -221,5 +221,4 @@ const StyledMessage = styled.h2`
   @media ${device.laptop} {
     padding-left: 2em;
   }
-
 `;

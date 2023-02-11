@@ -54,7 +54,7 @@ const router = createBrowserRouter(
       </Route>
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="*" element={<ErrorPage /> }/>
+      <Route path="*" element={<ErrorPage />} />
     </>
   )
 );
@@ -63,12 +63,11 @@ const App: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <QueryClientProvider client={queryClient}>
-          <AuthContextProvider>
-        <GlobalStyles />
-        <ReactQueryDevtools initialIsOpen={false} />
-        <RouterProvider router={router} />
-
-          </AuthContextProvider>
+        <AuthContextProvider>
+          <GlobalStyles />
+          <ReactQueryDevtools initialIsOpen={false} />
+          <RouterProvider router={router} />
+        </AuthContextProvider>
       </QueryClientProvider>
     </ThemeProvider>
   );

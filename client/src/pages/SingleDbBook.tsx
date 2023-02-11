@@ -34,8 +34,8 @@ export default function SingleDbBook() {
   // handles the mutation to delete the book from the db
   const deleteBook = (bookId: string) => {
     return axios.delete(
-      `http://localhost:5000/api/books/${bookId}`
-      // `https://${process.env.REACT_APP_API_URL}/api/books/${bookId}`
+      // `http://localhost:5000/api/books/${bookId}`
+      `https://${process.env.REACT_APP_API_URL}/api/books/${bookId}`
     );
   };
 
@@ -92,7 +92,10 @@ export default function SingleDbBook() {
               <>
                 {mutation.isError && (
                   <ErrorMessage>
-                    An error occurred: {(mutation.error instanceof AxiosError) ?mutation.error.message :null}
+                    An error occurred:{" "}
+                    {mutation.error instanceof AxiosError
+                      ? mutation.error.message
+                      : null}
                   </ErrorMessage>
                 )}
               </>
@@ -139,6 +142,12 @@ const Wrapper = styled.div`
 
     @media ${device.tablet} {
       min-height: 60vh;
+    }
+    section:first-child {
+      max-width: none;
+      div {
+        padding-right: 1em;
+      }
     }
   }
 

@@ -1,13 +1,16 @@
-import React from 'react';
+import React from "react";
 
-const ConvertDescriptionToHTML:({description}:{description:string}) => JSX.Element = ({description}:{description:string}) => {
-    let domParser = new DOMParser();
+const ConvertDescriptionToHTML: ({
+  description,
+}: {
+  description: string;
+}) => JSX.Element = ({ description }: { description: string }) => {
+  let domParser = new DOMParser();
 
-    const doc: Document = domParser.parseFromString(description, "text/html");
+  const doc: Document = domParser.parseFromString(description, "text/html");
 
-
-    const newDescription = doc.body.innerText;
-    return <p>Description: {newDescription}</p>
-  };
+  const newDescription = doc.body.innerText;
+  return <p>Description: {newDescription}</p>;
+};
 
 export default ConvertDescriptionToHTML;

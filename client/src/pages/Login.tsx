@@ -1,7 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
-// import axios from "axios";
 import styled from "styled-components";
 
 //components
@@ -31,32 +30,7 @@ const Login = () => {
 
   if (!userContext) return null;
 
-  console.log(userContext)
-
   const { login } = userContext;
-
-
-  // const loginUser = async () => {
-  //   console.log("in loginuser function")
-  //   return axios
-  //     .post(`http://localhost:5000/api/auth/login`, inputs)
-  //     .then((res) => {
-  //       setError(null);
-  //       // login function from AuthContext passes alias to context
-  //       if (login) {
-  //         login(res.data.username);
-  //       }
-  //       navigate("/books");
-  //     })
-  //     .catch((err) => {
-  //       if (err.response.data) {
-  //         setError(err.response.data);
-          
-  //       } else {
-  //         setError(err.message)
-  //       }
-  //     });
-  // };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // sets state as user input changes in all fields
@@ -70,12 +44,11 @@ const Login = () => {
     const user = await login(inputs).catch((err) => {
       if (err.response.data) {
         setError(err.response.data);
-        
       } else {
-        setError(err.message)
+        setError(err.message);
       }
     });
-    if(user) navigate("/books");
+    if (user) navigate("/books");
   };
 
   return (

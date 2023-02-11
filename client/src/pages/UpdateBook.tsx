@@ -54,12 +54,12 @@ const UpdateBook: React.FC = () => {
     book: DbBookInfo | undefined,
     bookId: string | undefined
   ) => {
-    return axios.put(`http://localhost:5000/api/books/${bookId}`, book);
+    // return axios.put(`http://localhost:5000/api/books/${bookId}`, book);
 
-    // return axios.put(
-    //   `https://${process.env.REACT_APP_API_URL}/api/books/${bookId}`,
-    //   book
-    // );
+    return axios.put(
+      `https://${process.env.REACT_APP_API_URL}/api/books/${bookId}`,
+      book
+    );
   };
   const mutation = useMutation({
     mutationFn: ({
@@ -111,14 +111,17 @@ const UpdateBook: React.FC = () => {
           </Button>
           {bookData.isError && (
             <ErrorMessage>
-              Error: {(bookData.error instanceof AxiosError) ?bookData.error.message :null}
+              Error:{" "}
+              {bookData.error instanceof AxiosError
+                ? bookData.error.message
+                : null}
             </ErrorMessage>
           )}
         </StyledForm>
       </>
 
-      {mutation.isLoading ? (<StyledMessage>Adding book to bookshelf...</StyledMessage>
-       
+      {mutation.isLoading ? (
+        <StyledMessage>Adding book to bookshelf...</StyledMessage>
       ) : (
         <>
           {mutation.isSuccess ? (
@@ -131,7 +134,10 @@ const UpdateBook: React.FC = () => {
             <>
               {mutation.isError ? (
                 <ErrorMessage>
-                  An error occurred: {(mutation.error instanceof Error) ?mutation.error.message :null}
+                  An error occurred:{" "}
+                  {mutation.error instanceof Error
+                    ? mutation.error.message
+                    : null}
                 </ErrorMessage>
               ) : null}
             </>
@@ -174,7 +180,7 @@ const StyledForm = styled.form`
 const StyledMessage = styled.h2`
   text-align: center;
   font-size: 1rem;
-  padding: 5em .5em;
+  padding: 5em 0.5em;
   letter-spacing: 0.1rem;
   color: ${(props) => props.theme.colors.secondary};
 
@@ -184,5 +190,4 @@ const StyledMessage = styled.h2`
   @media ${device.laptop} {
     padding-left: 2em;
   }
-
 `;

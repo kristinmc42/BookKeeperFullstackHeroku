@@ -21,8 +21,6 @@ export const DisplayDbBook = ({
   item: DbBookInfo;
   format: string;
 }) => {
- 
-
   return (
     <BookInfoCard key={item.id}>
       {format && format === "short" ? (
@@ -52,12 +50,12 @@ export const DisplayDbBook = ({
               </h3>
             )}
             {item.genre && (
-              <h4>
+              <h3>
                 Genre:{" "}
                 {item.genre.length <= 65
                   ? item.genre
                   : item.genre.substring(0, 65) + "..."}
-              </h4>
+              </h3>
             )}
           </div>
         </ShortFormBookInfo>
@@ -69,7 +67,7 @@ export const DisplayDbBook = ({
               {item.title && <h2>{item.title}</h2>}
               {item.subtitle && <h3>{item.subtitle}</h3>}
               {item.author && <h3>By: {item.author}</h3>}
-              {item.genre && <h4>Genre: {item.genre}</h4>}
+              {item.genre && <h3>Genre: {item.genre}</h3>}
             </div>
           </ShortFormBookInfo>
 
@@ -79,7 +77,7 @@ export const DisplayDbBook = ({
             {item.publishedDate && (
               <h4>Date Published: {item.publishedDate}</h4>
             )}
-              {item.desc && <ConvertDescriptionToHTML description={item.desc} />}
+            {item.desc && <ConvertDescriptionToHTML description={item.desc} />}
 
             {item.previewLink && (
               <a href={item.previewLink} target="_blank" rel="noreferrer">
@@ -144,11 +142,11 @@ export const DisplayGoogleBook = ({
               </h3>
             ) : null}
             {newGenreString && (
-              <h4>
+              <h3>
                 {newGenreString.length <= 65
                   ? newGenreString
                   : newGenreString.substring(0, 65) + "..."}
-              </h4>
+              </h3>
             )}
           </div>
         </ShortFormBookInfo>
@@ -169,7 +167,7 @@ export const DisplayGoogleBook = ({
                 <h3>By: {item.volumeInfo.authors.join(", ")}</h3>
               )}
 
-              {newGenreString && <h4>{newGenreString}</h4>}
+              {newGenreString && <h3>{newGenreString}</h3>}
             </div>
           </ShortFormBookInfo>
           <FullFormBookInfo>
@@ -182,9 +180,11 @@ export const DisplayGoogleBook = ({
             {item.volumeInfo.publishedDate && (
               <h4>Date Published: {item.volumeInfo.publishedDate}</h4>
             )}
-            {item.volumeInfo.description && 
-              <ConvertDescriptionToHTML description={item.volumeInfo.description} />
-            }
+            {item.volumeInfo.description && (
+              <ConvertDescriptionToHTML
+                description={item.volumeInfo.description}
+              />
+            )}
             {item.volumeInfo.previewLink && (
               <a
                 href={item.volumeInfo.previewLink}
@@ -215,9 +215,13 @@ const ShortFormBookInfo = styled.section`
   align-items: flex-start;
   gap: 0.8em;
   padding: 0.5em;
+  width: 100%;
+  max-width: 275px;
 
   img {
-    width: 85px;
+    min-width: 85px;
+    width: 25%;
+    max-width: 225px;
     padding-top: 0.8em;
   }
 
@@ -232,7 +236,8 @@ const ShortFormBookInfo = styled.section`
   h3 {
     font-size: 0.8rem;
   }
-  h4 {
+
+  h3:last-of-type {
     font-size: 0.7rem;
   }
 `;

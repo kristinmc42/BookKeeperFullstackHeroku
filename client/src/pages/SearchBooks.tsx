@@ -116,7 +116,8 @@ const SearchBooks: React.FC = () => {
       ) : null}
       {isError ? (
         <ErrorMessage>
-          An error occurred: {(error instanceof AxiosError) ?error.message :null}
+          An error occurred:{" "}
+          {error instanceof AxiosError ? error.message : null}
         </ErrorMessage>
       ) : null}
     </Wrapper>
@@ -161,6 +162,6 @@ const StyledMessage = styled.h2`
   text-align: center;
   font-size: 1rem;
   padding-left: 0.5em;
-  letter-spacing: .1rem;
+  letter-spacing: 0.1rem;
   color: ${(props) => props.theme.colors.secondary};
 `;

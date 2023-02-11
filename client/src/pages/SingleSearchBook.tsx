@@ -64,7 +64,15 @@ const Wrapper = styled.div`
   article {
     align-items: flex-start;
     border: 2px solid ${(props) => props.theme.colors.secondary};
-    padding: 1.5em .5em 2em .5em;
+    padding: 1.5em 0.5em 2em 0.5em;
+    width: 95%;
+
+    section:first-child {
+      max-width: none;
+      div {
+        padding-right: 1em;
+      }
+    }
   }
   button {
     margin: 1em 0;
@@ -74,6 +82,6 @@ const StyledMessage = styled.h2`
   text-align: center;
   font-size: 1rem;
   padding-left: 0.5em;
-  letter-spacing: .1rem;
+  letter-spacing: 0.1rem;
   color: ${(props) => props.theme.colors.secondary};
 `;

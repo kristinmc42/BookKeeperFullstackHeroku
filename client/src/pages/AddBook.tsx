@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios, { AxiosError } from "axios";
-import { useMutation } from "react-query";
+import { useMutation, UseQueryResult } from "react-query";
+import styled from "styled-components";
 
 // components
 import { DisplayGoogleBook } from "../components/DisplayBook";
@@ -21,8 +22,6 @@ import useBookInDb from "../hooks/useBookInDb";
 
 // types
 import { BookInfo, DbBookInfo } from "../types";
-import styled from "styled-components";
-import { device } from "../styles/Breakpoints";
 
 // displays select info on the book and allows the user to choose a status(bookshelf) for the book and then add to db
 const AddBook: React.FC = () => {
@@ -34,14 +33,16 @@ const AddBook: React.FC = () => {
   const bookId: string = bookInfo.id;
 
   // get userid of current user
-  const { data: user } = useUserId();
-  const userId: number = user?.id;
+  const userId: number | null | undefined = Number(useUserId());
 
   //  check if book is in db
-  const bookData = useBookInDb(bookId, userId, undefined);
+  const bookData: UseQueryResult<any, unknown> = useBookInDb(bookId, undefined);
 
   // for the bookshelf category selected by the user
   const [bookshelf, setBookshelf] = useState<string | undefined>();
+
+  // for error messages
+  const [errorMessage, setErrorMessage] = useState<string | undefined>();
 
   // for the day selected by user in BookshelfOptionsFieldset
   const [dateRead, setDateRead] = useState<Date | undefined | null>();
@@ -58,12 +59,20 @@ const AddBook: React.FC = () => {
   );
 
   // to ADD the book to the db
-  const addBook = (book: DbBookInfo | undefined) => {
-    console.log(book);
-    return axios.post(
-      `https://${process.env.REACT_APP_API_URL}/api/books/`,
-      book
-    );
+  const addBook = async (book: DbBookInfo | undefined) => {
+    return await axios
+      .post(
+        // `http://localhost:5000/api/books/`,
+        `https://${process.env.REACT_APP_API_URL}/api/books/`,
+        book
+      )
+      .catch((err) => {
+        if (err.response.data) {
+          setErrorMessage(err.response.data);
+        } else {
+          setErrorMessage(err.message);
+        }
+      });
   };
   const mutation = useMutation(addBook);
 
@@ -91,14 +100,14 @@ const AddBook: React.FC = () => {
     // add book to db
     mutation.mutate(bookToAdd);
   };
-  console.log(bookData);
-  console.log(mutation);
+
   return (
     <Wrapper>
       <>
         <Button onClick={() => navigate(-1)}>Back</Button>
 
         <DisplayGoogleBook item={bookInfo} format={"short"} />
+
         {bookData.isSuccess && bookData.data.length === 0 && userId && (
           <StyledForm onSubmit={handleSubmit}>
             <BookshelfOptionsFieldset
@@ -113,20 +122,19 @@ const AddBook: React.FC = () => {
       </>
 
       {/* loading/error messages */}
-      {userId && bookData.isSuccess && bookData.data.length > 0 && (
+
+      {((bookData.isSuccess && !userId) || bookData.isLoading) && (
+        <StyledMessage>Checking...</StyledMessage>
+      )}
+
+      {bookData.isSuccess && bookData.data.length > 0 && userId && (
         <ErrorMessage>
           You already have this book in your bookshelf.
         </ErrorMessage>
       )}
 
-      {bookData.isError && (
-        <ErrorMessage>
-          An error occurred: {(bookData.error as Error).message}
-        </ErrorMessage>
-      )}
-
       {mutation.isLoading ? (
-        <StyledMessage>"Adding book to bookshelf..."</StyledMessage>
+        <StyledMessage>Adding book to bookshelf...</StyledMessage>
       ) : (
         <>
           {mutation.isSuccess ? (
@@ -140,18 +148,18 @@ const AddBook: React.FC = () => {
           ) : (
             <>
               {((mutation.isError &&
-                (mutation.error as AxiosError).response?.status === 500) ||
-                !userId) && (
+                mutation.error instanceof AxiosError &&
+                mutation.error.response?.status === 500) ||
+                (bookData.isError && !userId)) && (
                 <ErrorMessage>
                   Please login to add the book to your bookshelf.
                 </ErrorMessage>
               )}
 
               {mutation.isError &&
-                (mutation.error as AxiosError).response?.status !== 500 && (
-                  <ErrorMessage>
-                    An error occurred: {(mutation.error as Error).message}
-                  </ErrorMessage>
+                mutation.error instanceof AxiosError &&
+                mutation.error.response?.status !== 500 && (
+                  <ErrorMessage>An error occurred: {errorMessage}</ErrorMessage>
                 )}
             </>
           )}
@@ -178,6 +186,12 @@ const Wrapper = styled.div`
     border: 2px solid ${(props) => props.theme.colors.secondary};
     padding: 1.5em 0.5em 2em 0.5em;
   }
+  section:first-child {
+    max-width: none;
+    div {
+      padding-right: 1em;
+    }
+  }
 
   button {
     max-width: 75px;
@@ -192,10 +206,7 @@ const StyledForm = styled.form`
 `;
 const StyledMessage = styled.h2`
   text-align: center;
-  font-size: 1.3rem;
+  font-size: 1rem;
   padding-left: 0.5em;
-
-  @media ${device.tablet} {
-    font-size: 1.7rem;
-  }
+  color: ${(props) => props.theme.colors.secondary};
 `;

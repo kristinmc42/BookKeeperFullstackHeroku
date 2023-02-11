@@ -1,89 +1,134 @@
-import express, { Request, Response } from "express";
+import express, { Request, Response, NextFunction } from "express";
 import { userInfo } from "os";
-import { db } from "../db";
+import jwt from "jsonwebtoken";
+import {
+  getAllUsersBooks,
+  getSingleBook,
+  addBookToDB,
+  deleteDbBook,
+  updateDbBook,
+} from "../db";
 
-export const getAllBooks = (req: Request, res: Response) => {
+interface TokenInterface extends jwt.JwtPayload {
+  id: number;
+  iat: number;
+}
+
+export const getAllBooks = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   //  get all books for the current user
+  // check authenticated
+  const token: string | null = req.cookies.access_token;
 
-  const q = "SELECT * FROM books WHERE userid = ?";
+  if (!token) return res.status(401).json("Not authenticated!");
 
-  db.query(q, [Number(req.params.userid)], (err, data) => {
-    if (err) return res.status(500).json(err);
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_KEY as jwt.Secret);
+    const user = decoded as TokenInterface;
 
-    return res.status(200).json(data);
-  });
+    const allBooks = await getAllUsersBooks(user.id).catch((err) => {
+      console.error(err.stack);
+      return res.status(500).json("User not found");
+    });
+
+    return res.status(200).json(allBooks);
+  } catch (err) {
+    if (err) return res.status(403).json("Token is not valid!");
+  }
 };
 
-export const getBook = (req: Request, res: Response) => {
+export const getBook = async (req: Request, res: Response) => {
   // gets a specific book in the current user's bookshelf
-  const bookId = req.params.bookid;
-  const userId = Number(req.params.userid);
-  const q =
-    "SELECT `title`, `subtitle`, `author`, `genre`,  `img`, `desc`,`pageCount`, `previewLink`, `language`, `publishedDate`, `bookid`, `dateRead`,`status`, `userid` FROM books WHERE bookid = ? AND userid = ?";
 
-  db.query(q, [bookId, userId], (err, data) => {
-    if (err) return res.status(500).json("Book not in database");
+  const token: string | null = req.cookies.access_token;
 
-    return res.status(200).json(data);
-  });
+  if (!token) return res.status(401).json("Not authenticated!");
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_KEY as jwt.Secret);
+    const user = decoded as TokenInterface;
+
+    const bookInfo = await getSingleBook(req.params.bookid, user.id).catch(
+      (err) => {
+        console.error(err.stack);
+        return res.status(500).json("Book not in database");
+      }
+    );
+
+    return res.status(200).json(bookInfo);
+  } catch (err) {
+    if (err) return res.status(403).json("Token is not valid!");
+  }
 };
 
-export const addBook = (req: Request, res: Response) => {
+export const addBook = async (req: Request, res: Response) => {
   // adds a book to the current user's bookshelf
-  const q =
-    "INSERT INTO books(`title`, `subtitle`, `author`, `genre`,  `img`, `desc`,`pageCount`, `previewLink`, `language`, `publishedDate`, `bookid`, `dateRead`,`status`, `userid`) VALUES (?)";
 
-  const values = [
-    req.body.title,
-    req.body.subtitle,
-    req.body.author,
-    req.body.genre,
-    req.body.img,
-    req.body.desc,
-    req.body.pageCount,
-    req.body.previewLink,
-    req.body.language,
-    req.body.publishedDate,
-    req.body.bookid,
-    req.body.dateRead,
-    req.body.status,
-    req.body.userid,
-  ];
+  const token: string | null = req.cookies.access_token;
 
-  db.query(q, [values], (err, data) => {
-    if (err) return res.status(500).json(err);
-    return res.json("Book has been added.");
-  });
+  if (!token) return res.status(401).json("Not authenticated!");
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_KEY as jwt.Secret);
+    const user = decoded as TokenInterface;
+
+    const success = await addBookToDB(req.body, user.id).catch((err) => {
+      console.error(err.stack);
+      return res.status(500).json("Book not in database");
+    });
+    return res.status(200).json("Book has been added.");
+  } catch (err) {
+    if (err) return res.status(403).json("Token is not valid!");
+  }
 };
 
-export const deleteBook = (req: Request, res: Response) => {
+export const deleteBook = async (req: Request, res: Response) => {
   // deletes a book from the current user's bookshelf
+  const token: string | null = req.cookies.access_token;
 
-  const bookId = req.params.bookid;
-  const userId = Number(req.params.userid);
-  const q = "DELETE FROM books WHERE `bookid` = ? AND `userid` = ?";
+  if (!token) return res.status(401).json("Not authenticated!");
 
-  db.query(q, [bookId, userId], (err: any, data: any) => {
-    if (err)
-      return res.status(403).json("You can only delete one of your books.");
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_KEY as jwt.Secret);
+    const user = decoded as TokenInterface;
+
+    const success = await deleteDbBook(req.params.bookid, user.id).catch(
+      (err) => {
+        console.error(err.stack);
+        return res.status(403).json("You can only delete one of your books.");
+      }
+    );
 
     return res.json("The book has been deleted!");
-  });
+  } catch (err) {
+    if (err) return res.status(403).json("Token is not valid!");
+  }
 };
 
-export const updateBook = (req: Request, res: Response) => {
+export const updateBook = async (req: Request, res: Response) => {
   // updates the information on a book in the current user's bookshelf
+  const token: string | null = req.cookies.access_token;
 
-  const bookId = req.params.bookid;
-  const userId = Number(req.params.userid);
-  const q =
-    "UPDATE books SET `status`=?, `dateRead`=? WHERE `bookid`=? AND `userid`=?";
+  if (!token) return res.status(401).json("Not authenticated!");
 
-  const values = [req.body.status, req.body.dateRead];
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_KEY as jwt.Secret);
+    const user = decoded as TokenInterface;
 
-  db.query(q, [...values, bookId, userId], (err: any, data: any) => {
-    if (err) return res.status(500).json(err);
-
+    const success = await updateDbBook(
+      req.params.bookid,
+      user.id,
+      req.body.status,
+      req.body.dateRead
+    ).catch((err) => {
+      console.error(err.stack);
+      return res.status(500).json(err);
+    });
     return res.json("The book has been updated!");
-  });
+  } catch (err) {
+    if (err) return res.status(403).json("Token is not valid!");
+  }
 };

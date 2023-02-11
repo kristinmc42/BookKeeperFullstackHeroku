@@ -7,9 +7,8 @@ interface ErrorProps {
   children: React.ReactNode;
 }
 
-
 export default function ErrorMessage({ children }: ErrorProps) {
-    return <StyledError>{children}</StyledError>;
+  return <StyledError>{children}</StyledError>;
 }
 
 // sstyled component

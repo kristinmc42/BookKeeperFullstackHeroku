@@ -8,16 +8,16 @@ import Button from "../components/Button";
 import AuthHeader from "../components/AuthHeader";
 import ErrorMessage from "../components/ErrorMessage";
 
-// types
-import { UserObj } from "../types";
-
 // styles
 import { device } from "../styles/Breakpoints";
 
-const Login: React.FC = () => {
+// types
+import { UserObj } from "../types";
+
+const Login = () => {
   // values from input fields inputted by user
   const [inputs, setInputs] = useState<UserObj>({
-    username: "",
+    email: "",
     password: "",
   });
 
@@ -35,20 +35,22 @@ const Login: React.FC = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // sets state as user input changes in all fields
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    setError(null);
   };
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
-    // makes axios post call when user clicks login button
     e.preventDefault();
-    try {
-      // if login successful, redirects user to bookshelf page
-      login(inputs);
-      navigate("/books");
-    } catch (err: unknown | any) {
-      // sets error message in state
-      setError(err.response.data);
-    }
+    setError(null);
+    const user = await login(inputs).catch((err) => {
+      if (err.response.data) {
+        setError(err.response.data);
+      } else {
+        setError(err.message);
+      }
+    });
+    if (user) navigate("/books");
   };
+
   return (
     <Wrapper>
       <AuthHeader to="/" title="home">
@@ -57,13 +59,13 @@ const Login: React.FC = () => {
       <main>
         <h1>Login</h1>
         <form onSubmit={handleSubmit}>
-          <label htmlFor="usernameLogin">
-            Username:
+          <label htmlFor="emailLogin">
+            Email:
             <input
               required
-              type="text"
-              id="usernameLogin"
-              name="username"
+              type="email"
+              id="emailLogin"
+              name="email"
               onChange={handleChange}
             />
           </label>
@@ -78,7 +80,9 @@ const Login: React.FC = () => {
             />
           </label>
           <Button type="submit">Login</Button>
+
           {error && <ErrorMessage>{error}</ErrorMessage>}
+
           <p>
             Don't have an account? <Link to="/register">Register</Link>
           </p>
@@ -139,10 +143,16 @@ const Wrapper = styled.div`
       max-width: 366px;
       gap: 3em;
 
-      @media ${device.laptop} {
-        flex-direction: row;
-        justify-content: center;
-        max-width: none;
+      @media ${device.mobileL} {
+        max-width: 446px;
+        width: 100%;
+      }
+
+      label {
+        width: 100%;
+        @media ${device.mobileL} {
+          align-self: flex-start;
+        }
       }
 
       input {
@@ -153,11 +163,7 @@ const Wrapper = styled.div`
         background-color: ${(props) => props.theme.colors.secondary};
         border: 3px solid ${(props) => props.theme.colors.secondary};
         border-radius: 5px;
-
-        @media ${device.mobileL} {
-          margin-left: 10px;
-          display: inline;
-        }
+        width: 100%;
       }
 
       p {

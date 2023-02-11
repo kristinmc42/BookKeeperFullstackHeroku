@@ -102,7 +102,7 @@ const StyledInput = styled.input`
   appearance: none;
   -webkit-appearance: none;
   border-radius: 50%;
-  background: ${(props) => props.theme.colors.white};
+  background: ${(props) => props.theme.colors.black};
   border: 3px solid ${(props) => props.theme.colors.secondary};
   box-shadow: 0 0 0 1px ${(props) => props.theme.colors.tertiary};
   width: 1em;
@@ -110,7 +110,7 @@ const StyledInput = styled.input`
   margin-right: 1em;
 
   &:checked {
-    background: ${(props) => props.theme.colors.black};
+    background: ${(props) => props.theme.colors.white};
   }
   &:checked + ${StyledLabel} {
     color: ${(props) => props.theme.colors.secondary};

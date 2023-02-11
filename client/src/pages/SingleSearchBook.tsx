@@ -8,6 +8,7 @@ import Button from "../components/Button";
 
 // hooks
 import useBookSearch from "../hooks/useBookSearch";
+import ErrorMessage from "../components/ErrorMessage";
 
 // types
 type BookParams = {
@@ -24,12 +25,12 @@ const SingleSearchBook: React.FC = () => {
   const { data, error, isError, isLoading, isFetching } = useBookSearch(bookId);
 
   if (isLoading || isFetching) {
-    return <h2>Loading...</h2>;
+    return <StyledMessage>Loading...</StyledMessage>;
   }
 
   if (isError) {
     if (error instanceof Error) {
-      return <h2>Error: {error.message}</h2>;
+      return <ErrorMessage>Error: {error.message}</ErrorMessage>;
     }
   }
 
@@ -63,9 +64,24 @@ const Wrapper = styled.div`
   article {
     align-items: flex-start;
     border: 2px solid ${(props) => props.theme.colors.secondary};
-    padding: 1.5em .5em 2em .5em;
+    padding: 1.5em 0.5em 2em 0.5em;
+    width: 95%;
+
+    section:first-child {
+      max-width: none;
+      div {
+        padding-right: 1em;
+      }
+    }
   }
   button {
     margin: 1em 0;
   }
+`;
+const StyledMessage = styled.h2`
+  text-align: center;
+  font-size: 1rem;
+  padding-left: 0.5em;
+  letter-spacing: 0.1rem;
+  color: ${(props) => props.theme.colors.secondary};
 `;

@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import React, { useState } from "react";
 import { useMutation } from "react-query";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -9,6 +9,7 @@ import Button from "../components/Button";
 import { DisplayDbBook } from "../components/DisplayBook";
 import MessageCard from "../components/MessageCard";
 import CardOverlay from "../components/CardOverlay";
+import ErrorMessage from "../components/ErrorMessage";
 
 //styles
 import { device } from "../styles/Breakpoints";
@@ -24,27 +25,26 @@ export default function SingleDbBook() {
   const { state } = useLocation();
   const bookInfo: DbBookInfo = state.book;
 
-  // get bookId and userId from bookInfo
+  // get bookId  from bookInfo
   const bookId: string = bookInfo.bookid;
-  const userId: number = bookInfo.userid;
 
   // for when user clicks on Delete button
   const [confirmDelete, setConfirmDelete] = useState<boolean>(false);
 
   // handles the mutation to delete the book from the db
-  const deleteBook = (bookId: string, userId: number) => {
+  const deleteBook = (bookId: string) => {
     return axios.delete(
-      `https://${process.env.REACT_APP_API_URL}/api/books/${bookId}/users/${userId}`
+      // `http://localhost:5000/api/books/${bookId}`
+      `https://${process.env.REACT_APP_API_URL}/api/books/${bookId}`
     );
   };
 
   const mutation = useMutation({
-    mutationFn: ({ bookId, userId }: { bookId: string; userId: number }) =>
-      deleteBook(bookId, userId),
+    mutationFn: ({ bookId }: { bookId: string }) => deleteBook(bookId),
   });
 
   const handleDelete = () => {
-    mutation.mutate({ bookId, userId });
+    mutation.mutate({ bookId });
   };
 
   // when user selects a different option, launch UpdateBook component, passing target option and item in state
@@ -61,7 +61,9 @@ export default function SingleDbBook() {
     <Wrapper>
       {mutation.isSuccess ? (
         <DeletedBookContainer>
-          <MessageCard navigateTo="/books"><h2>Your book has been deleted.</h2></MessageCard>
+          <MessageCard navigateTo="/books">
+            <h2>Your book has been deleted.</h2>
+          </MessageCard>
         </DeletedBookContainer>
       ) : (
         <>
@@ -85,14 +87,17 @@ export default function SingleDbBook() {
             <Button onClick={() => setConfirmDelete(true)}>Delete Book</Button>
 
             {mutation.isLoading ? (
-              "Deleting book from bookshelf..."
+              <StyledMessage>Deleting book from bookshelf...</StyledMessage>
             ) : (
               <>
-                {mutation.isError ? (
-                  <div>
-                    An error occurred: {(mutation.error as Error).message}
-                  </div>
-                ) : null}
+                {mutation.isError && (
+                  <ErrorMessage>
+                    An error occurred:{" "}
+                    {mutation.error instanceof AxiosError
+                      ? mutation.error.message
+                      : null}
+                  </ErrorMessage>
+                )}
               </>
             )}
           </BookStatusSection>
@@ -133,15 +138,21 @@ const Wrapper = styled.div`
   article {
     align-items: flex-start;
     border: 2px solid ${(props) => props.theme.colors.secondary};
-    padding: 1.5em .5em 2em .5em;
+    padding: 1.5em 0.5em 2em 0.5em;
 
     @media ${device.tablet} {
       min-height: 60vh;
     }
+    section:first-child {
+      max-width: none;
+      div {
+        padding-right: 1em;
+      }
+    }
   }
 
-  .delete{
-    top:0;
+  .delete {
+    top: 0;
   }
 
   @media (min-width: 600px) {
@@ -201,9 +212,6 @@ const BookStatusSection = styled.section`
   }
 `;
 
-
-
-
 const DeleteBookModal = styled.div`
   display: flex;
   flex-direction: column;
@@ -226,7 +234,7 @@ const DeleteBookModal = styled.div`
   button:first-of-type {
     background-color: ${(props) => props.theme.colors.white};
 
-    &:hover{
+    &:hover {
       color: ${(props) => props.theme.colors.secondary};
       background-color: ${(props) => props.theme.colors.black};
     }
@@ -252,4 +260,17 @@ const DeletedBookContainer = styled.section`
     height: 60vh;
   }
 `;
+const StyledMessage = styled.h2`
+  text-align: center;
+  font-size: 1rem;
+  padding: 5em 0.5em;
+  letter-spacing: 0.1rem;
+  color: ${(props) => props.theme.colors.secondary};
 
+  @media ${device.tablet} {
+    padding-left: 1em;
+  }
+  @media ${device.laptop} {
+    padding-left: 2em;
+  }
+`;

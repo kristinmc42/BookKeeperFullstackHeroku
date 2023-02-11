@@ -1,65 +1,61 @@
 import { Request, Response } from "express";
-import { db } from "../db";
+import { db, getUniqueUser, addUser, getUser } from "../db";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-export const register = (req: Request, res: Response) => {
-  // CHECK EXISTING USER
-  const q: string = "SELECT * FROM users WHERE email = ? OR username = ?";
-
-  db.query(q, [req.body.email, req.body.username], (err, data) => {
-    // handle error or exisiting user
+export const register = async (req: Request, res: Response) => {
+  // check for existing username or email
+  const userExists = await getUniqueUser(
+    req.body.email,
+    req.body.username
+  ).catch((err) => {
     if (err) return res.status(500).json(err);
-    if (data.length) return res.status(409).json("User already exists!");
-
-    // proceed with registering user
-    // hash the password and create a user
-    const salt: string = bcrypt.genSaltSync(10);
-    const hash: string = bcrypt.hashSync(req.body.password, salt);
-
-    const q: string =
-      "INSERT INTO users(`username`,`email`,`password`) VALUES (?)";
-    const values: string[] = [req.body.username, req.body.email, hash];
-
-    // add the user to the db
-    db.query(q, [values], (err, data) => {
-      if (err) return res.status(500).json(err);
-      return res.status(200).json("User has been created");
-    });
   });
+
+  if (userExists && userExists.length > 0)
+    return res.status(409).json("User already exists!");
+
+  // proceed with registering user
+  const salt: string = bcrypt.genSaltSync(10);
+  const hash: string = bcrypt.hashSync(req.body.password, salt);
+
+  // add the user to the db
+  const newUser = await addUser(req.body.username, req.body.email, hash).catch(
+    (err) => {
+      if (err) return res.status(500).json(err);
+    }
+  );
+  if (newUser) return res.status(200).json("User has been created");
 };
 
-export const login = (req: Request, res: Response) => {
+export const login = async (req: Request, res: Response) => {
   // CHECK USER
-  const q: string = "SELECT * FROM users WHERE username = ?";
-
-  db.query(q, [req.body.username], (err, data) => {
-    // handle error or no existing user
+  const user = await getUser(req.body.email).catch((err) => {
     if (err) return res.status(500).json(err);
-    if (data.length === 0) return res.status(404).json("User not found!");
-
-    // proceed with logging in user
-    //CHECK PASSWORD
-    const isPasswordCorrect: boolean = bcrypt.compareSync(
-      req.body.password,
-      data[0].password
-    );
-
-    if (!isPasswordCorrect)
-      return res.status(400).json("Wrong username or password!");
-
-    const token: string = jwt.sign(
-      { id: data[0].id },
-      process.env.JWT_KEY as string
-    );
-
-    const { password, ...other } = data[0]; // separating out password so that we are not sending it with the other information
-
-    res
-      .cookie("access_token", token, { httpOnly: true }) // only for making API requests
-      .status(200)
-      .json(other);
   });
+
+  if (user && user.length === 0) return res.status(404).json("User not found!");
+
+  // proceed with logging in user
+  //CHECK PASSWORD
+  const isPasswordCorrect: boolean = bcrypt.compareSync(
+    req.body.password,
+    user[0].password
+  );
+
+  if (!isPasswordCorrect) return res.status(400).json("Incorrect password!");
+
+  const token: string = jwt.sign(
+    { id: user[0].id },
+    process.env.JWT_KEY as string
+  );
+
+  const { password, ...other } = user[0]; // separating out password so that we are not sending it with the other information
+
+  res
+    .cookie("access_token", token, { httpOnly: true }) // only for making API requests
+    .status(200)
+    .json(other);
 };
 
 export const logout = (req: Request, res: Response) => {

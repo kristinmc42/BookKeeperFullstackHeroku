@@ -16,10 +16,12 @@ import { ContextState } from "../types";
 
 // styles
 import { device } from "../styles/Breakpoints";
+import { useQueryClient } from "react-query";
 
 export default function Nav() {
   const navigate: NavigateFunction = useNavigate();
 
+  const queryClient = useQueryClient();
   // deconstructs the currentUser and logout function from the AuthContext
   const userContext: ContextState | null = useContext(AuthContext);
   if (!userContext) return null;
@@ -27,9 +29,8 @@ export default function Nav() {
 
   const handleLogout = () => {
     // logs out user(clears cookie), search info (session storage) and navigates back to home page
+    queryClient.removeQueries("dbBooks");
     logout();
-    sessionStorage.clear();
-    localStorage.clear();
     navigate("/");
   };
 
@@ -61,7 +62,7 @@ export default function Nav() {
         {currentUser ? (
           <>
             <li key={5}>
-              <p>{currentUser?.username}</p>
+              <p>{currentUser}</p>
               <Button onClick={handleLogout}>Logout</Button>
             </li>
           </>
@@ -134,7 +135,7 @@ const StyledNav = styled.nav`
       p {
         color: ${(props) => props.theme.colors.secondary};
         display: none;
-        font-size: .8rem;
+        font-size: 0.8rem;
         padding-top: 8px;
         padding-right: 8px;
 

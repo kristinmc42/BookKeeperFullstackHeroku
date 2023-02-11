@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMutation } from "react-query";
 import styled from "styled-components";
@@ -23,6 +23,7 @@ import useBookInDb from "../hooks/useBookInDb";
 
 // types
 import { DbBookInfo } from "../types";
+import { device } from "../styles/Breakpoints";
 
 // displays select info on the book and allows the user to modify the status of the book in the db
 const UpdateBook: React.FC = () => {
@@ -35,11 +36,10 @@ const UpdateBook: React.FC = () => {
   const selectedStatus: string = state.selectedStatus; // bookshelf status to change to
 
   // get userid of current user
-  const { data: user } = useUserId();
-  const userId: number = user?.id;
+  const userId: number | null | undefined = Number(useUserId());
 
   //  get book from db that matches bookId
-  const bookData = useBookInDb(bookId, userId, bookInfo);
+  const bookData = useBookInDb(bookId, bookInfo);
 
   // for the bookshelf category selected by the user
   const [bookshelf, setBookshelf] = useState<string | undefined>(
@@ -47,16 +47,17 @@ const UpdateBook: React.FC = () => {
   );
 
   // for the day selected by user in DayPicker
-  const [dateRead, setDateRead] = useState<Date | null | undefined>();
+  const [dateRead, setDateRead] = useState<Date | null | undefined>(new Date());
 
   // to update the book info in the db
   const updateBook = (
     book: DbBookInfo | undefined,
-    bookId: string | undefined,
-    userId: number | undefined
+    bookId: string | undefined
   ) => {
+    // return axios.put(`http://localhost:5000/api/books/${bookId}`, book);
+
     return axios.put(
-      `https://${process.env.REACT_APP_API_URL}/api/books/${bookId}/users/${userId}`,
+      `https://${process.env.REACT_APP_API_URL}/api/books/${bookId}`,
       book
     );
   };
@@ -64,12 +65,10 @@ const UpdateBook: React.FC = () => {
     mutationFn: ({
       book,
       bookId,
-      userId,
     }: {
       book: DbBookInfo | undefined;
       bookId: string | undefined;
-      userId: number | undefined;
-    }) => updateBook(book, bookId, userId),
+    }) => updateBook(book, bookId),
   });
 
   // when radio button selection changes
@@ -84,12 +83,14 @@ const UpdateBook: React.FC = () => {
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
     const bookInDb: DbBookInfo = bookData.data[0];
-    if (dateRead) {
+    if (dateRead && bookshelf === "read") {
       bookInDb.dateRead = convertDateToString(dateRead);
+    } else {
+      bookInDb.dateRead = undefined;
     }
     bookInDb.status = bookshelf;
 
-    mutation.mutate({ book: bookInDb, bookId, userId });
+    mutation.mutate({ book: bookInDb, bookId });
   };
 
   return (
@@ -105,17 +106,22 @@ const UpdateBook: React.FC = () => {
             setDateRead={setDateRead}
           />
 
-          <Button type="submit">Update</Button>
+          <Button type="submit" disabled={!userId}>
+            Update
+          </Button>
           {bookData.isError && (
             <ErrorMessage>
-              Error: {(bookData.error as Error).message}
+              Error:{" "}
+              {bookData.error instanceof AxiosError
+                ? bookData.error.message
+                : null}
             </ErrorMessage>
           )}
         </StyledForm>
       </>
 
       {mutation.isLoading ? (
-        "Adding book to bookshelf..."
+        <StyledMessage>Adding book to bookshelf...</StyledMessage>
       ) : (
         <>
           {mutation.isSuccess ? (
@@ -128,7 +134,10 @@ const UpdateBook: React.FC = () => {
             <>
               {mutation.isError ? (
                 <ErrorMessage>
-                  An error occurred: {(mutation.error as Error).message}
+                  An error occurred:{" "}
+                  {mutation.error instanceof Error
+                    ? mutation.error.message
+                    : null}
                 </ErrorMessage>
               ) : null}
             </>
@@ -158,7 +167,7 @@ const Wrapper = styled.div`
   }
   article {
     align-items: flex-start;
-    padding: 1.5em .5em 2em .5em;
+    padding: 1.5em 0.5em 2em 0.5em;
     border: 2px solid ${(props) => props.theme.colors.secondary};
   }
 `;
@@ -166,5 +175,19 @@ const StyledForm = styled.form`
   button {
     max-width: 100px;
     margin-top: 0;
+  }
+`;
+const StyledMessage = styled.h2`
+  text-align: center;
+  font-size: 1rem;
+  padding: 5em 0.5em;
+  letter-spacing: 0.1rem;
+  color: ${(props) => props.theme.colors.secondary};
+
+  @media ${device.tablet} {
+    padding-left: 1em;
+  }
+  @media ${device.laptop} {
+    padding-left: 2em;
   }
 `;

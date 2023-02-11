@@ -8,6 +8,7 @@ import {
 import { QueryClientProvider, QueryClient } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { ThemeProvider } from "styled-components";
+import { AuthContextProvider } from "./context/AuthContext";
 
 //pages
 import Books from "./pages/Books";
@@ -29,6 +30,7 @@ import "react-day-picker/dist/style.css";
 import "react-datepicker/dist/react-datepicker.css";
 import { theme } from "./styles/Theme";
 import { GlobalStyles } from "./styles/Global";
+import ErrorPage from "./pages/ErrorPage";
 
 const queryClient: QueryClient = new QueryClient({
   defaultOptions: {
@@ -52,6 +54,7 @@ const router = createBrowserRouter(
       </Route>
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="*" element={<ErrorPage />} />
     </>
   )
 );
@@ -60,9 +63,11 @@ const App: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <QueryClientProvider client={queryClient}>
-        <GlobalStyles />
-        <ReactQueryDevtools initialIsOpen={false} />
-        <RouterProvider router={router} />
+        <AuthContextProvider>
+          <GlobalStyles />
+          <ReactQueryDevtools initialIsOpen={false} />
+          <RouterProvider router={router} />
+        </AuthContextProvider>
       </QueryClientProvider>
     </ThemeProvider>
   );

@@ -4,19 +4,19 @@ import { getAllBooks, getBook, addBook, deleteBook, updateBook } from "../contro
 const router = express.Router();
 
 // get all books with matching userid
-router.get("/:userid", getAllBooks);
+router.get("/", getAllBooks);
 
 // get a book by bookid and userid
-router.get("/:bookid/users/:userid", getBook);
+router.get("/:bookid", getBook);
 
 // add a book
 router.post("/", addBook);
 
 // delete a book with matching userid
-router.delete("/:bookid/users/:userid", deleteBook);
+router.delete("/:bookid", deleteBook);
 
 
 // update a book with matching userid
-router.put("/:bookid/users/:userid", updateBook);
+router.put("/:bookid", updateBook);
 
 export default router;

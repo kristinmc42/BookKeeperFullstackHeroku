@@ -1,14 +1,17 @@
+import { AxiosResponse } from "axios";
 import React from "react";
 
 export interface UserObj {
-  username: string;
+  username?: string;
   email?: string;
-  password: string;
+  password?: string;
+  alias?: string;
 }
 
 export interface ContextState {
-  currentUser: UserObj | null;
-  login: (inputs: UserObj) => void;
+  currentUser: string | null;
+  currentUserId: string | null;
+  login: (inputs: UserObj) => Promise<AxiosResponse<any, any>>;
   logout: () => void;
 }
 
@@ -16,8 +19,8 @@ export interface ComponentProps {
   children: React.ReactNode;
 }
 
-export interface BookInfo{
-  id: string; 
+export interface BookInfo {
+  id: string;
   volumeInfo: {
     title: string;
     subtitle?: string;
@@ -29,16 +32,16 @@ export interface BookInfo{
     previewLink?: string;
     language?: string;
     publishedDate?: string;
-  }
+  };
 }
 
-export interface DbBookInfo{
-  id?: number; 
+export interface DbBookInfo {
+  id?: number;
   title: string;
   subtitle?: string;
   author?: string;
   genre?: string;
-  img?: string;// smallThumbnail url
+  img?: string; // smallThumbnail url
   desc?: string;
   pageCount?: number;
   previewLink?: string;
@@ -47,5 +50,5 @@ export interface DbBookInfo{
   bookid: string;
   dateRead?: string;
   status?: string; // read/toRead/currentlyReading
-  userid: number;
+  userid: number | undefined | null;
 }

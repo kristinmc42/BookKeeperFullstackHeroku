@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { Axios } from "../config";
 
 // components
 import Button from "../components/Button";
@@ -52,8 +52,8 @@ const Register: React.FC = () => {
       try {
         // if registration successful, redirects user to login page
         // await axios.post(`http://localhost:5000/api/auth/register`, inputs);
-        await axios.post(
-          `https://${process.env.REACT_APP_API_URL}/api/auth/register`,
+        await Axios.post(
+          `/auth/register`,
           inputs
         );
         navigate("/login");

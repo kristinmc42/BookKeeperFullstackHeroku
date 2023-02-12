@@ -1,5 +1,5 @@
 import { useQuery, UseQueryResult } from "react-query";
-import axios from "axios";
+import { Axios } from "../config";
 
 // types
 import { DbBookInfo } from "../types";
@@ -12,17 +12,19 @@ export default function useBookInDb(
   initialBookData: DbBookInfo | undefined
 ): UseQueryResult<any, unknown> {
   const getBookByBookId = async () => {
-    return axios
+    return (
+      Axios
 
-    // .get(`http://localhost:5000/api/books/${bookId}`)
-      .get(`https://${process.env.REACT_APP_API_URL}/api/books/${bookId}`)
-      .then((res) => {
-        return res.data;
-      });
+        // .get(`http://localhost:5000/api/books/${bookId}`)
+        .get(`/books/${bookId}`)
+        .then((res) => {
+          return res.data;
+        })
+    );
   };
 
   return useQuery(["book", bookId], getBookByBookId, {
     enabled: !!bookId,
-    initialData: initialBookData ?initialBookData :undefined
+    initialData: initialBookData ? initialBookData : undefined,
   });
 }

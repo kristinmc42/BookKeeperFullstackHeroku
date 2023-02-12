@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
+import { Axios } from "../config";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMutation } from "react-query";
 import styled from "styled-components";
@@ -56,8 +57,8 @@ const UpdateBook: React.FC = () => {
   ) => {
     // return axios.put(`http://localhost:5000/api/books/${bookId}`, book);
 
-    return axios.put(
-      `https://${process.env.REACT_APP_API_URL}/api/books/${bookId}`,
+    return Axios.put(
+      `/books/${bookId}`,
       book
     );
   };

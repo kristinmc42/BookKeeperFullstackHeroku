@@ -24,6 +24,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
     //   `http://localhost:5000/api/auth/login`,
     //   inputs
     //   );
+    console.log(process.env.REACT_APP_API_URL)
     const res = await Axios.post(`/auth/login`, inputs);
 
     setCurrentUser(res.data.username);

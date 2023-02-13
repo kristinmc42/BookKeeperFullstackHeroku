@@ -30,6 +30,9 @@ app.use("/api/auth", authRoutes);
 app.use("/api/books", bookRoutes);
 app.use("/api/users", userRoutes);
   
+app.get('/', (_req: Request, res: Response) => {
+  return res.send('Express Typescript on Vercel')
+})
 
 app.use(
   (err: MysqlError | any, req: Request, res: Response, next: NextFunction) => {

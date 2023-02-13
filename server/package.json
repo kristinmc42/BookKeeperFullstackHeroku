@@ -6,9 +6,16 @@
   "scripts": {
     "start": "node dist/app.js",
     "dev": "nodemon src/app.ts",
-    "build": "tsc -p .",
+    "build": "rimraf dist && tsc",
+    "ts.check": "tsc --project tsconfig.json",
+    "add-build": "git add dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "pre-commit": [
+    "ts.check",
+    "build",
+    "add-build"
+  ],
   "engines": {
     "node": ">=v16.13.0"
   },
@@ -34,6 +41,8 @@
     "@types/mysql": "^2.15.21",
     "@types/node": "^18.11.9",
     "nodemon": "^2.0.20",
+    "pre-commit": "^1.2.2",
+    "rimraf": "^4.1.2",
     "ts-node": "^10.9.1",
     "typescript": "^4.9.3"
   }

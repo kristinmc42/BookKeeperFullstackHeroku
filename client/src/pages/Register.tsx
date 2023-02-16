@@ -53,7 +53,7 @@ const Register: React.FC = () => {
         // if registration successful, redirects user to login page
         // await axios.post(`http://localhost:5000/api/auth/register`, inputs);
         await Axios.post(
-          `/auth/register`,
+          `/api/auth/register`,
           inputs
         );
         navigate("/login");

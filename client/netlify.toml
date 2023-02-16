@@ -1,0 +1,2 @@
+[[redirects]]
+/api/*  https://bookkeeperfullstack-production.up.railway.app/:splat  200

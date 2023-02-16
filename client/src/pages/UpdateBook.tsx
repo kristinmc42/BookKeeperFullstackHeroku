@@ -58,7 +58,7 @@ const UpdateBook: React.FC = () => {
     // return axios.put(`http://localhost:5000/api/books/${bookId}`, book);
 
     return Axios.put(
-      `/books/${bookId}`,
+      `/api/books/${bookId}`,
       book
     );
   };

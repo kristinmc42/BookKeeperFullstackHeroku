@@ -16,7 +16,7 @@ export default function useBookInDb(
       Axios
 
         // .get(`http://localhost:5000/api/books/${bookId}`)
-        .get(`/books/${bookId}`)
+        .get(`/api/books/${bookId}`)
         .then((res) => {
           return res.data;
         })

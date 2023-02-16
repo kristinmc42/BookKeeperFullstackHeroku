@@ -8,7 +8,7 @@ export default function useAllBooksInDb(): UseQueryResult<any, unknown> {
     return await Axios
       // .get(`http://localhost:5000/api/books/`)
 
-      .get(`/books/`)
+      .get(`/api/books/`)
       .then((res) => {
         return res.data;
       });

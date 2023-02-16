@@ -25,7 +25,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
     //   inputs
     //   );
     console.log(process.env.REACT_APP_API_URL)
-    const res = await Axios.post(`/auth/login`, inputs);
+    const res = await Axios.post(`/api/auth/login`, inputs);
 
     setCurrentUser(res.data.username);
     setCurrentUserId(res.data.id);
@@ -38,7 +38,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
     localStorage.clear();
     sessionStorage.clear();
     // await Axios.post(`http://localhost:5000/api/auth/logout`);
-    await Axios.post(`/auth/logout`);
+    await Axios.post(`/api/auth/logout`);
   };
 
   useEffect(() => {

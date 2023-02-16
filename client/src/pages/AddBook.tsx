@@ -64,7 +64,7 @@ const AddBook: React.FC = () => {
     return await Axios
       .post(
         // `http://localhost:5000/api/books/`,
-        `/books/`,
+        `/api/books/`,
         book
       )
       .catch((err) => {

@@ -36,7 +36,7 @@ export default function SingleDbBook() {
   const deleteBook = (bookId: string) => {
     return Axios.delete(
       // `http://localhost:5000/api/books/${bookId}`
-      `/books/${bookId}`
+      `/api/books/${bookId}`
     );
   };
 

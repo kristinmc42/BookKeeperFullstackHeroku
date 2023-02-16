@@ -32,7 +32,7 @@ app.use("/api/books", bookRoutes);
 app.use("/api/users", userRoutes);
   
 app.get('/', (_req: Request, res: Response) => {
-  return res.send('Express Typescript on Vercel')
+  return res.send('Express Typescript app')
 })
 
 app.use(

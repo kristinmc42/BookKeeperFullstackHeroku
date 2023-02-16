@@ -12,7 +12,7 @@ import { MysqlError } from "mysql";
 const app: Application = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(express.json());
+// When using cors middleware as an application level middleware (for example, app.use(cors())), pre-flight requests are already handled for all routes
 app.use(
   cors({
     origin: [
@@ -26,7 +26,8 @@ app.use(
     credentials: true,
   })
   );
-app.use(cookieParser());
+  app.use(cookieParser());
+  app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/books", bookRoutes);
 app.use("/api/users", userRoutes);

@@ -1,6 +1,5 @@
-// import * as dotenv from "dotenv";
-// dotenv.config();
-import 'dotenv/config'
+import * as dotenv from "dotenv";
+dotenv.config();
 
 import express, { Application, Request, Response, NextFunction } from "express";
 import authRoutes from "./routes/auth";

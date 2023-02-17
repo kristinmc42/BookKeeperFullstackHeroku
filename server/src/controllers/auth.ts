@@ -52,11 +52,12 @@ export const login = async (req: Request, res: Response) => {
 
   const { password, ...other } = user[0]; // separating out password so that we are not sending it with the other information
 
-  res
-    .cookie("access_token", token, { maxAge: 86400000, httpOnly: true, sameSite:"none", secure: true}) // only for making API requests
-    .status(200)
-    .setHeader('Access-Control-Allow-Origin','*')
-    .json(other);
+  res.status(200).send("hello from login")
+  // res
+  //   .cookie("access_token", token, { maxAge: 86400000, httpOnly: true, sameSite:"none", secure: true}) // only for making API requests
+  //   .status(200)
+  //   .setHeader('Access-Control-Allow-Origin','*')
+  //   .json(other);
 };
 
 export const logout = (req: Request, res: Response) => {

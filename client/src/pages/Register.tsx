@@ -13,6 +13,7 @@ import { device } from "../styles/Breakpoints";
 // types
 
 import { UserObj } from "../types";
+import { AxiosResponse } from "axios";
 interface RegisterObj extends UserObj {
   confirmPassword?: string;
 }
@@ -59,11 +60,12 @@ const Register: React.FC = () => {
         navigate("/login");
       } catch (err: unknown | any) {
         // sets error message in state
-        if (err.response.data) {
-          setError(err.response.data);
-          
+        if (err.response?.data !== undefined || err.response?.data !== null) {
+          const res: AxiosResponse<unknown, any> | undefined = err.response;
+          const mess = res?.data;
+          if(typeof mess === "string") setError(mess);
         } else {
-          setError(err.message)
+          setError(err.message);
         }
       }
     }

@@ -13,19 +13,20 @@ const app: Application = express();
 const PORT = process.env.PORT || 5000;
 
 // When using cors middleware as an application level middleware (for example, app.use(cors())), pre-flight requests are already handled for all routes
-app.use(
-  cors({
-    origin: [
-      "http://localhost:3000",
-      "http://localhost:5000/",
-      "https://bookkeeperfullstack-production.up.railway.app",
-      "https://www.googleapis.com/books",
-      "https://book-keeper-revisited.netlify.app/",
-      "https://book-keeper-fullstack.vercel.app/"
-    ],
-    credentials: true,
-  })
-  );
+// app.use(
+//   cors({
+//     origin: [
+//       "http://localhost:3000",
+//       "http://localhost:5000/",
+//       "https://bookkeeperfullstack-production.up.railway.app",
+//       "https://www.googleapis.com/books",
+//       "https://book-keeper-revisited.netlify.app/",
+//       "https://book-keeper-fullstack.vercel.app/"
+//     ],
+//     credentials: true,
+//   })
+//   );
+app.use(cors())
   app.use(cookieParser());
   app.use(express.json());
 app.use("/api/auth", authRoutes);

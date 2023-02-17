@@ -52,3 +52,5 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
     </AuthContext.Provider>
   );
 };
+
+// create an async funtion that returns boolean if someone is logged in or not

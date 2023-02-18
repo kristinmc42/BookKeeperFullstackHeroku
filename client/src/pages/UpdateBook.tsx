@@ -19,7 +19,7 @@ import CardOverlay from "../components/CardOverlay";
 import { convertDateToString } from "../functions/convertDateToString";
 
 //hooks
-import useUserId from "../hooks/useUserId";
+import useIsLoggedIn from "../hooks/useIsLoggedIn";
 import useBookInDb from "../hooks/useBookInDb";
 
 // types
@@ -37,7 +37,9 @@ const UpdateBook: React.FC = () => {
   const selectedStatus: string = state.selectedStatus; // bookshelf status to change to
 
   // get userid of current user
-  const userId: number | null | undefined = Number(useUserId());
+  // const userId: number | null | undefined = Number(useUserId());
+  // check user is logged in
+  const isLoggedIn = useIsLoggedIn();
 
   //  get book from db that matches bookId
   const bookData = useBookInDb(bookId, bookInfo);
@@ -107,7 +109,7 @@ const UpdateBook: React.FC = () => {
             setDateRead={setDateRead}
           />
 
-          <Button type="submit" disabled={!userId}>
+          <Button type="submit" disabled={!isLoggedIn}>
             Update
           </Button>
           {bookData.isError && (

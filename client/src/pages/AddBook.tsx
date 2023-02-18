@@ -18,7 +18,7 @@ import { convertBookToDbFormat } from "../functions/convertBookToDbFormat";
 import { convertDateToString } from "../functions/convertDateToString";
 
 //hooks
-import useUserId from "../hooks/useUserId";
+import useIsLoggedIn from "../hooks/useIsLoggedIn";
 import useBookInDb from "../hooks/useBookInDb";
 
 // types
@@ -33,8 +33,8 @@ const AddBook: React.FC = () => {
   const bookInfo: BookInfo = state.bookInfo;
   const bookId: string = bookInfo.id;
 
-  // get userid of current user
-  const userId: number | null | undefined = Number(useUserId());
+  // check that user is logged in
+  const isLoggedIn = useIsLoggedIn();
 
   //  check if book is in db
   const bookData: UseQueryResult<any, unknown> = useBookInDb(bookId, undefined);
@@ -56,7 +56,7 @@ const AddBook: React.FC = () => {
     bookInfo,
     bookshelf,
     dateReadString,
-    userId
+    // userId
   );
 
   // to ADD the book to the db
@@ -91,7 +91,7 @@ const AddBook: React.FC = () => {
 
     const bookToAdd = convertedBook;
     if (bookToAdd) {
-      bookToAdd.userid = userId;
+      // bookToAdd.userid = userId;
       bookToAdd.status = bookshelf;
       if (dateRead) {
         dateReadString = convertDateToString(dateRead);
@@ -109,7 +109,7 @@ const AddBook: React.FC = () => {
 
         <DisplayGoogleBook item={bookInfo} format={"short"} />
 
-        {bookData.isSuccess && bookData.data.length === 0 && userId && (
+        {bookData.isSuccess && bookData.data.length === 0 && isLoggedIn && (
           <StyledForm onSubmit={handleSubmit}>
             <BookshelfOptionsFieldset
               bookshelf={bookshelf}
@@ -124,11 +124,11 @@ const AddBook: React.FC = () => {
 
       {/* loading/error messages */}
 
-      {((bookData.isSuccess && !userId) || bookData.isLoading) && (
+      {((bookData.isSuccess && !isLoggedIn) || bookData.isLoading) && (
         <StyledMessage>Checking...</StyledMessage>
       )}
 
-      {bookData.isSuccess && bookData.data.length > 0 && userId && (
+      {bookData.isSuccess && bookData.data.length > 0 && isLoggedIn && (
         <ErrorMessage>
           You already have this book in your bookshelf.
         </ErrorMessage>
@@ -151,7 +151,7 @@ const AddBook: React.FC = () => {
               {((mutation.isError &&
                 mutation.error instanceof AxiosError &&
                 mutation.error.response?.status === 500) ||
-                (bookData.isError && !userId)) && (
+                (bookData.isError && !isLoggedIn)) && (
                 <ErrorMessage>
                   Please login to add the book to your bookshelf.
                 </ErrorMessage>

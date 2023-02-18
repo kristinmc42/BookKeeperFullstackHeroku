@@ -13,6 +13,7 @@ export interface ContextState {
   currentUserId?: string | null;
   login: (inputs: UserObj) =>  Promise<any>;
   logout: () => void;
+  isLoggedIn: () => boolean;
 }
 
 export interface ComponentProps {
@@ -50,5 +51,5 @@ export interface DbBookInfo {
   bookid: string;
   dateRead?: string;
   status?: string; // read/toRead/currentlyReading
-  userid: number | undefined | null;
+  userid?: number | undefined | null;
 }

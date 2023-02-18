@@ -10,7 +10,7 @@ import BookshelfFilter from "../components/BookshelfFilter";
 import ErrorMessage from "../components/ErrorMessage";
 
 // hooks
-import useUserId from "../hooks/useUserId";
+import useIsLoggedIn from "../hooks/useIsLoggedIn";
 import useAllBooksInDb from "../hooks/useAllBooksInDb";
 
 // types
@@ -24,8 +24,9 @@ import { device } from "../styles/Breakpoints";
 const Books: React.FC = () => {
   const [displayFilter, setDisplayFilter] = useState<string>("all");
 
-  // get userid of current user
-  const currentUserId: number | null | undefined = Number(useUserId());
+  // check user is logged in
+  // const currentUserId: number | null | undefined = Number(useUserId());
+  const isLoggedIn = useIsLoggedIn();
 
   // get all books from db for user
   const allBooks: UseQueryResult<any, unknown> = useAllBooksInDb();
@@ -37,7 +38,7 @@ const Books: React.FC = () => {
 
       {((allBooks.error instanceof AxiosError &&
         allBooks.error.response?.status === 401) ||
-        !currentUserId) && (
+        !useIsLoggedIn) && (
         <ErrorMessage>Please login to see your bookshelves</ErrorMessage>
       )}
 

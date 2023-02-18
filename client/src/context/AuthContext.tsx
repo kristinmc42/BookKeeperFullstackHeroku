@@ -1,7 +1,6 @@
 // import axios from "axios";
 import React, { createContext, ReactNode, useEffect, useState } from "react";
 import { Axios } from "../config";
-import { useMutation } from "react-query";
 
 // interfaces
 import { ContextState, UserObj } from "../types";
@@ -70,6 +69,14 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
     await Axios.post(`/api/auth/logout`);
   };
 
+  const isLoggedIn = () => {
+    if (!currentUser) {
+      return false
+    } else {
+      return true
+    }
+  }
+
   useEffect(() => {
     localStorage.setItem("alias", JSON.stringify(currentUser));
     // localStorage.setItem("key", JSON.stringify(currentUserId));
@@ -78,7 +85,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     // <AuthContext.Provider value={{ currentUser, currentUserId, login, logout }}>
-    <AuthContext.Provider value={{ currentUser, login, logout }}>
+    <AuthContext.Provider value={{ currentUser, login, logout, isLoggedIn }}>
       {children}
     </AuthContext.Provider>
   );

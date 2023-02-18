@@ -23,7 +23,7 @@ const Login = () => {
   });
 
   // error in axios call
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | undefined>();
 
   const navigate = useNavigate();
 
@@ -36,22 +36,35 @@ const Login = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // sets state as user input changes in all fields
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-    setError(null);
+    setError(undefined);
   };
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-    setError(null);
-    const user = await login(inputs).catch((err:AxiosError) => {
-      if (err.response?.data !== undefined || err.response?.data !== null) {
-        const res: AxiosResponse<unknown, any> | undefined = err.response;
-        const mess = res?.data;
-        if(typeof mess === "string") setError(mess);
-      } else {
-        setError(err.message);
+    setError(undefined);
+
+    const user = await login(inputs).catch((err: AxiosError) => {
+      const errorResponse: AxiosResponse<unknown, any> | undefined =
+        err.response;
+      const errorStatus: number | undefined = errorResponse?.status;
+      let errorMessage: string | undefined;
+      if (typeof errorResponse?.data === "string") {
+        errorMessage = errorResponse?.data;
+      }
+      switch (errorStatus) {
+        case 400:
+        case 401:
+          setError(errorMessage);
+          break;
+        case 404:
+        case 500:
+        default:
+          setError("Oops! Something went wrong. Please refresh and try again.");
       }
     });
-    if (user) navigate("/books");
+    if (user) console.log(user);
+
+    // if (user) navigate("/books");
   };
 
   return (

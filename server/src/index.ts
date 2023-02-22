@@ -3,6 +3,7 @@ dotenv.config();
 
 import express, { Application, Request, Response, NextFunction } from "express";
 import cors from "cors";
+import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import authRoutes from "./routes/auth";
 import bookRoutes from "./routes/books";
@@ -17,20 +18,21 @@ const PORT = process.env.PORT || 5000;
 // When using cors middleware as an application level middleware (for example, app.use(cors())), pre-flight requests are already handled for all routes
 app.use(express.json());
 app.use(cookieParser());
-// app.use(
-//   cors({
-//     origin: [
-//       "http://localhost:3000",
-//       "http://localhost:5000/",
-//       "https://bookkeeperfullstack-production.up.railway.app",
-//       "https://www.googleapis.com/books",
-//       "https://book-keeper-revisited.netlify.app/",
-//       "https://book-keeper-fullstack.vercel.app/"
-//     ],
-//     // credentials: true,
-//   })
-//   );
-app.use(cors())
+app.use(helmet());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:3000",
+      "http://localhost:5000",
+      "https://bookkeeperfullstack-production.up.railway.app",
+      "https://www.googleapis.com/books",
+      "https://book-keeper-revisited.netlify.app",
+      "https://book-keeper-fullstack.vercel.app"
+    ],
+    credentials: true,
+  })
+  );
+// app.use(cors())
 app.use("/api/auth", authRoutes);
 app.use("/api/books", bookRoutes);
 app.use("/api/users", userRoutes);

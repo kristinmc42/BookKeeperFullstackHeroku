@@ -6,7 +6,6 @@ import convertGenres from "./convertGenres";
     bookInfo: BookInfo,
     bookshelf: string | undefined,
     dateReadString: string | undefined,
-    userId: number | null | undefined
  ) => {
    
    const newGenreString: string | undefined = convertGenres((bookInfo.volumeInfo.categories));
@@ -39,7 +38,6 @@ import convertGenres from "./convertGenres";
       bookid: bookInfo.id,
       dateRead: dateReadString ? dateReadString : undefined,
       status: bookshelf ? bookshelf : undefined, // read/toRead/currentlyReading
-      userid: userId? userId :undefined,
     };
 
     return bookToStore;

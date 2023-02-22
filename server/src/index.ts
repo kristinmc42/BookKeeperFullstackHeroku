@@ -2,33 +2,43 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 import express, { Application, Request, Response, NextFunction } from "express";
+import cors from "cors";
+import helmet from "helmet";
+import cookieParser from "cookie-parser";
 import authRoutes from "./routes/auth";
 import bookRoutes from "./routes/books";
 import userRoutes from "./routes/users";
-import cookieParser from "cookie-parser";
-import cors from "cors";
 import { MysqlError } from "mysql";
 
 const app: Application = express();
-const PORT = process.env.PORT || 5000;
 
-// When using cors middleware as an application level middleware (for example, app.use(cors())), pre-flight requests are already handled for all routes
+// check that all .env variables have values
+if (!(process.env.PORT && process.env.DB_HOST && process.env.DB_USER && process.env.DB_DATABASE && process.env.DB_PASSWORD)) {
+  throw new Error(
+    "Missing required environment variables. Check docs for more info."
+    );
+  }
+  
+const PORT = process.env.PORT || 5000;
+  
+app.use(express.json()); //parses incoming JSON requests and puts the parsed data in req.body
+app.use(cookieParser()); //Parse Cookie header and populate req.cookies with an object keyed by the cookie names
+app.use(helmet()); //helps you secure Express apps by setting various HTTP headers
 app.use(
   cors({
     origin: [
       "http://localhost:3000",
-      "http://localhost:5000/",
+      "http://localhost:5000",
       "https://bookkeeperfullstack-production.up.railway.app",
       "https://www.googleapis.com/books",
-      "https://book-keeper-revisited.netlify.app/",
-      "https://book-keeper-fullstack.vercel.app/"
+      "https://book-keeper-revisited.netlify.app",
+      "https://book-keeper-fullstack.vercel.app"
     ],
-    // credentials: true,
+    credentials: true,
   })
   );
-// app.use(cors())
-  app.use(cookieParser());
-  app.use(express.json());
+  // When using cors middleware as an application level middleware (for example, app.use(cors())), pre-flight requests are already handled for all routes
+
 app.use("/api/auth", authRoutes);
 app.use("/api/books", bookRoutes);
 app.use("/api/users", userRoutes);

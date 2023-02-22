@@ -34,7 +34,7 @@ export const login = async (req: Request, res: Response) => {
     if (err) return res.status(500).json(err);
   });
 
-  if (user && user.length === 0) return res.status(404).json("User not found!");
+  if (user && user.length === 0) return res.status(401).json("User not authenticated! Please re-enter your email or register");
 
   // proceed with logging in user
   //CHECK PASSWORD
@@ -50,14 +50,14 @@ export const login = async (req: Request, res: Response) => {
     process.env.JWT_KEY as string
   );
 
-  const { password, ...other } = user[0]; // separating out password so that we are not sending it with the other information
-
-  res.status(200).send("hello from login")
-  // res
-  //   .cookie("access_token", token, { maxAge: 86400000, httpOnly: true, sameSite:"none", secure: true}) // only for making API requests
-  //   .status(200)
-  //   .setHeader('Access-Control-Allow-Origin','*')
-  //   .json(other);
+  const username = user[0].username; // separating out username to return
+ 
+  res
+    // .cookie("access_token", token)
+    // .setHeader('Access-Control-Allow-Origin','*')
+    .cookie("access_token", token, { maxAge: 86400000, httpOnly: true, sameSite:"none", secure: true}) // only for making API requests
+    .status(200)
+    .json(username);
 };
 
 export const logout = (req: Request, res: Response) => {

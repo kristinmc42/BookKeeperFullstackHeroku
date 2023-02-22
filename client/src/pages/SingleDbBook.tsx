@@ -34,10 +34,7 @@ export default function SingleDbBook() {
 
   // handles the mutation to delete the book from the db
   const deleteBook = (bookId: string) => {
-    return Axios.delete(
-      // `http://localhost:5000/api/books/${bookId}`
-      `/api/books/${bookId}`
-    );
+    return Axios.delete(`/api/books/${bookId}`);
   };
 
   const mutation = useMutation({

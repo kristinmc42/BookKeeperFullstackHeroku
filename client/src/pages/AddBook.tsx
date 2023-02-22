@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { AxiosError } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 import { Axios } from "../config";
 import { useMutation, UseQueryResult } from "react-query";
 import styled from "styled-components";
@@ -18,7 +18,7 @@ import { convertBookToDbFormat } from "../functions/convertBookToDbFormat";
 import { convertDateToString } from "../functions/convertDateToString";
 
 //hooks
-import useUserId from "../hooks/useUserId";
+import useIsLoggedIn from "../hooks/useIsLoggedIn";
 import useBookInDb from "../hooks/useBookInDb";
 
 // types
@@ -33,8 +33,8 @@ const AddBook: React.FC = () => {
   const bookInfo: BookInfo = state.bookInfo;
   const bookId: string = bookInfo.id;
 
-  // get userid of current user
-  const userId: number | null | undefined = Number(useUserId());
+  // check that user is logged in
+  const isLoggedIn = useIsLoggedIn();
 
   //  check if book is in db
   const bookData: UseQueryResult<any, unknown> = useBookInDb(bookId, undefined);
@@ -55,25 +55,35 @@ const AddBook: React.FC = () => {
   const convertedBook: DbBookInfo | undefined = convertBookToDbFormat(
     bookInfo,
     bookshelf,
-    dateReadString,
-    userId
+    dateReadString
   );
 
   // to ADD the book to the db
   const addBook = async (book: DbBookInfo | undefined) => {
-    return await Axios
-      .post(
-        // `http://localhost:5000/api/books/`,
-        `/api/books/`,
-        book
-      )
-      .catch((err) => {
-        if (err.response.data) {
-          setErrorMessage(err.response.data);
-        } else {
-          setErrorMessage(err.message);
-        }
-      });
+    return await Axios.post(
+      `/api/books/`,
+      book
+    ).catch((err) => {
+      const errorResponse: AxiosResponse<unknown, any> | undefined =
+        err.response;
+      const errorStatus: number | undefined = errorResponse?.status;
+      let responseErrorMessage: string | undefined;
+      if (typeof errorResponse?.data === "string") {
+        responseErrorMessage = errorResponse?.data;
+      }
+      switch (errorStatus) {
+        case 400:
+        case 401:
+          setErrorMessage(responseErrorMessage);
+          break;
+        case 404:
+        case 500:
+        default:
+          setErrorMessage(
+            "Oops! Something went wrong. Please refresh and try again."
+          );
+      }
+    });
   };
   const mutation = useMutation(addBook);
 
@@ -91,7 +101,6 @@ const AddBook: React.FC = () => {
 
     const bookToAdd = convertedBook;
     if (bookToAdd) {
-      bookToAdd.userid = userId;
       bookToAdd.status = bookshelf;
       if (dateRead) {
         dateReadString = convertDateToString(dateRead);
@@ -102,6 +111,7 @@ const AddBook: React.FC = () => {
     mutation.mutate(bookToAdd);
   };
 
+  console.log(mutation);
   return (
     <Wrapper>
       <>
@@ -109,7 +119,7 @@ const AddBook: React.FC = () => {
 
         <DisplayGoogleBook item={bookInfo} format={"short"} />
 
-        {bookData.isSuccess && bookData.data.length === 0 && userId && (
+        {bookData.isSuccess && bookData.data.length === 0 && isLoggedIn && (
           <StyledForm onSubmit={handleSubmit}>
             <BookshelfOptionsFieldset
               bookshelf={bookshelf}
@@ -124,11 +134,11 @@ const AddBook: React.FC = () => {
 
       {/* loading/error messages */}
 
-      {((bookData.isSuccess && !userId) || bookData.isLoading) && (
+      {((bookData.isSuccess && !isLoggedIn) || bookData.isLoading || mutation.isIdle) && (
         <StyledMessage>Checking...</StyledMessage>
       )}
 
-      {bookData.isSuccess && bookData.data.length > 0 && userId && (
+      {bookData.isSuccess && bookData.data.length > 0 && isLoggedIn && (
         <ErrorMessage>
           You already have this book in your bookshelf.
         </ErrorMessage>
@@ -151,7 +161,7 @@ const AddBook: React.FC = () => {
               {((mutation.isError &&
                 mutation.error instanceof AxiosError &&
                 mutation.error.response?.status === 500) ||
-                (bookData.isError && !userId)) && (
+                (bookData.isError && !isLoggedIn)) && (
                 <ErrorMessage>
                   Please login to add the book to your bookshelf.
                 </ErrorMessage>

@@ -1,22 +1,24 @@
 import express from "express";
+import { isAuthenticated } from "../middleware/AuthenticateUser";
 import { getAllBooks, getBook, addBook, deleteBook, updateBook } from "../controllers/books";
+
 
 const router = express.Router();
 
 // get all books with matching userid
-router.get("/", getAllBooks);
+router.get("/", isAuthenticated, getAllBooks);
 
 // get a book by bookid and userid
-router.get("/:bookid", getBook);
+router.get("/:bookid", isAuthenticated, getBook);
 
 // add a book
-router.post("/", addBook);
+router.post("/", isAuthenticated, addBook);
 
 // delete a book with matching userid
-router.delete("/:bookid", deleteBook);
+router.delete("/:bookid", isAuthenticated, deleteBook);
 
 
 // update a book with matching userid
-router.put("/:bookid", updateBook);
+router.put("/:bookid", isAuthenticated, updateBook);
 
 export default router;

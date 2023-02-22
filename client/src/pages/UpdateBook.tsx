@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { AxiosError } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 import { Axios } from "../config";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMutation } from "react-query";
@@ -19,7 +19,7 @@ import CardOverlay from "../components/CardOverlay";
 import { convertDateToString } from "../functions/convertDateToString";
 
 //hooks
-import useUserId from "../hooks/useUserId";
+import useIsLoggedIn from "../hooks/useIsLoggedIn";
 import useBookInDb from "../hooks/useBookInDb";
 
 // types
@@ -36,31 +36,50 @@ const UpdateBook: React.FC = () => {
   const bookId: string = bookInfo.bookid;
   const selectedStatus: string = state.selectedStatus; // bookshelf status to change to
 
-  // get userid of current user
-  const userId: number | null | undefined = Number(useUserId());
-
-  //  get book from db that matches bookId
-  const bookData = useBookInDb(bookId, bookInfo);
-
   // for the bookshelf category selected by the user
   const [bookshelf, setBookshelf] = useState<string | undefined>(
     selectedStatus
   );
 
+  // for error messages
+  const [errorMessage, setErrorMessage] = useState<string | undefined>();
+
   // for the day selected by user in DayPicker
   const [dateRead, setDateRead] = useState<Date | null | undefined>(new Date());
 
+  // check user is logged in
+  const isLoggedIn = useIsLoggedIn();
+
+  //  get book from db that matches bookId
+  const bookData = useBookInDb(bookId, bookInfo);
+
+
   // to update the book info in the db
-  const updateBook = (
+  const updateBook = async(
     book: DbBookInfo | undefined,
     bookId: string | undefined
   ) => {
-    // return axios.put(`http://localhost:5000/api/books/${bookId}`, book);
-
-    return Axios.put(
-      `/api/books/${bookId}`,
-      book
-    );
+    return await Axios.put(`/api/books/${bookId}`, book).catch((err) => {
+      const errorResponse: AxiosResponse<unknown, any> | undefined =
+        err.response;
+      const errorStatus: number | undefined = errorResponse?.status;
+      let responseErrorMessage: string | undefined;
+      if (typeof errorResponse?.data === "string") {
+        responseErrorMessage = errorResponse?.data;
+      }
+      switch (errorStatus) {
+        case 400:
+        case 401:
+          setErrorMessage(responseErrorMessage);
+          break;
+        case 404:
+        case 500:
+        default:
+          setErrorMessage(
+            "Oops! Something went wrong. Please refresh and try again."
+          );
+      }
+    });
   };
   const mutation = useMutation({
     mutationFn: ({
@@ -107,12 +126,11 @@ const UpdateBook: React.FC = () => {
             setDateRead={setDateRead}
           />
 
-          <Button type="submit" disabled={!userId}>
+          <Button type="submit" disabled={!isLoggedIn}>
             Update
           </Button>
           {bookData.isError && (
             <ErrorMessage>
-              Error:{" "}
               {bookData.error instanceof AxiosError
                 ? bookData.error.message
                 : null}
@@ -134,12 +152,7 @@ const UpdateBook: React.FC = () => {
           ) : (
             <>
               {mutation.isError ? (
-                <ErrorMessage>
-                  An error occurred:{" "}
-                  {mutation.error instanceof Error
-                    ? mutation.error.message
-                    : null}
-                </ErrorMessage>
+                <ErrorMessage>An error occurred: {errorMessage}</ErrorMessage>
               ) : null}
             </>
           )}

@@ -52,20 +52,27 @@ const Register: React.FC = () => {
     } else {
       try {
         // if registration successful, redirects user to login page
-        // await axios.post(`http://localhost:5000/api/auth/register`, inputs);
-        await Axios.post(
-          `/api/auth/register`,
-          inputs
-        );
+        await Axios.post(`/api/auth/register`, inputs);
         navigate("/login");
       } catch (err: unknown | any) {
-        // sets error message in state
-        if (err.response?.data !== undefined || err.response?.data !== null) {
-          const res: AxiosResponse<unknown, any> | undefined = err.response;
-          const mess = res?.data;
-          if(typeof mess === "string") setError(mess);
-        } else {
-          setError(err.message);
+        const errorResponse: AxiosResponse<unknown, any> | undefined =
+          err.response;
+        const errorStatus: number | undefined = errorResponse?.status;
+        let errorMessage: string | undefined;
+        if (typeof errorResponse?.data === "string") {
+          errorMessage = errorResponse?.data;
+        }
+        switch (errorStatus) {
+          case 400:
+          case 401:
+            setError(errorMessage);
+            break;
+          case 404:
+          case 500:
+          default:
+            setError(
+              "Oops! Something went wrong. Please refresh and try again."
+            );
         }
       }
     }

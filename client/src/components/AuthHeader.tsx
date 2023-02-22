@@ -12,6 +12,7 @@ interface PropTypes {
   title?: string;
 }
 
+// header for Login and Register pages
 
 export default function AuthHeader({ children, to, title }: PropTypes) {
   return (

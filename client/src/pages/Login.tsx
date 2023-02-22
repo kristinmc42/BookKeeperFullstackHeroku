@@ -62,9 +62,8 @@ const Login = () => {
           setError("Oops! Something went wrong. Please refresh and try again.");
       }
     });
-    if (user) console.log(user);
 
-    // if (user) navigate("/books");
+    if (user) navigate("/books");
   };
 
   return (

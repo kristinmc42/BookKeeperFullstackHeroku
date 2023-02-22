@@ -25,7 +25,6 @@ const Books: React.FC = () => {
   const [displayFilter, setDisplayFilter] = useState<string>("all");
 
   // check user is logged in
-  // const currentUserId: number | null | undefined = Number(useUserId());
   const isLoggedIn = useIsLoggedIn();
 
   // get all books from db for user
@@ -38,7 +37,7 @@ const Books: React.FC = () => {
 
       {((allBooks.error instanceof AxiosError &&
         allBooks.error.response?.status === 401) ||
-        !useIsLoggedIn) && (
+        !isLoggedIn) && (
         <ErrorMessage>Please login to see your bookshelves</ErrorMessage>
       )}
 

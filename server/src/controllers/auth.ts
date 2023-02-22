@@ -50,16 +50,14 @@ export const login = async (req: Request, res: Response) => {
     process.env.JWT_KEY as string
   );
 
-  const { password, ...other } = user[0]; // separating out password so that we are not sending it with the other information
-
-  // res.status(200).send("hello from login")
-  console.log(token)
+  const username = user[0].username; // separating out username to return
+ 
   res
     // .cookie("access_token", token)
     // .setHeader('Access-Control-Allow-Origin','*')
     .cookie("access_token", token, { maxAge: 86400000, httpOnly: true, sameSite:"none", secure: true}) // only for making API requests
     .status(200)
-    .json(other);
+    .json(username);
 };
 
 export const logout = (req: Request, res: Response) => {

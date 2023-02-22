@@ -8,9 +8,6 @@ export default function useIsLoggedIn() {
   if (!userContext) return null;
 
   const { isLoggedIn } = userContext;
-
-  console.log(isLoggedIn());
   
-
   return isLoggedIn();
 }

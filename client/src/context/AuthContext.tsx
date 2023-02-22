@@ -20,15 +20,14 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     try {
       const savedUser: string | null = localStorage.getItem("alias");
-      console.log(savedUser)
-      if (savedUser) {
+     
+      if (savedUser &&  savedUser.valueOf() !== "null" && savedUser.valueOf() !== "undefined") {
         const parsedUser: string = JSON.parse(savedUser);
         setCurrentUser(parsedUser);
         setIsSignedIn(true);
       }
     } catch (err) {
-      // 
-      console.log(err)
+      console.error(err)
     }
 
   }, [])

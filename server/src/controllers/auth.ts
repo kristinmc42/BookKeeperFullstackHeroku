@@ -56,7 +56,7 @@ export const login = async (req: Request, res: Response) => {
   console.log(token)
   res
     // .cookie("access_token", token)
-    .setHeader('Access-Control-Allow-Origin','*')
+    // .setHeader('Access-Control-Allow-Origin','*')
     .cookie("access_token", token, { maxAge: 86400000, httpOnly: true, sameSite:"none", secure: true}) // only for making API requests
     .status(200)
     .json(other);

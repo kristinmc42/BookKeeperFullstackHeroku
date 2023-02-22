@@ -12,6 +12,8 @@ import { MysqlError } from "mysql";
 const app: Application = express();
 const PORT = process.env.PORT || 5000;
 
+// check that all .env variables have values
+
 // When using cors middleware as an application level middleware (for example, app.use(cors())), pre-flight requests are already handled for all routes
 app.use(express.json());
 app.use(cookieParser());

@@ -1,4 +1,3 @@
-import { MysqlError } from "mysql";
 import mysql from "mysql2";
 
 //types

@@ -11,14 +11,19 @@ import userRoutes from "./routes/users";
 import { MysqlError } from "mysql";
 
 const app: Application = express();
-const PORT = process.env.PORT || 5000;
 
 // check that all .env variables have values
-
-// When using cors middleware as an application level middleware (for example, app.use(cors())), pre-flight requests are already handled for all routes
-app.use(express.json());
-app.use(cookieParser());
-app.use(helmet());
+if (!(process.env.PORT && process.env.DB_HOST && process.env.DB_USER && process.env.DB_DATABASE && process.env.DB_PASSWORD)) {
+  throw new Error(
+    "Missing required environment variables. Check docs for more info."
+    );
+  }
+  
+const PORT = process.env.PORT || 5000;
+  
+app.use(express.json()); //parses incoming JSON requests and puts the parsed data in req.body
+app.use(cookieParser()); //Parse Cookie header and populate req.cookies with an object keyed by the cookie names
+app.use(helmet()); //helps you secure Express apps by setting various HTTP headers
 app.use(
   cors({
     origin: [
@@ -32,7 +37,8 @@ app.use(
     credentials: true,
   })
   );
-// app.use(cors())
+  // When using cors middleware as an application level middleware (for example, app.use(cors())), pre-flight requests are already handled for all routes
+
 app.use("/api/auth", authRoutes);
 app.use("/api/books", bookRoutes);
 app.use("/api/users", userRoutes);

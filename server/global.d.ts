@@ -4,6 +4,9 @@ declare global {
         MYSQL_URL: string;
         DATABASE_URL: string;
       }
+      interface Request{
+        userId?: any;
+      }
     }
   }
   export {};

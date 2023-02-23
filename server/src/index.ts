@@ -13,7 +13,7 @@ import { MysqlError } from "mysql";
 const app: Application = express();
 
 // check that all .env variables have values
-if (!(process.env.PORT && process.env.DB_HOST && process.env.DB_USER && process.env.DB_DATABASE && process.env.DB_PASSWORD)) {
+if (!(process.env.PORT && process.env.DB_HOST && process.env.DB_USER && process.env.DB_DATABASE && process.env.DB_PASSWORD && process.env.JWT_KEY)) {
   throw new Error(
     "Missing required environment variables. Check docs for more info."
     );

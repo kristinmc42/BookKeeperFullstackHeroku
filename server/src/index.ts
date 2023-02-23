@@ -32,7 +32,8 @@ app.use(
       "https://bookkeeperfullstack-production.up.railway.app",
       "https://www.googleapis.com/books",
       "https://book-keeper-revisited.netlify.app",
-      "https://book-keeper-fullstack.vercel.app"
+      "https://book-keeper-fullstack.vercel.app",
+      "https://book-keeper-fullstack-lpwt.vercel.app/"
     ],
     credentials: true,
   })

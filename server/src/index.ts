@@ -19,7 +19,7 @@ if (!(process.env.PORT && process.env.DB_HOST && process.env.DB_USER && process.
     );
   }
   
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8080;
   
 app.use(express.json()); //parses incoming JSON requests and puts the parsed data in req.body
 app.use(cookieParser()); //Parse Cookie header and populate req.cookies with an object keyed by the cookie names

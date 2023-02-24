@@ -1,1 +1,1 @@
-web: node dist/index.js 
+worker: cd server node dist/index.js 

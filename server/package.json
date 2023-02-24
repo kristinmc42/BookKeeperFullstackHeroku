@@ -10,7 +10,7 @@
     "ts.check": "tsc --project tsconfig.json",
     "add-build": "git add dist",
     "postinstall": "tsc",
-    "deploy": "git add . && git commit -m Heroku && git push heroku master",
+    "deploy": "git add . && git commit -m Heroku && git push heroku main",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "pre-commit": [

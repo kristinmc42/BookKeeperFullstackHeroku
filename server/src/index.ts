@@ -38,10 +38,8 @@ app.use(
       "https://www.googleapis.com/books",
       "https://book-keeper-revisited.netlify.app",
       "https://book-keeper-fullstack.vercel.app",
-      "https://book-keeper-fullstack.vercel.app/",
-      "https://book-keeper-fullstack-lpwt.vercel.app/",
       "https://book-keeper-fullstack-lpwt.vercel.app",
-      "https://book-keeper-fullstack-oocaajbuc-kristinmc42.vercel.app"
+      "https://book-keeper-api.herokuapp.com/"
     ],
     credentials: true,
   })

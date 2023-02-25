@@ -22,6 +22,9 @@ const Login = () => {
     password: "",
   });
 
+  // for hiding/showing text in password input field
+  const [isShown, setIsShown] = useState<boolean>(false);
+
   // error in axios call
   const [error, setError] = useState<string | undefined>();
 
@@ -88,10 +91,21 @@ const Login = () => {
             Password:
             <input
               required
-              type="password"
+              type={isShown ? "text" : "password"}
               id="passwordLogin"
               name="password"
               onChange={handleChange}
+              value={inputs.password}
+            />
+          </label>
+          <label htmlFor="showPassword">
+            Show password?
+            <input
+              type="checkbox"
+              id="showPassword"
+              name="showPassword"
+              checked={isShown}
+              onChange={() => setIsShown((isShown) => !isShown)}
             />
           </label>
           <Button type="submit">Login</Button>
@@ -167,6 +181,15 @@ const Wrapper = styled.div`
         width: 100%;
         @media ${device.mobileL} {
           align-self: flex-start;
+        }
+      }
+      label:nth-of-type(3) {
+        display: flex;
+        input {
+          max-width: 30px;
+          height: 20px;
+          margin-top: 0;
+          margin-left: 0.5em;
         }
       }
 

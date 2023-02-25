@@ -147,6 +147,7 @@ const Books: React.FC = () => {
               ) : null
             ) : null}
           </BookList>
+          {allBooks.data.length === 0 ?<StyledMessage>Your bookshelf is empty. Click on "Add a book" and start building your library!</StyledMessage>: null}
         </>
       ) : null}
     </Wrapper>

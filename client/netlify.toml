@@ -1,7 +1,6 @@
 [build]
 
 [[redirects]]
-  from = "/api/*"
-  to = "https://bookkeeperfullstack-production.up.railway.app/:splat"
+    from = "/*"
+  to = "/"
   status = 200
-  force = true

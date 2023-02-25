@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon api/index.ts",
+    "start": "node api/index.js",
     "build": "rimraf dist && tsc",
     "ts.check": "tsc --project tsconfig.json",
     "add-build": "git add dist",
@@ -15,9 +15,7 @@
     "build",
     "add-build"
   ],
-  "engines": {
-    "node": ">=v16.13.0"
-  },
+
   "keywords": [],
   "author": "",
   "license": "ISC",

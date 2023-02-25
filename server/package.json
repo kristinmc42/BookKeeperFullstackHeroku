@@ -2,19 +2,25 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "start": "node api/index.js",
+    "dev": "nodemon src/index.ts",
+    "start": "node dist/index.js",
+    "postinstall": "tsc",
     "build": "rimraf dist && tsc",
     "ts.check": "tsc --project tsconfig.json",
     "add-build": "git add dist",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "git add . && git commit -m Heroku && git push heroku main"
   },
   "pre-commit": [
     "ts.check",
     "build",
     "add-build"
   ],
+  "engines": {
+    "node": ">=v16.13.0"
+  },
 
   "keywords": [],
   "author": "",

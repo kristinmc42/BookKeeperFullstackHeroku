@@ -24,21 +24,14 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json()); //parses incoming JSON requests and puts the parsed data in req.body
 app.use(cookieParser()); //Parse Cookie header and populate req.cookies with an object keyed by the cookie names
 app.use(helmet()); //helps you secure Express apps by setting various HTTP headers
-// app.use(
-//   helmet.crossOriginResourcePolicy({
-//       policy: "cross-origin"
-//   })
-// );
+
 app.use(
   cors({
     origin: [
       "http://localhost:3000",
       "http://localhost:5000",
-      "https://bookkeeperfullstack-production.up.railway.app",
       "https://www.googleapis.com/books",
       "https://book-keeper-revisited.netlify.app",
-      "https://book-keeper-fullstack.vercel.app",
-      "https://book-keeper-fullstack-lpwt.vercel.app",
       "https://book-keeper-api.herokuapp.com/"
     ],
     credentials: true,

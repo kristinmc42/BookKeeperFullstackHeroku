@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AxiosError, AxiosResponse } from "axios";
 import { Axios } from "../config";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -32,14 +32,16 @@ const UpdateBook: React.FC = () => {
 
   // get book info from location and extract and save bookInfo object, selectedStatus, and bookId string in variables
   const { state } = useLocation();
-  const bookInfo: DbBookInfo = state.bookInfo; // bookInfo Object
-  const bookId: string = bookInfo.bookid;
-  const selectedStatus: string = state.selectedStatus; // bookshelf status to change to
 
-  // for the bookshelf category selected by the user
-  const [bookshelf, setBookshelf] = useState<string | undefined>(
-    selectedStatus
-  );
+  const [bookInfo, setBookInfo] = useState<DbBookInfo | undefined>();
+  const [selectedStatus, setSelectedStatus] = useState<string | undefined>(); // bookshelf status to change to
+
+  useEffect(() => {
+    if (state) {
+      setBookInfo(state.bookInfo);
+      setSelectedStatus(state.selectedStatus);
+    }
+  }, [state]);
 
   // for error messages
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
@@ -51,11 +53,10 @@ const UpdateBook: React.FC = () => {
   const isLoggedIn = useIsLoggedIn();
 
   //  get book from db that matches bookId
-  const bookData = useBookInDb(bookId, bookInfo);
-
+  const bookData = useBookInDb(bookInfo?.bookid, bookInfo);
 
   // to update the book info in the db
-  const updateBook = async(
+  const updateBook = async (
     book: DbBookInfo | undefined,
     bookId: string | undefined
   ) => {
@@ -95,7 +96,7 @@ const UpdateBook: React.FC = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const target = e.target;
     if (target.checked) {
-      setBookshelf(target.value);
+      setSelectedStatus(target.value);
     }
   };
 
@@ -103,41 +104,48 @@ const UpdateBook: React.FC = () => {
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
     const bookInDb: DbBookInfo = bookData.data[0];
-    if (dateRead && bookshelf === "read") {
+    if (dateRead && selectedStatus === "read") {
       bookInDb.dateRead = convertDateToString(dateRead);
     } else {
       bookInDb.dateRead = undefined;
     }
-    bookInDb.status = bookshelf;
+    bookInDb.status = selectedStatus;
 
-    mutation.mutate({ book: bookInDb, bookId });
+    if (bookInfo && bookInfo.bookid) {
+      const bookId: string = bookInfo.bookid;
+      mutation.mutate({ book: bookInDb, bookId });
+    }
   };
 
   return (
     <Wrapper>
-      <>
-        <Button onClick={() => navigate(-1)}>Back</Button>
-        <DisplayDbBook item={bookInfo} format={"short"} />
-        <StyledForm className="optionsForm" onSubmit={handleSubmit}>
-          <BookshelfOptionsFieldset
-            bookshelf={bookshelf}
-            handleChange={handleChange}
-            dateRead={dateRead}
-            setDateRead={setDateRead}
-          />
+      {!isLoggedIn ? (
+        <ErrorMessage>Please login to see your bookshelves</ErrorMessage>
+      ) : (
+        <>
+          <Button onClick={() => navigate(-1)}>Back</Button>
+          {bookInfo && <DisplayDbBook item={bookInfo} format={"short"} />}
+          <StyledForm className="optionsForm" onSubmit={handleSubmit}>
+            <BookshelfOptionsFieldset
+              bookshelf={selectedStatus}
+              handleChange={handleChange}
+              dateRead={dateRead}
+              setDateRead={setDateRead}
+            />
 
-          <Button type="submit" disabled={!isLoggedIn}>
-            Update
-          </Button>
-          {bookData.isError && (
-            <ErrorMessage>
-              {bookData.error instanceof AxiosError
-                ? bookData.error.message
-                : null}
-            </ErrorMessage>
-          )}
-        </StyledForm>
-      </>
+            <Button type="submit" disabled={!isLoggedIn}>
+              Update
+            </Button>
+            {bookData.isError && (
+              <ErrorMessage>
+                {bookData.error instanceof AxiosError
+                  ? bookData.error.message
+                  : null}
+              </ErrorMessage>
+            )}
+          </StyledForm>
+        </>
+      )}
 
       {mutation.isLoading ? (
         <StyledMessage>Adding book to bookshelf...</StyledMessage>

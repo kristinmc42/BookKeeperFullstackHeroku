@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AxiosError, AxiosResponse } from "axios";
 import { Axios } from "../config";
@@ -30,14 +30,25 @@ const AddBook: React.FC = () => {
 
   // get book info from location and save bookId string in variables
   const { state } = useLocation();
-  const bookInfo: BookInfo = state.bookInfo;
-  const bookId: string = bookInfo.id;
+  // const bookInfo: BookInfo = state.bookInfo;
+  // const bookId: string = bookInfo.id;
+
+  const [bookInfo, setBookInfo] = useState<BookInfo | undefined>();
+
+  useEffect(() => {
+    if (state) {
+      setBookInfo(state.bookInfo);
+    }
+  }, [state]);
 
   // check that user is logged in
   const isLoggedIn = useIsLoggedIn();
 
   //  check if book is in db
-  const bookData: UseQueryResult<any, unknown> = useBookInDb(bookId, undefined);
+  const bookData: UseQueryResult<any, unknown> = useBookInDb(
+    bookInfo?.id,
+    undefined
+  );
 
   // for the bookshelf category selected by the user
   const [bookshelf, setBookshelf] = useState<string | undefined>();
@@ -60,10 +71,7 @@ const AddBook: React.FC = () => {
 
   // to ADD the book to the db
   const addBook = async (book: DbBookInfo | undefined) => {
-    return await Axios.post(
-      `/api/books/`,
-      book
-    ).catch((err) => {
+    return await Axios.post(`/api/books/`, book).catch((err) => {
       const errorResponse: AxiosResponse<unknown, any> | undefined =
         err.response;
       const errorStatus: number | undefined = errorResponse?.status;
@@ -111,32 +119,42 @@ const AddBook: React.FC = () => {
     mutation.mutate(bookToAdd);
   };
 
-  console.log(mutation);
+
   return (
     <Wrapper>
       <>
-        <Button onClick={() => navigate(-1)}>Back</Button>
+        {!isLoggedIn ? (
+          <ErrorMessage>Please login to add a book to your bookshelves</ErrorMessage>
+        ) : (
+          <>
+            <Button onClick={() => navigate(-1)}>Back</Button>
 
-        <DisplayGoogleBook item={bookInfo} format={"short"} />
+            {bookInfo && <DisplayGoogleBook item={bookInfo} format={"short"} />}
 
-        {bookData.isSuccess && bookData.data.length === 0 && isLoggedIn && (
-          <StyledForm onSubmit={handleSubmit}>
-            <BookshelfOptionsFieldset
-              bookshelf={bookshelf}
-              handleChange={handleChange}
-              dateRead={dateRead}
-              setDateRead={setDateRead}
-            />
-            <Button disabled={!bookshelf}>Add Book </Button>
-          </StyledForm>
+            {bookData.isSuccess && bookData.data.length === 0 && isLoggedIn && (
+              <StyledForm onSubmit={handleSubmit}>
+                <BookshelfOptionsFieldset
+                  bookshelf={bookshelf}
+                  handleChange={handleChange}
+                  dateRead={dateRead}
+                  setDateRead={setDateRead}
+                />
+                <Button disabled={!bookshelf}>Add Book </Button>
+              </StyledForm>
+            )}
+          </>
         )}
       </>
 
       {/* loading/error messages */}
 
-      {((bookData.isSuccess && !isLoggedIn) || bookData.isLoading || mutation.isIdle) && (
-        <StyledMessage>Checking...</StyledMessage>
-      )}
+      {((bookData.isLoading
+        // ||
+        // bookData.isIdle ||
+        // mutation.isIdle
+      )
+        &&
+        isLoggedIn) && <StyledMessage>Checking...</StyledMessage>}
 
       {bookData.isSuccess && bookData.data.length > 0 && isLoggedIn && (
         <ErrorMessage>

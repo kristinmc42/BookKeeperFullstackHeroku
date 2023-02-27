@@ -18,43 +18,43 @@ export const DisplayDbBook = ({
   item,
   format,
 }: {
-  item: DbBookInfo;
+  item: DbBookInfo | undefined;
   format: string;
 }) => {
   return (
-    <BookInfoCard key={item.id}>
+    <BookInfoCard key={item?.id}>
       {format && format === "short" ? (
         <ShortFormBookInfo>
-          {item.img && <img src={item.img} alt={`Cover of ${item.title}`} />}
+          {item?.img && <img src={item?.img} alt={`Cover of ${item?.title}`} />}
           <div>
-            {item.title && (
+            {item?.title && (
               <h2>
-                {item.title.length <= 65
-                  ? item.title
-                  : item.title.substring(0, 65) + "..."}
+                {item?.title.length <= 65
+                  ? item?.title
+                  : item?.title.substring(0, 65) + "..."}
               </h2>
             )}
-            {item.subtitle && (
+            {item?.subtitle && (
               <h3>
-                {item.subtitle.length <= 65
-                  ? item.subtitle
-                  : item.subtitle.substring(0, 65) + "..."}
+                {item?.subtitle.length <= 65
+                  ? item?.subtitle
+                  : item?.subtitle.substring(0, 65) + "..."}
               </h3>
             )}
-            {item.author && (
+            {item?.author && (
               <h3>
                 By:{" "}
-                {item.author.length <= 65
-                  ? item.author
-                  : item.author.substring(0, 65) + "..."}
+                {item?.author.length <= 65
+                  ? item?.author
+                  : item?.author.substring(0, 65) + "..."}
               </h3>
             )}
-            {item.genre && (
+            {item?.genre && (
               <h3>
                 Genre:{" "}
-                {item.genre.length <= 65
-                  ? item.genre
-                  : item.genre.substring(0, 65) + "..."}
+                {item?.genre.length <= 65
+                  ? item?.genre
+                  : item?.genre.substring(0, 65) + "..."}
               </h3>
             )}
           </div>
@@ -62,25 +62,25 @@ export const DisplayDbBook = ({
       ) : (
         <>
           <ShortFormBookInfo>
-            {item.img && <img src={item.img} alt={`Cover of ${item.title}`} />}
+            {item?.img && <img src={item?.img} alt={`Cover of ${item?.title}`} />}
             <div>
-              {item.title && <h2>{item.title}</h2>}
-              {item.subtitle && <h3>{item.subtitle}</h3>}
-              {item.author && <h3>By: {item.author}</h3>}
-              {item.genre && <h3>Genre: {item.genre}</h3>}
+              {item?.title && <h2>{item?.title}</h2>}
+              {item?.subtitle && <h3>{item?.subtitle}</h3>}
+              {item?.author && <h3>By: {item?.author}</h3>}
+              {item?.genre && <h3>Genre: {item?.genre}</h3>}
             </div>
           </ShortFormBookInfo>
 
           <FullFormBookInfo>
-            {item.pageCount && <h4>Pages: {item.pageCount}</h4>}
-            {item.language && <h4>Language: {item.language}</h4>}
-            {item.publishedDate && (
-              <h4>Date Published: {item.publishedDate}</h4>
+            {item?.pageCount && <h4>Pages: {item?.pageCount}</h4>}
+            {item?.language && <h4>Language: {item?.language}</h4>}
+            {item?.publishedDate && (
+              <h4>Date Published: {item?.publishedDate}</h4>
             )}
-            {item.desc && <ConvertDescriptionToHTML description={item.desc} />}
+            {item?.desc && <ConvertDescriptionToHTML description={item?.desc} />}
 
-            {item.previewLink && (
-              <a href={item.previewLink} target="_blank" rel="noreferrer">
+            {item?.previewLink && (
+              <a href={item?.previewLink} target="_blank" rel="noreferrer">
                 Preview on Google Books
               </a>
             )}

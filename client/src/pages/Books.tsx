@@ -35,12 +35,12 @@ const Books: React.FC = () => {
       <h1>My Books</h1>
       {allBooks.isLoading && <StyledMessage>Loading...</StyledMessage>}
 
-      {(allBooks.error instanceof AxiosError &&
+      {((allBooks.error instanceof AxiosError &&
         allBooks.error.response?.status === 401 &&
-        !isLoggedIn) && (
+        !isLoggedIn) || !isLoggedIn) && (
         <ErrorMessage>Please login to see your bookshelves</ErrorMessage>
         )}
-      {allBooks.error instanceof AxiosError && allBooks.error.response?.status === 401 && isLoggedIn && <ErrorMessage>Your browser is not allowing authentication cookie to be stored. Check your privacy settings to allow cookies and cross-site tracking.</ErrorMessage>}
+      {allBooks.error instanceof AxiosError && allBooks.error.response?.status === 401 && isLoggedIn && <ErrorMessage>Your browser is not allowing the authentication cookie to be stored. Check your privacy settings to allow cookies and cross-site tracking. </ErrorMessage>}
 
       {allBooks.error instanceof AxiosError &&
         allBooks.error.response?.status !== 401 && (
@@ -49,7 +49,7 @@ const Books: React.FC = () => {
           </ErrorMessage>
         )}
 
-      {allBooks.isSuccess && allBooks.data && !allBooks.error ? (
+      {allBooks.isSuccess && allBooks.data && !allBooks.error && isLoggedIn ? (
         <>
           <BookshelfFilter
             displayFilter={displayFilter}

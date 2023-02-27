@@ -38,7 +38,7 @@ export interface BookInfo {
 
 export interface DbBookInfo {
   id?: number;
-  title: string;
+  title?: string;
   subtitle?: string;
   author?: string;
   genre?: string;
@@ -48,7 +48,7 @@ export interface DbBookInfo {
   previewLink?: string;
   language?: string;
   publishedDate?: string;
-  bookid: string;
+  bookid?: string;
   dateRead?: string;
   status?: string; // read/toRead/currentlyReading
   userid?: number | undefined | null;

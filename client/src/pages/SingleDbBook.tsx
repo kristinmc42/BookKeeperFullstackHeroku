@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import { Axios } from "../config";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useMutation } from "react-query";
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
@@ -11,7 +11,8 @@ import { DisplayDbBook } from "../components/DisplayBook";
 import MessageCard from "../components/MessageCard";
 import CardOverlay from "../components/CardOverlay";
 import ErrorMessage from "../components/ErrorMessage";
-
+// hooks
+import useIsLoggedIn from "../hooks/useIsLoggedIn";
 //styles
 import { device } from "../styles/Breakpoints";
 
@@ -24,10 +25,18 @@ export default function SingleDbBook() {
 
   // get bookInfo passed in state
   const { state } = useLocation();
-  const bookInfo: DbBookInfo = state.book;
 
-  // get bookId  from bookInfo
-  const bookId: string = bookInfo.bookid;
+  const [bookInfo, setBookInfo] = useState<DbBookInfo | undefined>();
+
+  useEffect(() => {
+    if (state) {
+      setBookInfo(state.book);
+    }
+  }, [state])
+  
+
+  // check user is logged in
+  const isLoggedIn = useIsLoggedIn();
 
   // for when user clicks on Delete button
   const [confirmDelete, setConfirmDelete] = useState<boolean>(false);
@@ -42,7 +51,10 @@ export default function SingleDbBook() {
   });
 
   const handleDelete = () => {
-    mutation.mutate({ bookId });
+    if (bookInfo && bookInfo.bookid) {
+      const bookId:string = bookInfo.bookid;
+      mutation.mutate({ bookId });
+    }
   };
 
   // when user selects a different option, launch UpdateBook component, passing target option and item in state
@@ -65,40 +77,51 @@ export default function SingleDbBook() {
         </DeletedBookContainer>
       ) : (
         <>
-          <Button onClick={() => navigate(-1)}>Back</Button>
-          <DisplayDbBook item={bookInfo} format={"full"} />
-          <BookStatusSection>
-            {bookInfo.dateRead && <h4>Date read: {bookInfo.dateRead}</h4>}
-            <label htmlFor="bookshelfSelect">
-              Select a different bookshelf
-            </label>
-            <select
-              name="bookshelfSelect"
-              id="bookshelfSelect"
-              onChange={handleChange}
-              value={bookInfo.status}
-            >
-              <option value="read">Read</option>
-              <option value="toRead">Want to Read</option>
-              <option value="currentlyReading">Currently Reading</option>
-            </select>
-            <Button onClick={() => setConfirmDelete(true)}>Delete Book</Button>
+          {!isLoggedIn ? (
+            <ErrorMessage>Please login to see your bookshelves</ErrorMessage>
+          ) : (
+            <>
+                  <Button onClick={() => navigate(-1)}>Back</Button>
+                  {
+                    bookInfo && <DisplayDbBook item={bookInfo} format={"full"} />
+                  }
+              
+              <BookStatusSection>
+                {bookInfo?.dateRead && <h4>Date read: {bookInfo.dateRead}</h4>}
+                <label htmlFor="bookshelfSelect">
+                  Select a different bookshelf
+                </label>
+                <select
+                  name="bookshelfSelect"
+                  id="bookshelfSelect"
+                  onChange={handleChange}
+                  value={bookInfo?.status}
+                >
+                  <option value="read">Read</option>
+                  <option value="toRead">Want to Read</option>
+                  <option value="currentlyReading">Currently Reading</option>
+                </select>
+                <Button onClick={() => setConfirmDelete(true)}>
+                  Delete Book
+                </Button>
 
-            {mutation.isLoading ? (
-              <StyledMessage>Deleting book from bookshelf...</StyledMessage>
-            ) : (
-              <>
-                {mutation.isError && (
-                  <ErrorMessage>
-                    An error occurred:{" "}
-                    {mutation.error instanceof AxiosError
-                      ? mutation.error.message
-                      : null}
-                  </ErrorMessage>
+                {mutation.isLoading ? (
+                  <StyledMessage>Deleting book from bookshelf...</StyledMessage>
+                ) : (
+                  <>
+                    {mutation.isError && (
+                      <ErrorMessage>
+                        An error occurred:{" "}
+                        {mutation.error instanceof AxiosError
+                          ? mutation.error.message
+                          : null}
+                      </ErrorMessage>
+                    )}
+                  </>
                 )}
-              </>
-            )}
-          </BookStatusSection>
+              </BookStatusSection>
+            </>
+          )}
           {confirmDelete ? (
             <CardOverlay className="delete">
               <DeleteBookModal>

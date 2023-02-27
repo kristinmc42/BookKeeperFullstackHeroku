@@ -53,7 +53,7 @@ export const login = async (req: Request, res: Response) => {
   const username = user[0].username; // separating out username to return
  
   res
-    .cookie("access_token", token, { maxAge: 86400000, httpOnly: true, sameSite:"lax" }) // httponly - only for making API requests
+    .cookie("access_token", token, { maxAge: 86400000, httpOnly: true, sameSite:"none", secure: true  }) // httponly - only for making API requests
     .status(200)
     .json(username);
 };

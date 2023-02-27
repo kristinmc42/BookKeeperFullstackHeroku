@@ -33,7 +33,7 @@ const Books: React.FC = () => {
   return (
     <Wrapper>
       <h1>My Books</h1>
-      {allBooks.isLoading && <StyledMessage>Loading...</StyledMessage>}
+      {isLoggedIn && allBooks.isLoading && <StyledMessage>Loading...</StyledMessage>}
 
       {((allBooks.error instanceof AxiosError &&
         allBooks.error.response?.status === 401 &&
@@ -178,7 +178,7 @@ const Wrapper = styled.div`
   }
 
   h1 + h2 {
-    margin-top: 3em;
+    margin-top: 5em;
   }
 
   a {

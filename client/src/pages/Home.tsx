@@ -43,8 +43,8 @@ const Wrapper = styled.div`
   max-width: 1600px;
   width: 90%;
   margin: 1em auto;
-  height: 90vh;
-  min-height: 775px;
+  height: 79vh;
+  min-height: 685px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -58,7 +58,7 @@ const Wrapper = styled.div`
   );
 
   @media ${device.mobileL} {
-    min-height: 630px;
+    min-height: 560px;
   }
   @media ${device.tablet} {
     height: 84vh;
@@ -88,8 +88,12 @@ const TextContainer = styled.div`
 
   h1,
   p {
+    font-size: 1.6rem;
     color: ${(props) => props.theme.colors.whiteText};
-    padding: 40px;
+    padding: 20px;
+  }
+  p{
+    font-size: 1rem;
   }
   h1 > span {
     font-family: ${(props) => props.theme.fonts.header};
@@ -98,7 +102,7 @@ const TextContainer = styled.div`
   button {
     max-width: 150px;
     padding: 0.5em;
-    margin: 1em 3em 1em 2em;
+    margin: 1em 3em 1em 1em;
     font-weight: bold;
     color: ${(props) => props.theme.colors.whiteText};
     background-color: ${(props) => props.theme.colors.background};
@@ -108,6 +112,17 @@ const TextContainer = styled.div`
       color: ${(props) => props.theme.colors.blackText};
       background-color: ${(props) => props.theme.colors.secondary};
       border: 1px solid ${(props) => props.theme.colors.secondary};
+    }
+  }
+  @media ${device.tablet}{
+    h1, p{
+      padding: 40px;
+    }
+    h1{
+      font-size: 2rem;
+    }
+    button{
+      margin-left: 2em;
     }
   }
 `;
@@ -140,10 +155,10 @@ const ImageContainer = styled.div`
   }
 
   @media ${device.laptop} {
-    max-width: 600px;
+    max-width: 535px;
     height: 100%;
     padding: 2em;
-    margin-left: 1em;
+    margin-left: 3em;
     background-color: ${(props) => props.theme.colors.background};
     border-radius: 15px;
 

@@ -178,7 +178,7 @@ const Wrapper = styled.div`
     width: 100%;
     height: 100%;
     max-width: 876px;
-    margin: 30px auto;
+    margin: 20px auto;
 
     h1 {
       margin-top: 40px;
@@ -189,11 +189,11 @@ const Wrapper = styled.div`
         margin-top: 10px;
       }
       @media ${device.mobileM} {
-        margin-top: 50px;
-        margin-bottom: 50px;
+        margin-top: 20px;
+        margin-bottom: 30px;
       }
       @media (orientation: landscape) and (hover: none) and (pointer: coarse) {
-        margin-top: 50px;
+        margin-top: 10px;
         margin-bottom: 50px;
       }
     }
@@ -212,7 +212,8 @@ const StyledForm = styled.form`
   flex-direction: column;
   align-items: center;
   max-width: 366px;
-  gap: 3em;
+  gap: 1em;
+  margin-bottom: 2em;
 
   @media ${device.tablet} {
     align-items: flex-start;
@@ -230,6 +231,7 @@ const StyledForm = styled.form`
   button:first-of-type {
     align-self: center;
     max-width: 110px;
+    margin: 1em auto;
   }
 `;
 

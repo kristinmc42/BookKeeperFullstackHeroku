@@ -130,7 +130,7 @@ export default SearchBooks;
 const Wrapper = styled.div`
   max-width: 1600px;
   min-height: 85vh;
-  margin: 0 auto;
+  margin: 1em auto 0 auto;
 
   h1 {
     font-size: 1.9em;
